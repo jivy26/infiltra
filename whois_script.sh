@@ -47,4 +47,5 @@ else
     exit 1
 fi
 
-echo "Whois results saved to $output_file"
+echo
+echo -e "\033[32;1mWhois results saved to $output_file\033[0m"
