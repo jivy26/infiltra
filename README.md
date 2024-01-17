@@ -1,3 +1,6 @@
+Download the most current file from Releases.
+<br /><br />
+
 # Install Script
 Give the install script executable permissions `sudo chmod +x install.sh`
 <br /><br />
