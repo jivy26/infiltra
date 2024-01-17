@@ -1,3 +1,8 @@
+# Install Script
+Give the install script executable permissions `sudo chmod +x install.sh`
+<br /><br />
+Then run it using `./install.sh` and follow prompts
+
 # Dependencies
 
 
@@ -16,7 +21,7 @@ ept/<br />
 ├── version.txt<br />
 └── whois_script.sh<br />
 <br /><br />
-# Configuration
+# Configuration (Only needed if not using install.sh)
 <br />
 The tool works out of the box; however, I recommend creating an alias to handle calls to ept.py for ease of use. The example uses zshrc_aliases; however, the same applies for bash_aliases. Close and reopen the terminal after saving the alias file and type ept to verify the alias is working correctly.
 <br /><br />
