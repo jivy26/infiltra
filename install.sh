@@ -30,7 +30,7 @@ move_files
 # Invoke the function to set executable permissions
 set_executable_permissions
 
-# Ask the user if they use bash or zsh #
+# Ask the user if they use bash or zsh
 echo "Do you use bash or zsh? (bash/zsh): "
 read shell_type
 
