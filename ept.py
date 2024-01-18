@@ -1,10 +1,6 @@
-import keyring
-import getpass
-import requests
-import requests.exceptions
 import os
 import subprocess
-import base64
+from updater import check_and_update
 
 # Define color constants
 BOLD_BLUE = "\033[34;1m"
@@ -14,6 +10,7 @@ BOLD_GREEN = "\033[32;1m"
 BOLD_RED = "\033[31;1m"
 BOLD_YELLOW = "\033[33;1m"
 
+
 # Function to get the current version from a file
 def get_version():
     # Get the directory in which the script is located
@@ -22,6 +19,7 @@ def get_version():
     version_file_path = os.path.join(dir_of_script, "version.txt")
     with open(version_file_path, "r") as file:
         return file.read().strip()
+
 
 # Function to run EyeWitness
 def run_eyewitness():
@@ -52,6 +50,7 @@ def run_eyewitness():
     subprocess.run(['python3', eyewitness_script_path, input_file])
 
     input(f"{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
+
 
 # Function to run sslscan and parse results
 def run_sslscanparse():
@@ -105,6 +104,7 @@ def run_sslscanparse():
         print(f"{BOLD_RED}An error occurred:\n" + stderr.decode())
 
     input(f"{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
+
 
 # Function to run whois script
 def run_whois():
@@ -180,8 +180,9 @@ def display_menu(version):
     print("3. Run Ngrep on Nmap Output")
     print("4. Run SSLScans and Parse Findings")
     print("5. Run EyeWitness")
-    print("\n9. Check For Updates (Not Fully Functioning)")
-    print(f"{BOLD_RED}0. Exit{COLOR_RESET}")
+    print(f"\n{BOLD_CYAN}U. Check For Updates{COLOR_RESET}")
+    print(f"{BOLD_RED}X. Exit{COLOR_RESET}")
+
 
 # Function to run nmap scan
 def run_nmap():
@@ -216,7 +217,7 @@ def main():
     version = get_version()
     while True:
         display_menu(version)
-        choice = input(f"\n{BOLD_GREEN}Enter your choice: {COLOR_RESET}")
+        choice = input(f"\n{BOLD_GREEN}Enter your choice: {COLOR_RESET}").lower()
         if choice == '1':
             run_whois()
         elif choice == '2':
@@ -228,13 +229,21 @@ def main():
             run_sslscanparse()
         elif choice == '5':
             run_eyewitness()
-        elif choice == '9':
-            print("Checking for updates...")  # Additional debugging message
-            compare_versions()
-        elif choice == '0':
+        elif choice == 'u':
+            print("Checking for updates...")
+            check_and_update()
+        elif choice == 'u':
             break
         else:
             print(f"{BOLD_YELLOW}Invalid choice, please try again.{COLOR_RESET}")
+
+
+# Ensure the `packaging` library is installed
+try:
+    from packaging import version
+except ImportError:
+    print(f"{BOLD_RED}The 'packaging' library is required for version comparison. Please install it using 'pip install packaging'.{COLOR_RESET}")
+    exit(1)
 
 if __name__ == "__main__":
     main()
