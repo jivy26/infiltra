@@ -34,23 +34,36 @@ set_executable_permissions
 echo "Do you use bash or zsh? (bash/zsh): "
 read shell_type
 
-# Edit the appropriate shell configuration file to ensure the alias is set
-if [ "$shell_type" = "bash" ]; then
-    RC_FILE="$HOME/.bashrc_aliases"
-elif [ "$shell_type" = "zsh" ]; then
-    RC_FILE="$HOME/.zshrc_aliases"
+# Create .zshrc_aliases if it doesn't exist and add alias
+if [ "$shell_type" = "zsh" ]; then
+    ZSHRC="$HOME/.zshrc"
+    ALIAS_FILE="$HOME/.zshrc_aliases"
+
+    # Create .zshrc_aliases if it doesn't exist
+    if [ ! -f "$ALIAS_FILE" ]; then
+        touch "$ALIAS_FILE"
+    fi
+
+    # Add alias to the .zshrc_aliases file
+    echo "alias ept='python3 $EPT_DIR/ept.py'" >> "$ALIAS_FILE"
+
+    # Add source command to .zshrc if not already present
+    if ! grep -q "source $ALIAS_FILE" "$ZSHRC"; then
+        echo "source $ALIAS_FILE" >> "$ZSHRC"
+    fi
+
+elif [ "$shell_type" = "bash" ]; then
+    ALIAS_FILE="$HOME/.bashrc_aliases"
+    # Add alias to the .bashrc_aliases file
+    echo "alias ept='python3 $EPT_DIR/ept.py'" >> "$ALIAS_FILE"
 else
     echo "Unsupported shell type. Please manually set the alias in your shell configuration file."
     exit 1
 fi
 
-# Add alias to the shell configuration file
-echo "alias ept='python3 $EPT_DIR/ept.py'" >> "$RC_FILE"
-
-# Source the shell configuration file if possible
-if [ -f "$RC_FILE" ]; then
-    source "$RC_FILE"
-fi
-
 # Inform the user to restart their shell or source their configuration file
-echo "Installation complete. Please restart your terminal or source your $RC_FILE."
+if [ "$shell_type" = "zsh" ]; then
+    echo "Installation complete. Please restart your terminal or run 'source ~/.zshrc'."
+else
+    echo "Installation complete. Please restart your terminal or source your $ALIAS_FILE."
+fi

@@ -227,7 +227,7 @@ def main():
             run_whois()
         elif choice == '2':
             run_nmap()
-        elif choice == '3':  # Call run_ngrep when the user selects option 2
+        elif choice == '3':
             scan_type = input(f"{BOLD_GREEN}Enter the scan type that was run (TCP/UDP): {COLOR_RESET}").upper()
             run_ngrep(scan_type)
         elif choice == '4':
