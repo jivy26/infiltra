@@ -1,4 +1,5 @@
-Download the most current file from Releases.
+# Clone Repo
+Run the following command in Kali terminal `git clone https://github.com/jivy26/ept`
 <br /><br />
 
 # Install Script
@@ -8,9 +9,9 @@ Then run it using `./install.sh` and follow prompts
 
 # Dependencies
 
-
 **pup and httprobe required for Eyewitness** `apt install pup && httprobe -y`
 <br /><br />
+
 # Folder Structure
 As long as the EPT folder structure is maintained, you can place the EPT folder anywhere you prefer. Changing the structure will break functionality.
 <br /><br />
