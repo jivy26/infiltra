@@ -111,7 +111,7 @@ def run_whois():
     os.system('clear')  # Clear the screen at the beginning of the function
     whois_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'whois_script.sh')
 
-    # Module Info Box
+    # Module Info Box #
     message_lines = [
         "This module will look for OrgName in all whois requests",
         "and parse the names 1 per line."
