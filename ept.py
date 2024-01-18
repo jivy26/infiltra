@@ -1,5 +1,10 @@
+import keyring
+import getpass
+import requests
+import requests.exceptions
 import os
 import subprocess
+import base64
 
 # Define color constants
 BOLD_BLUE = "\033[34;1m"
@@ -175,7 +180,8 @@ def display_menu(version):
     print("3. Run Ngrep on Nmap Output")
     print("4. Run SSLScans and Parse Findings")
     print("5. Run EyeWitness")
-    print(f"\n{BOLD_YELLOW}9. Exit{COLOR_RESET}")
+    print("\n9. Check For Updates (Not Fully Functioning)")
+    print(f"{BOLD_RED}0. Exit{COLOR_RESET}")
 
 # Function to run nmap scan
 def run_nmap():
@@ -223,6 +229,9 @@ def main():
         elif choice == '5':
             run_eyewitness()
         elif choice == '9':
+            print("Checking for updates...")  # Additional debugging message
+            compare_versions()
+        elif choice == '0':
             break
         else:
             print(f"{BOLD_YELLOW}Invalid choice, please try again.{COLOR_RESET}")

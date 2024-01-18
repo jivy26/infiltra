@@ -19,8 +19,16 @@ move_files() {
     find . -mindepth 1 -maxdepth 1 ! -name "$(basename "$0")" -exec mv -t "$EPT_DIR" -- {} +
 }
 
+# Set executable permissions for .sh and .py files only
+set_executable_permissions() {
+    find . -type f \( -name "*.sh" -o -name "*.py" \) -exec chmod +x {} +
+}
+
 # Invoke the function to move files
 move_files
+
+# Invoke the function to set executable permissions
+set_executable_permissions
 
 # Ask the user if they use bash or zsh
 echo "Do you use bash or zsh? (bash/zsh): "
