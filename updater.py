@@ -5,7 +5,10 @@ import requests
 import stat
 import threading
 import time
+import sys
 
+# Exit Code
+UPDATE_EXIT_CODE = 85
 
 # Define color constants
 BOLD_BLUE = "\033[34;1m"
@@ -110,8 +113,11 @@ def check_and_update():
             # Proceed with the update after user confirmation
             input(f"{BOLD_YELLOW}Press any key to start the update or Ctrl+C to cancel...{COLOR_RESET}")
             perform_update(dir_of_script)
+            print("Update was successful. Please restart the tool to apply the updates.")
+            return True  # Indicate that an update was performed
         else:
             print(f"{BOLD_GREEN}You are up-to-date with version {local_version}.{COLOR_RESET}")
+            return False  # No update was necessary
 
         # Wait for user input before returning to the main menu
         input(f"{BOLD_YELLOW}Press any key to return to the main menu...{COLOR_RESET}")

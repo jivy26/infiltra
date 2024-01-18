@@ -1,6 +1,11 @@
 import os
 import subprocess
+import sys
 from updater import check_and_update
+
+
+UPDATE_EXIT_CODE = 85
+
 
 # Define color constants
 BOLD_BLUE = "\033[34;1m"
@@ -232,6 +237,10 @@ def main():
         elif choice == 'u':
             print("Checking for updates...")
             check_and_update()
+            updated = check_and_update()
+            if updated:
+                # Exit with a special code to signal the wrapper to restart
+                sys.exit(UPDATE_EXIT_CODE)
         elif choice == 'x':
             break
         else:
@@ -246,4 +255,8 @@ except ImportError:
     exit(1)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nOperation cancelled by user. Exiting...")
+        sys.exit()
