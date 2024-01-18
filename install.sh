@@ -45,7 +45,7 @@ else
 fi
 
 # Add alias to the shell configuration file
-echo "alias ept='python3 $EPT_DIR/run_ept.py'" >> "$RC_FILE"
+echo "alias ept='python3 $EPT_DIR/ept.py'" >> "$RC_FILE"
 
 # Source the shell configuration file if possible
 if [ -f "$RC_FILE" ]; then
