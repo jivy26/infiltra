@@ -232,7 +232,7 @@ def main():
         elif choice == 'u':
             print("Checking for updates...")
             check_and_update()
-        elif choice == 'u':
+        elif choice == 'x':
             break
         else:
             print(f"{BOLD_YELLOW}Invalid choice, please try again.{COLOR_RESET}")

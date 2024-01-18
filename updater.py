@@ -3,6 +3,8 @@ import subprocess
 from packaging import version
 import requests
 import stat
+import threading
+import time
 
 
 # Define color constants
@@ -11,6 +13,14 @@ COLOR_RESET = "\033[0m"
 BOLD_GREEN = "\033[32;1m"
 BOLD_RED = "\033[31;1m"
 BOLD_YELLOW = "\033[33;1m"
+
+
+def print_progress(stop_event):
+    print(f"{BOLD_BLUE}Starting update...", end="")
+    while not stop_event.is_set():
+        print(".", end="", flush=True)
+        time.sleep(0.5)
+    print(f"{COLOR_RESET}")
 
 
 def is_git_repository(path):
@@ -28,12 +38,14 @@ def set_executable_permissions(file_path):
         os.chmod(file_path, st.st_mode | stat.S_IEXEC)
 
 def set_permissions_for_all_executables(directory):
-    # Iterate over all files in the directory
-    for subdir, dirs, files in os.walk(directory):
-        for file in files:
-            file_path = os.path.join(subdir, file)
-            if file_path.endswith('.sh') or file_path.endswith('.py'):  # Check for .sh and .py files
-                set_executable_permissions(file_path)
+    # Iterate over files in the current working directory only
+    for file in os.listdir(directory):
+        file_path = os.path.join(directory, file)
+        if os.path.isfile(file_path) and (file_path.endswith('.sh') or file_path.endswith('.py')):
+            # Check if the file has executable permissions
+            if not os.access(file_path, os.X_OK):
+                st = os.stat(file_path)
+                os.chmod(file_path, st.st_mode | stat.S_IEXEC)
 
 
 def get_version(version_file_path):
@@ -54,7 +66,9 @@ def update_needed(local_version, remote_version):
 
 
 def perform_update(repo_dir):
-    print(f"{BOLD_BLUE}Starting update...{COLOR_RESET}")
+    stop_event = threading.Event()
+    progress_thread = threading.Thread(target=print_progress, args=(stop_event,))
+    progress_thread.start()
 
     try:
         # Fetch the latest changes from the remote repository
@@ -64,14 +78,20 @@ def perform_update(repo_dir):
         # Clean untracked files
         subprocess.run(["git", "clean", "-fd"], cwd=repo_dir, check=True)
 
-        print(f"{BOLD_GREEN}Update completed successfully.{COLOR_RESET}")
+        stop_event.set()
+        progress_thread.join()  # Wait for the progress thread to finish
 
-        # Set executable permissions
+        print(f"\n{BOLD_GREEN}Update completed successfully.{COLOR_RESET}")
+
+        # Set executable permissions for script files
+        print(f"{BOLD_YELLOW}Checking file permissions and setting executable if necessary...{COLOR_RESET}", end="", flush=True)
         set_permissions_for_all_executables(repo_dir)
-
+        print(f"{BOLD_GREEN} Done.{COLOR_RESET}")
 
     except subprocess.CalledProcessError as e:
-        print(f"{BOLD_RED}An error occurred while updating: {e}{COLOR_RESET}")
+        stop_event.set()
+        progress_thread.join()  # Ensure the progress thread is stopped
+        print(f"\n{BOLD_RED}An error occurred while updating: {e}{COLOR_RESET}")
 
 
 def check_and_update():
