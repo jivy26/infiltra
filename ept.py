@@ -2,18 +2,39 @@ import os
 import subprocess
 import sys
 from updater import check_and_update
+from icmpecho import run_fping
 
 
 UPDATE_EXIT_CODE = 85
 
 
-# Define color constants
+# Define colors
 BOLD_BLUE = "\033[34;1m"
 COLOR_RESET = "\033[0m"
 BOLD_CYAN = "\033[36;1m"
 BOLD_GREEN = "\033[32;1m"
 BOLD_RED = "\033[31;1m"
 BOLD_YELLOW = "\033[33;1m"
+
+
+# Handle FPING
+
+
+def check_alive_hosts():
+    os.system('clear')
+    hosts_input = input(f"{BOLD_GREEN}Enter a path to the hosts file or a single IP address: {COLOR_RESET}").strip()
+    if os.path.isfile(hosts_input):
+        with open(hosts_input) as file:
+            hosts = file.read().splitlines()
+    else:
+        hosts = [hosts_input]
+
+    alive_hosts = run_fping(hosts)
+    print(f"\n{BOLD_CYAN}Alive Hosts:{COLOR_RESET}")
+    for host in alive_hosts:
+        print(f"\n{BOLD_YELLOW}{host}{COLOR_RESET}")
+
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")
 
 
 # Function to get the current version from a file
@@ -139,7 +160,7 @@ def run_whois():
     ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: {COLOR_RESET}").strip()
     
     # Run the whois script
-    print(f"\n{BOLD_GREEN}Running whois_script.sh on {ip_input}{COLOR_RESET}")
+    print(f"\n{BOLD_GREEN}Running whois_script.sh on {ip_input}{COLOR_RESET}\n")
     process = subprocess.Popen(['bash', whois_script_path, ip_input], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()  # Wait for the subprocess to finish
     
@@ -181,10 +202,11 @@ def display_menu(version):
     print(f"{BOLD_CYAN}TraceSecurity External Penetration Test Script{COLOR_RESET}{BOLD_GREEN} v{version}{COLOR_RESET}")
     print(f"\n{BOLD_GREEN}Menu Options:{COLOR_RESET}\n")
     print("1. Run Whois")
-    print("2. Run Nmap Scan")
-    print("3. Run Ngrep on Nmap Output")
-    print("4. Run SSLScans and Parse Findings")
-    print("5. Run EyeWitness")
+    print("2. Run ICMP Echo Check")
+    print("3. Run Nmap Scan")
+    print("4. Run Ngrep on Nmap Output")
+    print("5. Run SSLScans and Parse Findings")
+    print("6. Run EyeWitness")
     print(f"\n{BOLD_CYAN}U. Check For Updates{COLOR_RESET}")
     print(f"{BOLD_RED}X. Exit{COLOR_RESET}")
 
@@ -226,13 +248,15 @@ def main():
         if choice == '1':
             run_whois()
         elif choice == '2':
-            run_nmap()
+            check_alive_hosts()
         elif choice == '3':
+            run_nmap()
+        elif choice == '4':
             scan_type = input(f"{BOLD_GREEN}Enter the scan type that was run (TCP/UDP): {COLOR_RESET}").upper()
             run_ngrep(scan_type)
-        elif choice == '4':
-            run_sslscanparse()
         elif choice == '5':
+            run_sslscanparse()
+        elif choice == '6':
             run_eyewitness()
         elif choice == 'u':
             print("Checking for updates...")
