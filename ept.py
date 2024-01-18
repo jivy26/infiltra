@@ -236,7 +236,6 @@ def main():
             run_eyewitness()
         elif choice == 'u':
             print("Checking for updates...")
-            check_and_update()
             updated = check_and_update()
             if updated:
                 # Exit with a special code to signal the wrapper to restart
