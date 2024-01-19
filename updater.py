@@ -121,7 +121,7 @@ def check_and_update():
             print(f"{BOLD_GREEN}You are up-to-date with version {local_version}.{COLOR_RESET}")
             return False  # No update was necessary
 
-        # Wait for user input before returning to the main menu
+        # Wait for user input before returning to the main menu #
         input(f"{BOLD_YELLOW}Press any key to return to the main menu...{COLOR_RESET}")
 
     except requests.HTTPError as http_err:
