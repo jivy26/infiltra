@@ -1,0 +1,9 @@
+requests
+pydig
+dnspython
+urllib3
+argparse
+whois
+pytest-warnings
+python-Wappalyzer
+python-whois
