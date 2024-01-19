@@ -17,6 +17,7 @@ As long as the EPT folder structure is maintained, you can place the EPT folder 
 <br /><br />
 ept/<br />
 ├── ept.py<br />
+├── aort<br />
 ├── eyewitness/<br />
 │   └── eyewitness.py<br />
 ├── nmap-grep.sh<br />
