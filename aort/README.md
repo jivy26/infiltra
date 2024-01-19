@@ -5,8 +5,6 @@
 
 The purpouse of this tool is helping bug hunters and pentesters during reconnaissance
 
-If you want to know more about the tool you can read my own [post](https://d3ext.github.io/posts/aort) in my blog (written in spanish) 
-
 ## Installation:
 It can be used in any system with python3
 
