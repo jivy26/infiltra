@@ -1,5 +1,15 @@
 #!/bin/bash
 
+set -e  # Exit immediately if a command exits with a non-zero status.
+
+# Function to safely execute a command with error handling
+safe_run() {
+    if ! "$@"; then
+        echo "Error: Failed to execute: $*"
+        exit 1
+    fi
+}
+
 # Check if ept.py is in the same directory as this install.sh script
 if [ ! -f "$(dirname "$0")/ept.py" ]; then
     echo "Error: Please run this script from the same directory as ept.py"
@@ -9,19 +19,18 @@ fi
 # Check if /tools/ept/ exists in the home directory of the user; if not, create it
 EPT_DIR="$HOME/tools/ept"
 if [ ! -d "$EPT_DIR" ]; then
-    mkdir -p "$EPT_DIR"
+    safe_run mkdir -p "$EPT_DIR"
 fi
 
 # Function to move files maintaining the structure
 move_files() {
-    # Assuming the script is run from the directory where files are located
     # Find all files and directories except the script itself and move them
-    find . -mindepth 1 -maxdepth 1 ! -name "$(basename "$0")" -exec mv -t "$EPT_DIR" -- {} +
+    safe_run find . -mindepth 1 -maxdepth 1 ! -name "$(basename "$0")" -exec mv -t "$EPT_DIR" -- {} +
 }
 
 # Set executable permissions for .sh and .py files only
 set_executable_permissions() {
-    find . -type f \( -name "*.sh" -o -name "*.py" \) -exec chmod +x {} +
+    safe_run find . -type f \( -name "*.sh" -o -name "*.py" \) -exec chmod +x {} +
 }
 
 # Invoke the function to move files
@@ -34,27 +43,18 @@ set_executable_permissions
 echo "Do you use bash or zsh? (bash/zsh): "
 read shell_type
 
-# Create .zshrc_aliases if it doesn't exist and add alias
+# Create .zshrc_aliases or .bashrc_aliases if it doesn't exist and add alias
 if [ "$shell_type" = "zsh" ]; then
     ZSHRC="$HOME/.zshrc"
     ALIAS_FILE="$HOME/.zshrc_aliases"
-
-    # Create .zshrc_aliases if it doesn't exist
-    if [ ! -f "$ALIAS_FILE" ]; then
-        touch "$ALIAS_FILE"
-    fi
-
-    # Add alias to the .zshrc_aliases file
+    safe_run touch "$ALIAS_FILE"
     echo "alias ept='python3 $EPT_DIR/ept.py'" >> "$ALIAS_FILE"
-
-    # Add source command to .zshrc if not already present
     if ! grep -q "source $ALIAS_FILE" "$ZSHRC"; then
         echo "source $ALIAS_FILE" >> "$ZSHRC"
     fi
-
 elif [ "$shell_type" = "bash" ]; then
     ALIAS_FILE="$HOME/.bashrc_aliases"
-    # Add alias to the .bashrc_aliases file
+    safe_run touch "$ALIAS_FILE"
     echo "alias ept='python3 $EPT_DIR/ept.py'" >> "$ALIAS_FILE"
 else
     echo "Unsupported shell type. Please manually set the alias in your shell configuration file."

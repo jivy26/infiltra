@@ -7,8 +7,8 @@ import re
 import datetime
 import sys
 
-# Path to the file containing IP addresses
-ip_file_path = 'ips.txt'
+# Default path to the file containing IP addresses if no command-line argument is provided
+default_ip_file_path = 'tcp_parsed/https-hosts.txt'  # Define this before using it in the conditional statement below
 
 # Check if a command-line argument was provided for the IP file path
 if len(sys.argv) > 1:
@@ -18,7 +18,7 @@ else:
 
 # Vulnerability criteria
 vulnerabilities = {
-    'Weak Protocols': ['SSLv2', 'SSLv3', 'TLSv1.0', 'TLSv1.1'],
+    #'Weak Protocols': ['SSLv2', 'SSLv3', 'TLSv1.0', 'TLSv1.1'],
     'Weak Ciphers': ["DES", "3DES", "RC4", "RC2", "MD5", "EXPORT", "NULL", "IDEA", "SEED", "PSK", "SRP", "KRB5"],
     'StartTLS Enabled': 'StartTLS',
     'Anonymous Diffie-Helman Ciphers': 'ADH',
@@ -34,6 +34,7 @@ MAGENTA = '\033[35;1m'
 BOLD = '\033[1m'
 END = '\033[0m'
 
+
 # Command to open a new terminal window and run sslscan
 def open_new_terminal_and_run_sslscan(target):
     # Split the target into IP and port
@@ -41,15 +42,17 @@ def open_new_terminal_and_run_sslscan(target):
         ip, port = target.split(':')
     else:
         ip, port = target, '443'
-    
+
     # Command to open a new terminal window and run sslscan
     command = f"""qterminal -e bash -c 'sslscan --port={port} {ip}; echo "Press enter to close..."; read'"""
     subprocess.Popen(command, shell=True)
+
 
 # Function to remove ANSI escape codes
 def remove_ansi_escape_sequences(text):
     ansi_escape_pattern = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
     return ansi_escape_pattern.sub('', text)
+
 
 # Function to run sslscan and parse output
 def ssl_scan(ip):
@@ -61,30 +64,38 @@ def ssl_scan(ip):
     long_lived_cert_findings = []
     crime_findings = []
     weak_keyspace_findings = []
+    protocol_findings = []
+    fallback_scsv_findings = []
+    session_renegotiation_findings = []
 
     # Current date for comparison
     current_date = datetime.datetime.now()
 
     # Variable to store 'Not valid before' date
-    not_valid_before = None    
-    
+    not_valid_before = None
+
+    #
+    self_signed_found = False
+
+    # Variable to store if TLS Fallback SCSV is found
+    tls_fallback_scsv_found = False
+
     try:
         result = subprocess.run(['sslscan', ip], capture_output=True, text=True, timeout=60)
         output_lines = result.stdout.split('\n')
 
         # Debug: Print raw output to check for ANSI codes
-        #print("Raw sslscan output:")
-        #print(result.stdout)
-        
+        # print("Raw sslscan output:")
+        # print(result.stdout)
+
         # Variables to store subject and issuer for comparison
         subject = ""
         issuer = ""
 
         for line in output_lines:
-
             # Debug: Print the line after removing ANSI escape sequences
             cleaned_line = remove_ansi_escape_sequences(line)
-            #print(f"Processed line: {cleaned_line}")
+            # print(f"Processed line: {cleaned_line}")
 
             for vuln, criteria in vulnerabilities.items():
                 if isinstance(criteria, list):
@@ -98,6 +109,25 @@ def ssl_scan(ip):
                     # This is the important check for TLS Fallback
                     if criteria in cleaned_line:
                         findings[vuln].append(cleaned_line)
+
+            # Check each protocol for 'enabled' status
+            for protocol in ['SSLv2', 'SSLv3', 'TLSv1.0', 'TLSv1.1']:
+                protocol_match = re.search(rf"{protocol}\s+(enabled)", cleaned_line)
+                if protocol_match:
+                    protocol_findings.append(f"{protocol} is enabled - Found on {ip}")
+
+            # Check for TLS Fallback SCSV support
+            fallback_scsv_match = re.search(r"Server does not support TLS Fallback SCSV", cleaned_line)
+            if fallback_scsv_match:
+                # If the line saying server supports TLS Fallback SCSV is found, and it has not been set to True yet
+                if not tls_fallback_scsv_found:
+                    fallback_scsv_findings.append(f"Server does not support TLS Fallback SCSV - Found on {ip}")
+                    tls_fallback_scsv_found = True  # Set the flag to True so this block won't run again
+
+            # Check for session renegotiation support
+            session_renegotiation_match = re.search(r"Session renegotiation (supported)", cleaned_line)
+            if session_renegotiation_match:
+                session_renegotiation_findings.append(f"Session renegotiation supported - Found on {ip}")
 
             # Check for weak key space in ciphers
             cipher_line_match = re.search(r'Accepted\s+\S+\s+(\d+)\s+bits', line)
@@ -124,25 +154,26 @@ def ssl_scan(ip):
             if not_valid_after_match and not_valid_before:
                 not_valid_after_str = remove_ansi_escape_sequences(not_valid_after_match.group(1))
                 not_valid_after = datetime.datetime.strptime(not_valid_after_str, "%b %d %H:%M:%S %Y GMT")
-                
+
                 # Check if the validity period is longer than three years
                 validity_period = not_valid_after - not_valid_before
                 if validity_period.days > 3 * 365:
-                    long_lived_cert_findings.append(f"Long-Lived Certificate (>{3*365} days): {line}")
+                    long_lived_cert_findings.append(f"{line}")
 
             # Check for Subject
             subject_match = re.search(r'Subject:\s+(.*)', line)
-            if subject_match:
+            if subject_match and not self_signed_found:
                 subject = remove_ansi_escape_sequences(subject_match.group(1)).strip()
 
             # Check for Issuer
             issuer_match = re.search(r'Issuer:\s+(.*)', line)
-            if issuer_match:
+            if issuer_match and not self_signed_found:
                 issuer = remove_ansi_escape_sequences(issuer_match.group(1)).strip()
 
             # Compare Subject and Issuer for self-signed certificate
-            if subject and issuer and subject == issuer:
-                self_signed_findings.append(f"Self-Signed Certificate: Subject and Issuer match for {ip}")            
+            if subject and issuer and subject == issuer and not self_signed_found:
+                self_signed_findings.append(f"Self-Signed Certificate: {subject}")
+                self_signed_found = True
 
             # Check for expired certificates
             expired_match = re.search(r'Not valid after:\s+(.+)', line)
@@ -154,18 +185,28 @@ def ssl_scan(ip):
                     expired_cert_findings.append(f"{line}")
 
             # Additional regex check for 'DHE' with 2048 bits or less
-            dhe_match = re.search(r'DHE.*?(\d+) bits', line)
+            dhe_match = re.search(r'DHE.*?(\d+) bits', cleaned_line)
             if dhe_match:
                 dhe_bits = int(dhe_match.group(1))
                 if dhe_bits <= 2048:
                     dheater_findings.append(line)
 
-            # Additional regex check for 'RSA' with 2048 bits or less
-            rsa_match = re.search(r'RSA Key Strength:\s+(\d+)', line)
+            # Additional regex check for 'RSA' with less than 2048 bits on the cleaned line
+            rsa_match = re.search(r'RSA Key Strength:\s+(\d+)', cleaned_line)
             if rsa_match:
                 rsa_bits = int(rsa_match.group(1))
                 if rsa_bits < 2048:
-                    rsa_findings.append(line)
+                    # Append finding to the rsa_findings list in the desired format
+                    rsa_findings.append(f"{rsa_bits} bits")
+
+        if protocol_findings:
+            findings['Weak Protocols'] = protocol_findings
+
+        if crime_findings:
+            findings['TLS Compression (CRIME)'] = crime_findings
+
+        if weak_keyspace_findings:
+            findings['Weak Key Space'] = weak_keyspace_findings
 
         if dheater_findings:
             findings['DHeater'] = dheater_findings
@@ -176,17 +217,17 @@ def ssl_scan(ip):
         if expired_cert_findings:
             findings['Expired Certification'] = expired_cert_findings
 
-        if self_signed_findings:
-            findings['Self-Signed Certificate Signatures'] = self_signed_findings
-
         if long_lived_cert_findings:
             findings['Long-Lived Certificate'] = long_lived_cert_findings
 
-        if crime_findings:
-            findings['TLS Compression (CRIME)'] = crime_findings
+        if self_signed_findings:
+            findings['Self-Signed Certificate Signatures'] = self_signed_findings
 
-        if weak_keyspace_findings:
-            findings['Weak Key Space'] = weak_keyspace_findings
+        if fallback_scsv_findings:
+            findings['TLS Fallback SCSV'] = fallback_scsv_findings
+
+        if session_renegotiation_findings:
+            findings['Session Renegotiation'] = session_renegotiation_findings
 
         return {vuln: lines for vuln, lines in findings.items() if lines}
     except Exception as e:
@@ -195,12 +236,17 @@ def ssl_scan(ip):
         return {vuln: lines for vuln, lines in findings.items() if lines}
     except Exception as e:
         return {f"Error scanning {ip}": [str(e)]}
+
 
 # Read IPs from file and run sslscan
 with open(ip_file_path, 'r') as file:
     for ip in file:
         ip = ip.strip()
         if ip:
+            # Initialize (or reset) the flag for each IP address before processing it
+            self_signed_found = False
+            tls_fallback_scsv_found = False
+
             print(f"\n{BLUE}+----------Scanning {ip}------------+{END}")
             scan_results = ssl_scan(ip)
             if scan_results:
@@ -210,6 +256,7 @@ with open(ip_file_path, 'r') as file:
                         print(line)
             else:
                 print(f"\n{YELLOW}No findings for {ip}, lets load a window to screenshot and add to the appendix.{END}")
-                user_input = input(f"\n{GREEN}→{END}{MAGENTA} Press Enter to open a new window to take a screenshot or press any other key then press Enter to skip.{END}")
+                user_input = input(
+                    f"\n{GREEN}→{END}{MAGENTA} Press Enter to open a new window to take a screenshot or press any other key then press Enter to skip.{END}")
                 if user_input == '':
                     open_new_terminal_and_run_sslscan(ip)

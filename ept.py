@@ -1,12 +1,11 @@
 import os
 import subprocess
 import sys
+import time
 from updater import check_and_update
 from icmpecho import run_fping
 
-
 UPDATE_EXIT_CODE = 85
-
 
 # Define colors
 BOLD_BLUE = "\033[34;1m"
@@ -17,12 +16,31 @@ BOLD_RED = "\033[31;1m"
 BOLD_YELLOW = "\033[33;1m"
 
 
+# AORT Integration
+def run_aort(domain):
+    os.system('clear')
+    print(f"{BOLD_CYAN}Running AORT for domain: {COLOR_RESET}{BOLD_GREEN}{domain}{COLOR_RESET}\n")
+
+    script_directory = os.path.dirname(os.path.realpath(__file__))
+    aort_script_path = os.path.join(script_directory, 'aort/AORT.py')
+    aort_command = f"python3 {aort_script_path} -d {domain} -a -w -n --output aort_dns.txt"
+
+    print(f"{BOLD_BLUE}AORT is starting, subdomains will be saved to aort_dns.txt.{COLOR_RESET}\n")
+
+    try:
+        # Call AORT and let it handle the output directly
+        os.system(aort_command)
+    except Exception as e:
+        print(f"{BOLD_RED}An error occurred while running AORT: {e}{COLOR_RESET}")
+
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")
+
+
 # Handle FPING
-
-
 def check_alive_hosts():
     os.system('clear')
-    hosts_input = input(f"{BOLD_GREEN}Enter a path to the hosts file or a single IP address: {COLOR_RESET}").strip()
+    hosts_input = input(
+        f"{BOLD_GREEN}Enter the file name containing a list of IPs or input a single IP address: {COLOR_RESET}").strip()
     if os.path.isfile(hosts_input):
         with open(hosts_input) as file:
             hosts = file.read().splitlines()
@@ -52,30 +70,33 @@ def run_eyewitness():
     os.system('clear')  # Clear the screen at the beginning of the function
     script_directory = os.path.dirname(os.path.realpath(__file__))
     eyewitness_script_path = os.path.join(script_directory, 'eyewitness.py')
-    
+
     # Set default file path
-    default_file = 'tcp_parsed/https-hosts.txt'
-    
+    default_file = 'aort_dns.txt'
+
     # Prompt user for input
-    print(f"\n{BOLD_CYAN}If you provide a domain, it will enumerate subdomains and attempt to screenshot them after enumeration.{COLOR_RESET}")
-    user_input = input(f"\n{BOLD_GREEN}Enter a single IP, domain, or path to a file with domains (leave blank to use default https-hosts.txt from nmap_grep): {COLOR_RESET}").strip()
-    
+    print(
+        f"\n{BOLD_CYAN}If you provide a domain, it will enumerate subdomains and attempt to screenshot them after enumeration.{COLOR_RESET}")
+    user_input = input(
+        f"\n{BOLD_GREEN}Enter a single IP, domain, or path to a file with domains (leave blank to use default aort_dns.txt from nmap_grep): {COLOR_RESET}").strip()
+
     # Determine which file or IP to use
     if user_input:
         input_file = user_input  # Use the user-provided file or IP
     else:
-        input_file = default_file  # Use the default https-hosts.txt file
-    
+        input_file = default_file
+
     # Inform the user which input will be used
     if os.path.isfile(input_file):
         print(f"Using file: {input_file}")
     else:
         print(f"Using IP/domain: {input_file}")
-    
+
     # Run the EyeWitness Python script
     subprocess.run(['python3', eyewitness_script_path, input_file])
 
-    input(f"{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
+    input(
+        f"{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
 
 
 # Function to run sslscan and parse results
@@ -104,24 +125,28 @@ def run_sslscanparse():
     print("+" + "-" * (width - 2) + "+")
     # End Module Info Box
 
-    print(f"\n{BOLD_RED}By default, this scans 'https-hosts.txt' which might not include all forward-facing web servers on non-standard ports such as 10443, etc.{COLOR_RESET}")
-    use_default = input(f"\n{BOLD_BLUE}Do you want to use the default https-hosts.txt file? (Y/n): {COLOR_RESET}").strip().lower()
-    
+    print(
+        f"\n{BOLD_RED}By default, this scans 'https-hosts.txt' which might not include all forward-facing web servers on non-standard ports such as 10443, etc.{COLOR_RESET}")
+    use_default = input(
+        f"\n{BOLD_BLUE}Do you want to use the default https-hosts.txt file? (Y/n): {COLOR_RESET}").strip().lower()
+
     if use_default == '' or use_default.startswith('y'):
         input_file = default_file
     else:
-        input_file = input(f"{BOLD_BLUE}Enter the path to your custom .txt file with HTTPS hosts: {COLOR_RESET}").strip()
-    
+        input_file = input(
+            f"{BOLD_BLUE}Enter the path to your custom .txt file with HTTPS hosts: {COLOR_RESET}").strip()
+
     # Check if the file exists
     if not os.path.isfile(input_file):
         print(f"{BOLD_RED}The file {input_file} does not exist. Please enter a valid file name.{COLOR_RESET}")
         return
-    
+
     # Run the sslscanparse script
     print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}{COLOR_RESET}")
-    process = subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()  # Wait for the subprocess to finish
-    
+
     # Display the output
     print(stdout.decode())
 
@@ -129,7 +154,7 @@ def run_sslscanparse():
     if stderr:
         print(f"{BOLD_RED}An error occurred:\n" + stderr.decode())
 
-    input(f"{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
+    input(f"{BOLD_BLUE}Press Enter to return to the menu...{COLOR_RESET}")
 
 
 # Function to run whois script
@@ -158,12 +183,12 @@ def run_whois():
     # End Module Info Box
 
     ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: {COLOR_RESET}").strip()
-    
+
     # Run the whois script
     print(f"\n{BOLD_GREEN}Running whois_script.sh on {ip_input}{COLOR_RESET}\n")
     process = subprocess.Popen(['bash', whois_script_path, ip_input], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()  # Wait for the subprocess to finish
-    
+
     # Display the output
     print(stdout.decode())
 
@@ -171,7 +196,8 @@ def run_whois():
     if stderr:
         print(f"{BOLD_RED}An error occurred:\n" + stderr.decode())
 
-    input(f"{BOLD_GREEN}Press any key to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
+    input(
+        f"{BOLD_GREEN}Press any key to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
 
 
 def run_ngrep(scan_type):
@@ -193,7 +219,8 @@ def run_ngrep(scan_type):
     # Continue with running the nmap-grep.sh script
     print(f"{BOLD_GREEN}Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans{COLOR_RESET}")
     subprocess.run(['bash', ngrep_script_path, output_file, scan_type.upper()])
-    input(f"{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
+    input(
+        f"{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
 
 
 # Function to display the menu
@@ -203,10 +230,11 @@ def display_menu(version):
     print(f"\n{BOLD_GREEN}Menu Options:{COLOR_RESET}\n")
     print("1. Run Whois")
     print("2. Run ICMP Echo Check")
-    print("3. Run Nmap Scan")
-    print("4. Run Ngrep on Nmap Output")
-    print("5. Run SSLScans and Parse Findings")
-    print("6. Run EyeWitness")
+    print("3. Run OSINT")
+    print("4. Run Nmap Scan")
+    print("5. Run Ngrep on Nmap Output")
+    print("6. Run SSLScans and Parse Findings")
+    print("7. Run EyeWitness")
     print(f"\n{BOLD_CYAN}U. Check For Updates{COLOR_RESET}")
     print(f"{BOLD_RED}X. Exit{COLOR_RESET}")
 
@@ -235,8 +263,8 @@ def run_nmap():
     else:
         print(f"{BOLD_YELLOW}Invalid input. Make sure you enter a valid IP, file path, and scan type.{COLOR_RESET}")
 
-    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
-
+    input(
+        f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
 
 
 # Main function
@@ -250,13 +278,16 @@ def main():
         elif choice == '2':
             check_alive_hosts()
         elif choice == '3':
-            run_nmap()
+            domain = input(f"{BOLD_GREEN}Enter the domain to OSINT: {COLOR_RESET}")
+            run_aort(domain)
         elif choice == '4':
+            run_nmap()
+        elif choice == '5':
             scan_type = input(f"{BOLD_GREEN}Enter the scan type that was run (TCP/UDP): {COLOR_RESET}").upper()
             run_ngrep(scan_type)
-        elif choice == '5':
-            run_sslscanparse()
         elif choice == '6':
+            run_sslscanparse()
+        elif choice == '7':
             run_eyewitness()
         elif choice == 'u':
             print("Checking for updates...")
@@ -274,7 +305,8 @@ def main():
 try:
     from packaging import version
 except ImportError:
-    print(f"{BOLD_RED}The 'packaging' library is required for version comparison. Please install it using 'pip install packaging'.{COLOR_RESET}")
+    print(
+        f"{BOLD_RED}The 'packaging' library is required for version comparison. Please install it using 'pip install packaging'.{COLOR_RESET}")
     exit(1)
 
 if __name__ == "__main__":
