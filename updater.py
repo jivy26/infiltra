@@ -33,12 +33,14 @@ def is_git_repository(path):
     except subprocess.CalledProcessError:
         return False
 
+
 def set_executable_permissions(file_path):
     # Check if the file has executable permissions
     if not os.access(file_path, os.X_OK):
         print(f"Setting executable permissions for: {file_path}")
         st = os.stat(file_path)
         os.chmod(file_path, st.st_mode | stat.S_IEXEC)
+
 
 def set_permissions_for_all_executables(directory):
     # Iterate over files in the current working directory only
