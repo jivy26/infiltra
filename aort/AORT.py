@@ -7,6 +7,7 @@
 
 import sys
 
+
 # Output Colours
 class c:
     PURPLE = '\033[95m'
@@ -17,6 +18,7 @@ class c:
     RED = '\033[91m'
     END = '\033[0m'
     UNDERLINE = '\033[4m'
+
 
 # Libraries
 try:
@@ -33,13 +35,24 @@ try:
     from time import sleep
     import os
     import urllib3
+    from urllib.parse import urlparse
 except Exception as e:
     print(e)
-    print(c.YELLOW + "\n[" + c.RED + "-" + c.YELLOW + "] ERROR requirements missing try to install the requirements: pip3 install -r requirements.txt" + c.END)
+    print(
+        c.YELLOW + "\n[" + c.RED + "-" + c.YELLOW + "] ERROR requirements missing try to install the requirements: pip3 install -r requirements.txt" + c.END)
     sys.exit(0)
+
 
 # Banner Function
 def banner():
+    # Read the AORT version from the version.txt file
+    version_file_path = 'version.txt'  # Update the path if needed
+    try:
+        with open(version_file_path, 'r') as file:
+            aort_version = file.read().strip()  # Read and strip any extra whitespace
+    except FileNotFoundError:
+        aort_version = 'unknown'  # If the file doesn't exist, set version to 'unknown'
+
     print(c.YELLOW + '                _____                   ')
     print('             .-"     "-.                ')
     print('            / o       o \               ')
@@ -57,7 +70,8 @@ def banner():
     print('      `--Y--.___________.--Y--\'        ')
     print('         |==.___________.==|            ')
     print('         `==.___________.==\'           ' + c.END)
-    print(c.BLUE + "\nPython version: " + c.GREEN + platform.python_version() + c.END)
+    print(c.BLUE + "\nCurrent AORT version: " + c.GREEN + aort_version + c.END)
+    print(c.BLUE + "Python version: " + c.GREEN + platform.python_version() + c.END)
     print(c.BLUE + "Current OS: " + c.GREEN + platform.system() + " " + platform.release() + c.END)
 
     internet_check = socket.gethostbyname(socket.gethostname())
@@ -74,13 +88,30 @@ def banner():
 
     print(c.BLUE + "Target: " + c.GREEN + domain + c.END)
 
+
+# URL Validation Vuln Found From Github
+def is_allowed_url(url, allowed_hosts):
+    """
+    Check if the URL's hostname is in the list of allowed hosts.
+
+    :param url: The full URL to check.
+    :param allowed_hosts: A list of allowed hostnames.
+    :return: True if the URL is allowed, False otherwise.
+    """
+    parsed_url = urlparse(url)
+    hostname = parsed_url.hostname
+    return hostname in allowed_hosts
+
+
 # Argument parser Function
 def parseArgs():
     p = argparse.ArgumentParser(description="AORT - All in One Recon Tool")
     p.add_argument("-d", "--domain", help="domain to search its subdomains", required=True)
     p.add_argument("-o", "--output", help="file to store the scan output", required=False)
-    p.add_argument('-t', '--token', help="api token of hunter.io to discover mail accounts and employees", required=False)
-    p.add_argument("-p", "--portscan", help="perform a fast and stealthy scan of the most common ports", action='store_true', required=False)
+    p.add_argument('-t', '--token', help="api token of hunter.io to discover mail accounts and employees",
+                   required=False)
+    p.add_argument("-p", "--portscan", help="perform a fast and stealthy scan of the most common ports",
+                   action='store_true', required=False)
     p.add_argument("-a", "--axfr", help="try a domain zone transfer attack", action='store_true', required=False)
     p.add_argument("-m", "--mail", help="try to enumerate mail servers", action='store_true', required=False)
     p.add_argument('-e', '--extra', help="look for extra dns information", action='store_true', required=False)
@@ -88,23 +119,35 @@ def parseArgs():
     p.add_argument("-i", "--ip", help="it reports the ip or ips of the domain", action='store_true', required=False)
     p.add_argument('-6', '--ipv6', help="enumerate the ipv6 of the domain", action='store_true', required=False)
     p.add_argument("-w", "--waf", help="discover the WAF of the domain main page", action='store_true', required=False)
-    p.add_argument("-b", "--backups", help="discover common backups files in the web page", action='store_true', required=False)
-    p.add_argument("-s", "--subtakeover", help="check if any of the subdomains are vulnerable to Subdomain Takeover", action='store_true', required=False)
-    p.add_argument("-r", "--repos", help="try to discover valid repositories and s3 servers of the domain (still improving it)", action='store_true', required=False)
-    p.add_argument("-c", "--check", help="check active subdomains and store them into a file", action='store_true', required=False)
-    p.add_argument("--secrets", help="crawl the web page to find secrets and api keys (e.g. Google Maps API Key)", action='store_true', required=False)
-    p.add_argument("--enum", help="stealthily enumerate and identify common technologies", action='store_true', required=False)
+    p.add_argument("-b", "--backups", help="discover common backups files in the web page", action='store_true',
+                   required=False)
+    p.add_argument("-s", "--subtakeover", help="check if any of the subdomains are vulnerable to Subdomain Takeover",
+                   action='store_true', required=False)
+    p.add_argument("-r", "--repos",
+                   help="try to discover valid repositories and s3 servers of the domain (still improving it)",
+                   action='store_true', required=False)
+    p.add_argument("-c", "--check", help="check active subdomains and store them into a file", action='store_true',
+                   required=False)
+    p.add_argument("--secrets", help="crawl the web page to find secrets and api keys (e.g. Google Maps API Key)",
+                   action='store_true', required=False)
+    p.add_argument("--enum", help="stealthily enumerate and identify common technologies", action='store_true',
+                   required=False)
     p.add_argument("--whois", help="perform a whois query to the domain", action='store_true', required=False)
-    p.add_argument("--wayback", help="find useful information about the domain and his different endpoints using The Wayback Machine and other services", action="store_true", required=False)
-    #p.add_argument("--fuzz", help="use a fuzzing wordlist with common files and directories", actionn='store_true', require=False)
-    p.add_argument("--all", help="perform all the enumeration at once (best choice)", action='store_true', required=False)
+    p.add_argument("--wayback",
+                   help="find useful information about the domain and his different endpoints using The Wayback Machine and other services",
+                   action="store_true", required=False)
+    # p.add_argument("--fuzz", help="use a fuzzing wordlist with common files and directories", actionn='store_true', require=False)
+    p.add_argument("--all", help="perform all the enumeration at once (best choice)", action='store_true',
+                   required=False)
     p.add_argument("--quiet", help="don't print the banner", action='store_true', required=False)
     p.add_argument("--version", help="display the script version", action='store_true', required=False)
     return p.parse_args()
 
-# Nameservers Function 
+
+# Nameservers Function
 def ns_enum(domain):
-    print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Trying to discover valid name servers...\n" + c.END)
+    print(
+        c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Trying to discover valid name servers...\n" + c.END)
     sleep(0.2)
     """
     Query to get NS of the domain
@@ -119,6 +162,7 @@ def ns_enum(domain):
             print(c.YELLOW + str(ns) + c.END)
     else:
         print(c.YELLOW + "Unable to enumerate" + c.END)
+
 
 # IPs discover Function
 def ip_enum(domain):
@@ -138,6 +182,7 @@ def ip_enum(domain):
     else:
         print(c.YELLOW + "Unable to enumerate" + c.END)
 
+
 # Extra DNS info Function
 def txt_enum(domain):
     print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Enumerating extra DNS information...\n" + c.END)
@@ -155,6 +200,7 @@ def txt_enum(domain):
             print(c.YELLOW + info.to_text() + c.END)
     else:
         print(c.YELLOW + "Unable to enumerate" + c.END)
+
 
 # Function to discover the IPv6 of the target
 def ipv6_enum(domain):
@@ -174,6 +220,7 @@ def ipv6_enum(domain):
     else:
         print(c.YELLOW + "Unable to enumerate" + c.END)
 
+
 # Mail servers Function
 def mail_enum(domain):
     print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Finding valid mail servers...\n" + c.END)
@@ -192,9 +239,11 @@ def mail_enum(domain):
     else:
         print(c.YELLOW + "Unable to enumerate" + c.END)
 
+
 # Domain Zone Transfer Attack Function
 def axfr(domain):
-    print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Starting Domain Zone Transfer attack...\n" + c.END)
+    print(
+        c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Starting Domain Zone Transfer attack...\n" + c.END)
     sleep(0.2)
     """
     Iterate through the name servers and try an AXFR attack on everyone
@@ -211,6 +260,7 @@ def axfr(domain):
                 print(c.YELLOW + "NS {} refused zone transfer!".format(server) + c.END)
                 continue
 
+
 # Modified function from https://github.com/Nefcore/CRLFsuite WAF detector script <3
 def wafDetector(domain):
     """
@@ -226,7 +276,8 @@ def wafDetector(domain):
     with open(wafsign_path, 'r') as file:
         wafsigns = json.load(file)
 
-    print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Discovering active WAF on the main web page...\n" + c.END)
+    print(
+        c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Discovering active WAF on the main web page...\n" + c.END)
     sleep(1)
     """
     Payload to trigger the possible WAF
@@ -296,6 +347,7 @@ def wafDetector(domain):
     except:
         pass
 
+
 # Use the token
 def crawlMails(domain, api_token):
     print(c.BLUE + "\n[" + c.GREEN + "+" + c.BLUE + "] Discovering valid mail accounts and employees..." + c.END)
@@ -325,6 +377,7 @@ def crawlMails(domain, api_token):
     else:
         print(c.YELLOW + "\nMore mail data stored in " + domain_name + "-mails-data.txt" + c.END)
 
+
 # Function to check subdomain takeover
 def subTakeover(all_subdomains):
     """
@@ -333,7 +386,7 @@ def subTakeover(all_subdomains):
     vuln_counter = 0
     print(c.BLUE + "\n[" + c.GREEN + "+" + c.BLUE + "] Checking if any subdomain is vulnerable to takeover\n" + c.END)
     sleep(1)
-    
+
     for subdom in all_subdomains:
         try:
             sleep(0.05)
@@ -351,44 +404,52 @@ def subTakeover(all_subdomains):
             sys.exit(c.RED + "\n[!] Interrupt handler received, exiting...\n" + c.END)
         except:
             pass
-    
+
     if vuln_counter <= 0:
         print(c.YELLOW + "No subdomains are vulnerable" + c.END)
 
+
 # Function to enumerate github and cloud
 def cloudgitEnum(domain):
-    print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Looking for git repositories and public development info\n" + c.END)
+    print(
+        c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Looking for git repositories and public development info\n" + c.END)
     sleep(0.2)
     try:
         r = requests.get("https://" + domain + "/.git/", verify=False)
-        print(c.YELLOW + "Git repository URL: https://" + domain + "/.git/ - " + str(r.status_code) + " status code" + c.END)
+        print(c.YELLOW + "Git repository URL: https://" + domain + "/.git/ - " + str(
+            r.status_code) + " status code" + c.END)
     except:
         pass
     try:
         r = requests.get("https://bitbucket.org/" + domain.split(".")[0])
-        print(c.YELLOW + "Bitbucket account URL: https://bitbucket.org/" + domain.split(".")[0] + " - " + str(r.status_code) + " status code" + c.END)
+        print(c.YELLOW + "Bitbucket account URL: https://bitbucket.org/" + domain.split(".")[0] + " - " + str(
+            r.status_code) + " status code" + c.END)
     except:
         pass
     try:
         r = requests.get("https://github.com/" + domain.split(".")[0])
-        print(c.YELLOW + "Github account URL: https://github.com/" + domain.split(".")[0] + " - " + str(r.status_code) + " status code" + c.END)
-        #if r.status_code == 200:
-            #git_option = input("Do you want to analyze further the github account and its repos? [y/n]: ")
-            #if git_option == "y" or git_option == "yes":
-                #domain_name = domain.split(".")[0]
-                #r = requests.get("https://api.github.com/users/{domain_name}/repos")
-                #__import__('pdb').set_trace()
+        print(c.YELLOW + "Github account URL: https://github.com/" + domain.split(".")[0] + " - " + str(
+            r.status_code) + " status code" + c.END)
+        # if r.status_code == 200:
+        # git_option = input("Do you want to analyze further the github account and its repos? [y/n]: ")
+        # if git_option == "y" or git_option == "yes":
+        # domain_name = domain.split(".")[0]
+        # r = requests.get("https://api.github.com/users/{domain_name}/repos")
+        # __import__('pdb').set_trace()
     except:
         pass
     try:
         r = requests.get("https://gitlab.com/" + domain.split(".")[0])
-        print(c.YELLOW + "Gitlab account URL: https://gitlab.com/" + domain.split(".")[0] + " - " + str(r.status_code) + " status code" + c.END)
+        print(c.YELLOW + "Gitlab account URL: https://gitlab.com/" + domain.split(".")[0] + " - " + str(
+            r.status_code) + " status code" + c.END)
     except:
         pass
 
+
 # Wayback Machine function
 def wayback(domain):
-    print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Using The Wayback Machine to discover endpoints" + c.END)
+    print(
+        c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Using The Wayback Machine to discover endpoints" + c.END)
     wayback_url = f"http://web.archive.org/cdx/search/cdx?url=*.{domain}/*&output=json&fl=original&collapse=urlkey"
     """
     Get information from Wayback Machine
@@ -434,7 +495,7 @@ def wayback(domain):
     # Now filter wayback output to organize endpoints
     print(c.YELLOW + f"\nGetting .json endpoints from URLs..." + c.END)
     sleep(0.5)
-    try: # Remove existing file (avoid error when appending data to file)
+    try:  # Remove existing file (avoid error when appending data to file)
         os.remove(f"{domain_name}-json.txt")
     except:
         pass
@@ -478,7 +539,7 @@ def wayback(domain):
                 if endpoint_url not in redirect_urls:
                     redirect_urls.append(endpoint_url)
 
-    try: # Remove file if exists
+    try:  # Remove file if exists
         os.remove(f"{domain_name}-redirects.txt")
     except:
         pass
@@ -521,6 +582,7 @@ def wayback(domain):
     if xss_file_exists == 0:
         os.remove("xss.json")
 
+
 # Query the domain
 def whoisLookup(domain):
     print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Performing Whois lookup..." + c.END)
@@ -528,13 +590,14 @@ def whoisLookup(domain):
     sleep(1.2)
 
     try:
-        w = whois.whois(domain) # Two different ways to avoid a strange error
+        w = whois.whois(domain)  # Two different ways to avoid a strange error
     except:
         w = whois.query(domain)
     try:
         print(c.YELLOW + f"\n{w}" + c.END)
     except:
         print(c.YELLOW + "\nAn error has ocurred or unable to whois " + domain + c.END)
+
 
 # Function to thread when probing active subdomains
 def checkStatus(subdomain, file):
@@ -552,8 +615,9 @@ def checkStatus(subdomain, file):
         except:
             pass
 
+
 # Check status function
-def checkActiveSubs(domain,doms):
+def checkActiveSubs(domain, doms):
     global file
     import threading
 
@@ -561,8 +625,9 @@ def checkActiveSubs(domain,doms):
 
     if len(doms) >= 100:
         subs_total = len(doms)
-        option = input(c.YELLOW + f"\nThere are a lot of subdomains to check, ({subs_total}) do you want to check all of them [y/n]: " + c.END)
-        
+        option = input(
+            c.YELLOW + f"\nThere are a lot of subdomains to check, ({subs_total}) do you want to check all of them [y/n]: " + c.END)
+
         if option == "n" or option == "no":
             sleep(0.2)
             return
@@ -574,29 +639,33 @@ def checkActiveSubs(domain,doms):
     """
     threads_list = []
     for subdomain in doms:
-        t = threading.Thread(target=checkStatus, args=(subdomain,file))
+        t = threading.Thread(target=checkStatus, args=(subdomain, file))
         t.start()
         threads_list.append(t)
-    for proc_thread in threads_list: # Wait until all thread finish
+    for proc_thread in threads_list:  # Wait until all thread finish
         proc_thread.join()
 
     print(c.YELLOW + f"\nActive subdomains stored in {domain_name}-active-subs.txt" + c.END)
 
+
 # Check if common ports are open
 def portScan(domain):
-    print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Scanning most common ports on " + domain + "\n" + c.END)
+    print(
+        c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Scanning most common ports on " + domain + "\n" + c.END)
     """ Define ports array """
-    ports = [21,22,23,25,26,43,53,69,80,81,88,110,135,389,443,445,636,873,1433,2049,3000,3001,3306,4000,4040,5000,5001,5985,5986,8000,8001,8080,8081,27017]
+    ports = [21, 22, 23, 25, 26, 43, 53, 69, 80, 81, 88, 110, 135, 389, 443, 445, 636, 873, 1433, 2049, 3000, 3001,
+             3306, 4000, 4040, 5000, 5001, 5985, 5986, 8000, 8001, 8080, 8081, 27017]
     """
     Iterate through the ports to check if are open
     """
     for port in ports:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(0.40)
-        result = sock.connect_ex((domain,port))
+        result = sock.connect_ex((domain, port))
         if result == 0:
             print(c.YELLOW + "Port " + str(port) + " - OPEN" + c.END)
         sock.close()
+
 
 # Fuzz a little looking for backups
 def findBackups(domain):
@@ -605,7 +674,7 @@ def findBackups(domain):
     hostname = domain.split(".")[0]
     protocols = ["http", "https"]
     filenames = [hostname, domain, "backup", "admin"]
-    extensions = ["sql.tar","tar","tar.gz","gz","tar.bzip2","sql.bz2","sql.7z","zip","sql.gz","7z"]
+    extensions = ["sql.tar", "tar", "tar.gz", "gz", "tar.bzip2", "sql.bz2", "sql.7z", "zip", "sql.gz", "7z"]
     # Some common backup filenames with multiple extensions
     for protocol in protocols:
         for filename in filenames:
@@ -623,11 +692,14 @@ def findBackups(domain):
     if back_counter == 0:
         print(c.YELLOW + "No backup files found" + c.END)
 
+
 # Look for Google Maps API key and test if it's vulnerable
 def findSecrets(domain):
-    print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Trying to found possible secrets and api keys..." + c.END)
+    print(
+        c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Trying to found possible secrets and api keys..." + c.END)
     for protocol in ["https", "http"]:
         findSecretsFromUrl(protocol + "://" + domain)
+
 
 def findSecretsFromUrl(url):
     # Initial request
@@ -653,10 +725,25 @@ def findSecretsFromUrl(url):
             r = requests.get(url + js_endpoint, verify=False)
         except:
             pass
-        if "https://maps.googleapis.com/" in r.text:
-            maps_api_key = re.findall(r'src="https://maps.googleapis.com/(.*?)"', r.text)[0]
-            print(c.YELLOW + "\nMaps API key found: " + maps_api_key + c.END)
-            key_counter = 1
+
+        # Define the list of allowed hosts
+        allowed_hosts = ['maps.googleapis.com']
+
+        # Find all URLs in the text
+        urls = re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', r.text)
+
+        # Check each URL to see if its hostname is in the list of allowed hosts
+        for url in urls:
+            parsed_url = urlparse(url)
+            hostname = parsed_url.hostname
+            if hostname in allowed_hosts:
+                # Extract the API key from the URL if the host is allowed
+                maps_api_key_match = re.search(r'https://maps.googleapis.com/maps/api/js\?key=(.*?)&', url)
+                if maps_api_key_match:
+                    maps_api_key = maps_api_key_match.group(1)
+                    print(c.YELLOW + "\nMaps API key found: " + maps_api_key + c.END)
+                    key_counter = 1
+
         try:
             google_api = re.findall(r'AIza[0-9A-Za-z-_]{35}', r.text)[0]
             if google_api:
@@ -689,6 +776,7 @@ def findSecretsFromUrl(url):
     if key_counter != 1:
         print(c.YELLOW + "\nNo secrets found" + c.END)
 
+
 # Perform basic enumeration
 def basicEnum(domain):
     print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Performing some basic enumeration...\n" + c.END)
@@ -707,16 +795,21 @@ def basicEnum(domain):
         else:
             print(c.YELLOW + "\nNo common technologies found" + c.END)
 
-        endpoints = ["robots.txt","xmlrpc.php","wp-cron.php","actuator/heapdump","datahub/heapdump","datahub/actuator/heapdump","heapdump","admin/",".env",".config","version.txt","README.md","license.txt","config.php.bak","api/","feed.xml","CHANGELOG.md","config.json","cgi-bin/","env.json",".htaccess","js/","kibana/","log.txt"]
+        endpoints = ["robots.txt", "xmlrpc.php", "wp-cron.php", "actuator/heapdump", "datahub/heapdump",
+                     "datahub/actuator/heapdump", "heapdump", "admin/", ".env", ".config", "version.txt", "README.md",
+                     "license.txt", "config.php.bak", "api/", "feed.xml", "CHANGELOG.md", "config.json", "cgi-bin/",
+                     "env.json", ".htaccess", "js/", "kibana/", "log.txt"]
         for end in endpoints:
             r = requests.get(f"https://{domain}/{end}", timeout=4)
             print(c.YELLOW + f"https://{domain}/{end} - " + str(r.status_code) + c.END)
     except:
         print(c.YELLOW + "An error has ocurred or unable to enumerate" + c.END)
 
+
 # Main Domain Discoverer Function
-def SDom(domain,filename):
-    print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Discovering subdomains using passive techniques...\n" + c.END)
+def SDom(domain, filename):
+    print(
+        c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Discovering subdomains using passive techniques...\n" + c.END)
     sleep(0.1)
     global doms
     doms = []
@@ -735,7 +828,7 @@ def SDom(domain,filename):
     except KeyboardInterrupt:
         sys.exit(c.RED + "\n[!] Interrupt handler received, exiting...\n" + c.END)
     except:
-        pass      
+        pass
     """
     Get subdomains from AlienVault
     """
@@ -759,11 +852,11 @@ def SDom(domain,filename):
         # Only append new valid subdomains
         for dom in hackertarget_domains:
             if dom.endswith(domain) and dom not in doms:
-                doms.append(dom)        
+                doms.append(dom)
     except KeyboardInterrupt:
         sys.exit(c.RED + "\n[!] Interrupt handler received, exiting...\n" + c.END)
     except:
-        pass    
+        pass
     """
     Get subdomains from RapidDNS
     """
@@ -773,7 +866,7 @@ def SDom(domain,filename):
         # Only append new valid subdomains
         for dom in rapiddns_domains:
             if dom.endswith(domain) and dom not in doms:
-                doms.append(dom)          
+                doms.append(dom)
     except KeyboardInterrupt:
         sys.exit(c.RED + "\n[!] Interrupt handler received, exiting...\n" + c.END)
     except:
@@ -787,7 +880,7 @@ def SDom(domain,filename):
         # Only append new valid subdomains
         for dom in riddler_domains:
             if dom.endswith(domain) and dom not in doms:
-                doms.append(dom)        
+                doms.append(dom)
     except KeyboardInterrupt:
         sys.exit(c.RED + "\n[!] Interrupt handler received, exiting...\n" + c.END)
     except:
@@ -817,22 +910,22 @@ def SDom(domain,filename):
         for dom in urlscan_domains:
             dom = dom + "." + domain
             if dom.endswith(domain) and dom not in doms:
-                doms.append(dom)        
+                doms.append(dom)
     except KeyboardInterrupt:
         sys.exit(c.RED + "\n[!] Interrupt handler received, exiting...\n" + c.END)
     except:
         pass
-                
+
     if filename != None:
         f = open(filename, "a")
-    
+
     if doms:
         """
         Iterate through the subdomains and check the lenght to print them in a table format
         """
-        print(c.YELLOW + "+" + "-"*47 + "+")
+        print(c.YELLOW + "+" + "-" * 47 + "+")
         for value in doms:
-    
+
             if len(value) >= 10 and len(value) <= 14:
                 print("| " + value + "    \t\t\t\t|")
                 if filename != None:
@@ -864,7 +957,7 @@ def SDom(domain,filename):
         """
         Print summary
         """
-        print("+" + "-"*47 + "+" + c.END)
+        print("+" + "-" * 47 + "+" + c.END)
         print(c.YELLOW + "\nTotal discovered sudomains: " + str(len(doms)) + c.END)
         """
         Close file if "-o" parameter was especified
@@ -875,14 +968,15 @@ def SDom(domain,filename):
     else:
         print(c.YELLOW + "No subdomains discovered through SSL transparency" + c.END)
 
+
 # Check if the given target is active
 def checkDomain(domain):
-
     try:
         addr = socket.gethostbyname(domain)
     except:
         print(c.YELLOW + "\nTarget doesn't exists or is down" + c.END)
         sys.exit(1)
+
 
 # Program workflow starts here
 if __name__ == '__main__':
@@ -904,7 +998,7 @@ if __name__ == '__main__':
 
     # If --output is passed (store subdomains in file)
     if parse.output:
-        store_info=1
+        store_info = 1
         filename = parse.output
     else:
         filename = None
@@ -926,7 +1020,7 @@ if __name__ == '__main__':
         try:
             if not parse.quiet:
                 banner()
-            SDom(domain,filename)
+            SDom(domain, filename)
             portScan(domain)
             ns_enum(domain)
             axfr(domain)
@@ -940,14 +1034,15 @@ if __name__ == '__main__':
             findSecrets(domain)
             cloudgitEnum(domain)
             wafDetector(domain)
-            checkActiveSubs(domain,doms)
+            checkActiveSubs(domain, doms)
             wayback(domain)
             subTakeover(doms)
 
             if parse.token:
                 crawlMails(domain, parse.token)
             else:
-                print(c.BLUE + "\n[" + c.GREEN + "-" + c.BLUE + "] No API token provided, skipping email crawling" + c.END)
+                print(
+                    c.BLUE + "\n[" + c.GREEN + "-" + c.BLUE + "] No API token provided, skipping email crawling" + c.END)
             try:
                 file.close()
             except:
@@ -971,7 +1066,7 @@ if __name__ == '__main__':
         try:
             if not parse.quiet:
                 banner()
-            SDom(domain,filename)
+            SDom(domain, filename)
             """
             Check the passed arguments via command line
             """
@@ -1002,13 +1097,13 @@ if __name__ == '__main__':
             if parse.waf:
                 wafDetector(domain)
             if parse.check:
-                checkActiveSubs(domain,doms)
+                checkActiveSubs(domain, doms)
             if parse.wayback:
                 wayback(domain)
             if parse.subtakeover:
                 subTakeover(doms)
             if parse.token:
                 crawlMails(domain, parse.token)
-    
+
         except KeyboardInterrupt:
             sys.exit(c.RED + "\n[!] Interrupt handler received, exiting...\n" + c.END)

@@ -19,6 +19,27 @@ BOLD_YELLOW = "\033[33;1m"
 # AORT Integration
 def run_aort(domain):
     os.system('clear')
+
+    # Module Info Box
+    message_lines = [
+        "This module will look use AORT and DNSRecon",
+        "to enumerate DNS information."
+    ]
+
+    # Determine the width of the box based on the longest message line
+    width = max(len(line) for line in message_lines) + 4  # padding for the sides of the box
+
+    # Print the top border of the box
+    print("+" + "-" * (width - 2) + "+")
+
+    # Print each line of the message, centered within the box
+    for line in message_lines:
+        print("| " + line.center(width - 4) + " |")
+
+    # Print the bottom border of the box
+    print("+" + "-" * (width - 2) + "+")
+    # End Module Info Box
+
     print(f"{BOLD_CYAN}Running AORT for domain: {COLOR_RESET}{BOLD_GREEN}{domain}{COLOR_RESET}\n")
 
     script_directory = os.path.dirname(os.path.realpath(__file__))
@@ -33,7 +54,67 @@ def run_aort(domain):
     except Exception as e:
         print(f"{BOLD_RED}An error occurred while running AORT: {e}{COLOR_RESET}")
 
+    input(f"\n{BOLD_GREEN}Press Enter to return to proceed with DNSRecon...{COLOR_RESET}")
+
+
+# DNSRecon Integration
+def run_dnsrecon(domain):
+    os.system('clear')
+    print(f"{BOLD_CYAN}Running DNSRecon for domain: {COLOR_RESET}{BOLD_GREEN}{domain}{COLOR_RESET}\n")
+
+    dnsrecon_command = f"dnsrecon -d {domain} -t std"
+
+    print(f"{BOLD_BLUE}DNSRecon is starting, results will be saved to dnsrecon_results.json.{COLOR_RESET}\n")
+
+    try:
+        # Call DNSRecon and let it handle the output directly
+        os.system(dnsrecon_command)
+    except Exception as e:
+        print(f"{BOLD_RED}An error occurred while running DNSRecon: {e}{COLOR_RESET}")
+
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")
+
+
+# Function to check if dnsrecon is installed
+def is_dnsrecon_installed():
+    try:
+        subprocess.run(["dnsrecon", "-h"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
+
+
+# Nikto Integration
+def run_nikto(targets):
+    os.system('clear')  # Clear the screen
+    nikto_dir = 'nikto'
+    os.makedirs(nikto_dir, exist_ok=True)  # Create the nikto directory if it doesn't exist
+
+    # Check if the input is a file or a single host
+    if os.path.isfile(targets):
+        with open(targets) as file:
+            hosts = file.read().splitlines()
+    else:
+        hosts = [targets]  # If it's a single host, put it in a list
+
+    for host in hosts:
+        output_filename = f"nikto_{host.replace(':', '_').replace('/', '_')}.txt"  # Replace special characters
+        output_path = os.path.join(nikto_dir, output_filename)
+
+        print(f"{BOLD_CYAN}Running Nikto for {host}.{COLOR_RESET}")
+        nikto_command = f"nikto -h {host} -C all -Tuning 13 -o {output_path} -Format txt"
+
+        try:
+            # Run Nikto and save the output to a file
+            subprocess.run(nikto_command, shell=True)
+            print(f"{BOLD_GREEN}Nikto scan for {host} completed. Results saved to {output_path}.{COLOR_RESET}")
+        except Exception as e:
+            print(f"{BOLD_RED}An error occurred while running Nikto for {host}: {e}{COLOR_RESET}")
+
+        print(f"{BOLD_YELLOW}---{COLOR_RESET}")
+
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")
+
 
 
 # Handle FPING
@@ -235,6 +316,7 @@ def display_menu(version):
     print("5. Run Ngrep on Nmap Output")
     print("6. Run SSLScans and Parse Findings")
     print("7. Run EyeWitness")
+    print("8. Run Nikto Scans")
     print(f"\n{BOLD_CYAN}U. Check For Updates{COLOR_RESET}")
     print(f"{BOLD_RED}X. Exit{COLOR_RESET}")
 
@@ -280,6 +362,12 @@ def main():
         elif choice == '3':
             domain = input(f"{BOLD_GREEN}Enter the domain to OSINT: {COLOR_RESET}")
             run_aort(domain)
+            # Check if dnsrecon is installed before running it
+            if is_dnsrecon_installed():
+                run_dnsrecon(domain)
+            else:
+                print(f"{BOLD_RED}DNSRecon is not installed. Please install it to use this feature.{COLOR_RESET}")
+                input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")
         elif choice == '4':
             run_nmap()
         elif choice == '5':
@@ -289,6 +377,10 @@ def main():
             run_sslscanparse()
         elif choice == '7':
             run_eyewitness()
+        elif choice == '8':
+            target_input = input(
+                f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: {COLOR_RESET}")
+            run_nikto(target_input)
         elif choice == 'u':
             print("Checking for updates...")
             updated = check_and_update()
