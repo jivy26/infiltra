@@ -42,7 +42,7 @@ fi
 input=$1
 
 if [ -f "$input" ]; then
-    while IFS= read -r ip; do
+    while IFS= read -r ip || [[ -n "$ip" ]]; do
         perform_whois "$ip"
     done < "$input"
 else
