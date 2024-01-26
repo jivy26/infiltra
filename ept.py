@@ -1,6 +1,9 @@
 import os
 import subprocess
 import sys
+
+from bbot.bbot_parse import bbot_main
+from bbot.check_bbot import is_bbot_installed, install_bbot
 from updater import check_and_update
 from icmpecho import run_fping
 
@@ -53,6 +56,49 @@ def run_aort(domain):
         print(f"{BOLD_RED}An error occurred while running AORT: {e}{COLOR_RESET}")
 
     input(f"\n{BOLD_GREEN}Press Enter to return to proceed with DNSRecon...{COLOR_RESET}")
+
+
+def run_bbot(domain, display_menu):
+    # Check if bbot is installed
+    if not is_bbot_installed():
+        print("bbot is not installed, installing now...")
+        install_bbot()
+
+    # Clear the screen and display sample commands
+    os.system('clear')
+    print(f"{BOLD_CYAN}Select the bbot command to run:{COLOR_RESET}")
+    print(f"{BOLD_YELLOW}All output is saved to the bbot/ folder\n{COLOR_RESET}")
+    print(f"1. Enumerate Subdomains")
+    print(f"2. Subdomains, Port Scans, and Web Screenshots")
+    print(f"3. Subdomains and Basic Web Scan")
+    print(f"4. Full Enumeration {BOLD_YELLOW}--- Enumerates subdomains, emails, cloud buckets, port scan with nmap, basic web scan, nuclei scan, and web screenshots{COLOR_RESET}")
+
+
+    # Get user choice
+    choice = input(f"\n{BOLD_GREEN}Enter your choice (1-4): {COLOR_RESET}").strip()
+
+    # Map user choice to bbot command
+    commands = {
+        '1': "-f subdomain-enum",
+        '2': "-f subdomain-enum -m nmap gowitness",
+        '3': "-f subdomain-enum web-basic",
+        '4': "-f subdomain-enum email-enum cloud-enum web-basic -m nmap gowitness nuclei --allow-deadly",
+    }
+
+    if choice in commands:
+        command = commands[choice]
+        full_command = f"bbot -t {domain} {command} -o . --name bbot"
+        print(f"{BOLD_YELLOW}Executing: {full_command}{COLOR_RESET}")
+        try:
+            os.system(full_command)
+        except Exception as e:
+            print(f"{BOLD_RED}An error occurred while running bbot: {e}{COLOR_RESET}")
+    else:
+        print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.{COLOR_RESET}")
+
+    input(f"{BOLD_GREEN}Press any key to return to the menu...{COLOR_RESET}")
+    os.system('clear')
+    display_menu(get_version())
 
 
 # DNSRecon Integration
@@ -307,16 +353,45 @@ def display_menu(version):
     os.system('clear')  # Clear the screen
     print(f"{BOLD_CYAN}TraceSecurity External Penetration Test Script{COLOR_RESET}{BOLD_GREEN} v{version}{COLOR_RESET}")
     print(f"\n{BOLD_GREEN}Menu Options:{COLOR_RESET}\n")
-    print(f"1. Run Whois   {IT_MAG}--- Ensure 1 IP per line.{COLOR_RESET}")
-    print(f"2. Run ICMP Echo Check   {IT_MAG}--- Ensure 1 IP per line.{COLOR_RESET}")
-    print(f"3. Run OSINT   {IT_MAG}--- Runs AORT and DNSRecon.{COLOR_RESET}")
-    print(f"4. Run Nmap Scan   {IT_MAG}--- Use ESXI for large IP ranges.{COLOR_RESET}")
+    print(f"1. Run Whois   {BOLD_YELLOW}--- Ensure 1 IP per line.{COLOR_RESET}")
+    print(f"2. Run ICMP Echo Check   {BOLD_YELLOW}--- Ensure 1 IP per line.{COLOR_RESET}")
+    print(f"3. Run OSINT")
+    print(f"4. Run Nmap Scan   {BOLD_YELLOW}--- Use ESXI for large IP ranges.{COLOR_RESET}")
     print("5. Run Ngrep on Nmap Output")
     print("6. Run SSLScans and Parse Findings")
     print("7. Run EyeWitness")
     print("8. Run Nikto Scans")
     print(f"\n{BOLD_CYAN}U. Check For Updates{COLOR_RESET}")
     print(f"{BOLD_RED}X. Exit{COLOR_RESET}")
+
+
+# OSINT Sub menu
+def osint_submenu(domain):
+    os.system('clear')  # Clear the screen
+    while True:
+        print(f"{BOLD_CYAN}OSINT Submenu for {domain}:{COLOR_RESET}")
+        print("\n1. Run AORT and DNSRecon")
+        print("2. Run bbot (useful for black-box pen testing)")
+        print("3. Parse bbot results")
+        print(f"\n{BOLD_RED}X. Return to main menu{COLOR_RESET}")
+
+        choice = input(f"\n{BOLD_GREEN}Enter your choice: {COLOR_RESET}").lower()
+
+        if choice == '1':
+            run_aort(domain)
+            if is_dnsrecon_installed():
+                run_dnsrecon(domain)
+            else:
+                print(f"{BOLD_RED}DNSRecon is not installed. Please install it to use this feature.{COLOR_RESET}")
+                input(f"\n{BOLD_GREEN}Press Enter to return to the submenu...{COLOR_RESET}")
+        elif choice == '2':
+            run_bbot(domain, display_menu)
+        elif choice == '3':
+            bbot_main()
+        elif choice == 'x':
+            break
+        else:
+            print(f"{BOLD_YELLOW}Invalid choice, please try again.{COLOR_RESET}")
 
 
 # Function to run nmap scan
@@ -358,14 +433,14 @@ def main():
         elif choice == '2':
             check_alive_hosts()
         elif choice == '3':
-            domain = input(f"{BOLD_GREEN}Enter the domain to OSINT: {COLOR_RESET}")
-            run_aort(domain)
-            # Check if dnsrecon is installed before running it
-            if is_dnsrecon_installed():
-                run_dnsrecon(domain)
-            else:
-                print(f"{BOLD_RED}DNSRecon is not installed. Please install it to use this feature.{COLOR_RESET}")
-                input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")
+            while True:
+                domain = input(f"{BOLD_GREEN}Enter the domain to OSINT: {COLOR_RESET}").strip()
+                if domain and '.' in domain:  # simple check for a '.' to ensure it's somewhat like a domain
+                    osint_submenu(domain)
+                    break
+                else:
+                    os.system('clear')  # Clear the screen at the beginning of the function
+                    print(f"{BOLD_RED}No valid domain entered, try again.{COLOR_RESET}")
         elif choice == '4':
             run_nmap()
         elif choice == '5':
