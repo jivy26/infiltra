@@ -1,13 +1,11 @@
 import os
 import subprocess
 import sys
-import time
 from updater import check_and_update
 from icmpecho import run_fping
 
-UPDATE_EXIT_CODE = 85
-
 # Define colors
+IT_MAG = "\033[35;3m"
 BOLD_BLUE = "\033[34;1m"
 COLOR_RESET = "\033[0m"
 BOLD_CYAN = "\033[36;1m"
@@ -87,6 +85,7 @@ def is_dnsrecon_installed():
 # Nikto Integration
 def run_nikto(targets):
     os.system('clear')  # Clear the screen
+
     nikto_dir = 'nikto'
     os.makedirs(nikto_dir, exist_ok=True)  # Create the nikto directory if it doesn't exist
 
@@ -114,7 +113,6 @@ def run_nikto(targets):
         print(f"{BOLD_YELLOW}---{COLOR_RESET}")
 
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")
-
 
 
 # Handle FPING
@@ -309,10 +307,10 @@ def display_menu(version):
     os.system('clear')  # Clear the screen
     print(f"{BOLD_CYAN}TraceSecurity External Penetration Test Script{COLOR_RESET}{BOLD_GREEN} v{version}{COLOR_RESET}")
     print(f"\n{BOLD_GREEN}Menu Options:{COLOR_RESET}\n")
-    print("1. Run Whois")
-    print("2. Run ICMP Echo Check")
-    print("3. Run OSINT")
-    print("4. Run Nmap Scan")
+    print(f"1. Run Whois   {IT_MAG}--- Ensure 1 IP per line.{COLOR_RESET}")
+    print(f"2. Run ICMP Echo Check   {IT_MAG}--- Ensure 1 IP per line.{COLOR_RESET}")
+    print(f"3. Run OSINT   {IT_MAG}--- Runs AORT and DNSRecon.{COLOR_RESET}")
+    print(f"4. Run Nmap Scan   {IT_MAG}--- Use ESXI for large IP ranges.{COLOR_RESET}")
     print("5. Run Ngrep on Nmap Output")
     print("6. Run SSLScans and Parse Findings")
     print("7. Run EyeWitness")
@@ -384,9 +382,6 @@ def main():
         elif choice == 'u':
             print("Checking for updates...")
             updated = check_and_update()
-            if updated:
-                # Exit with a special code to signal the wrapper to restart
-                sys.exit(UPDATE_EXIT_CODE)
         elif choice == 'x':
             break
         else:

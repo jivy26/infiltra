@@ -1,3 +1,5 @@
+_**---Do not use sudo to clone repo or run install.sh script---**_
+
 # Clone Repo
 Run the following command in Kali terminal `git clone https://github.com/jivy26/ept`
 <br /><br />

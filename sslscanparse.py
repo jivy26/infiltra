@@ -233,10 +233,6 @@ def ssl_scan(ip):
     except Exception as e:
         return {f"Error scanning {ip}": [str(e)]}
 
-        return {vuln: lines for vuln, lines in findings.items() if lines}
-    except Exception as e:
-        return {f"Error scanning {ip}": [str(e)]}
-
 
 # Read IPs from file and run sslscan
 with open(ip_file_path, 'r') as file:
