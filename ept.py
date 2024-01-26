@@ -352,6 +352,7 @@ def run_ngrep(scan_type):
 def display_menu(version):
     os.system('clear')  # Clear the screen
     print(f"{BOLD_CYAN}TraceSecurity External Penetration Test Script{COLOR_RESET}{BOLD_GREEN} v{version}{COLOR_RESET}")
+    print(f"{BOLD_YELLOW}Created by Joshua Ivy{COLOR_RESET}")
     print(f"\n{BOLD_GREEN}Menu Options:{COLOR_RESET}\n")
     print(f"1. Run Whois   {BOLD_YELLOW}--- Ensure 1 IP per line.{COLOR_RESET}")
     print(f"2. Run ICMP Echo Check   {BOLD_YELLOW}--- Ensure 1 IP per line.{COLOR_RESET}")
