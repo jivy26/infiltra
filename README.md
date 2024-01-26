@@ -6,7 +6,7 @@
 
 - **Open Source Intelligence (OSINT) Tools**
   - **AORT & DNSRecon**: Employ for detailed subdomain enumeration.
-  - **BBOT**: Utilize for comprehensive black-box penetration testing.
+  - **BBOT**: Utilize for comprehensive black-box penetration testing. More info on BBOT here: https://github.com/blacklanternsecurity/bbot
 
 - **Network Mapping** - Run NMAP scans (TCP and UDP) and process the findings.
 
