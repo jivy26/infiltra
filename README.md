@@ -5,7 +5,7 @@ Run the following command in Kali terminal `git clone https://github.com/jivy26/
 <br /><br />
 
 # Install Script
-Give the install script executable permissions `sudo chmod +x install.sh`
+Give the install script executable permissions `chmod +x install.sh`
 <br /><br />
 Then run it using `./install.sh` and follow prompts
 
