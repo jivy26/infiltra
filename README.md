@@ -22,17 +22,14 @@ Automate basic external penetration test processes and integrate advanced OSINT.
 
 - **Web Server Scanning** - Conduct Nikto scans over an IP range.
 
-# Dependencies
-
-**pup and httprobe required for Eyewitness** `apt install pup && httprobe -y`
-<br />
 
 # Installation
-:warning: _**Do not use sudo to clone repo or run install.sh script**_ :warning:
 
 - **Clone Repo**
 Run the following command in Kali terminal `git clone https://github.com/jivy26/ept`
 - **Install Script**
-Give the install script executable permissions `chmod +x install.sh`<br />
-- **Run installation script**
-`./install.sh` and follow prompts 
+Chage to infiltra directory `cd infiltra`<br />
+- **Install with Pip**
+`pip install .` 
+- Change directory to your home `cd ~/`
+- Use `infiltra` from anywhere to load the tool
