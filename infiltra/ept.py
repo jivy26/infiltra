@@ -263,28 +263,6 @@ def run_sslscanparse():
     sslscan_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py')
     default_file = 'tcp_parsed/https-hosts.txt'
 
-    # Module Info Box
-    message_lines = [
-        "This module will run SSLScans on all IPs provided",
-        "and use regex to only parse SSLScans with findings."
-        "If an IP has no findings, it will automatically load"
-        "another window and run SSLScan for a screenshot."
-    ]
-
-    # Determine the width of the box based on the longest message line
-    width = max(len(line) for line in message_lines) + 4  # padding for the sides of the box
-
-    # Print the top border of the box
-    print("+" + "-" * (width - 2) + "+")
-
-    # Print each line of the message, centered within the box
-    for line in message_lines:
-        print("| " + line.center(width - 4) + " |")
-
-    # Print the bottom border of the box
-    print("+" + "-" * (width - 2) + "+")
-    # End Module Info Box
-
     print(
         f"\n{BOLD_RED}By default, this scans 'https-hosts.txt' which might not include all forward-facing web servers on non-standard ports such as 10443, etc.")
     use_default = input(
@@ -303,6 +281,7 @@ def run_sslscanparse():
 
     # Run the sslscanparse script
     print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}", flush=True)
+    print(f"{BOLD_YELLOW}Depending on the amount of IPs provided, it might take a while. Also any IPs with no findings will automatically load a separate SSLScan for screenshotting.")
     process = subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()  # Wait for the subprocess to finish
