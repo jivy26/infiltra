@@ -281,7 +281,10 @@ def run_sslscanparse():
 
     # Run the sslscanparse script
     print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}", flush=True)
-    print(f"{BOLD_YELLOW}Depending on the amount of IPs provided, it might take a while. Also any IPs with no findings will automatically load a separate SSLScan for screenshotting.")
+    print(f"{BOLD_YELLOW}[INFO]")
+    print(f"{BOLD_YELLOW}- Depending on the amount of IPs provided, it might take a while.")
+    print(f"{BOLD_YELLOW}- If an IP has no findings, an SSLScan will be automatically launched in a new terminal for screenshotting.")
+
     process = subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()  # Wait for the subprocess to finish
