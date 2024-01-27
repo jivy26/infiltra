@@ -267,6 +267,8 @@ def run_sslscanparse():
     message_lines = [
         "This module will run SSLScans on all IPs provided",
         "and use regex to only parse SSLScans with findings."
+        "If an IP has no findings, it will automatically load"
+        "another window and run SSLScan for a screenshot."
     ]
 
     # Determine the width of the box based on the longest message line
