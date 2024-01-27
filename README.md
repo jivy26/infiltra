@@ -10,12 +10,11 @@ Automate basic external penetration test processes and integrate advanced OSINT.
 - **Open Source Intelligence (OSINT) Tools**
   - **AORT & DNSRecon**: Employ for detailed subdomain enumeration.
   - **BBOT**: Utilize for comprehensive black-box penetration testing. More info on BBOT here: https://github.com/blacklanternsecurity/bbot
+  - **Subdomain Enumeration** - Enumerate subdomains and capture screenshots of any websites enumerated.
 
 - **Network Mapping** - Run NMAP scans (TCP and UDP) and process the findings.
 
 - **SSL Vulnerability Assessment** - Run SSLScans on a range of IPs and parse findings.
-
-- **Subdomain Enumeration** - Enumerate subdomains and capture screenshots of any websites enumerated.
 
 - **Web Server Scanning** - Conduct Nikto scans over an IP range.
 
