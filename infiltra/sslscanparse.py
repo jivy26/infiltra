@@ -7,6 +7,7 @@ import re
 import datetime
 import sys
 
+
 # Default path to the file containing IP addresses if no command-line argument is provided
 default_ip_file_path = 'tcp_parsed/https-hosts.txt'  # Define this before using it in the conditional statement below
 
@@ -251,8 +252,8 @@ with open(ip_file_path, 'r') as file:
                     for line in lines:
                         print(line)
             else:
-                print(f"\n{YELLOW}No findings for {ip}, lets load a window to screenshot and add to the appendix.{END}")
-                user_input = input(
-                    f"\n{GREEN}→{END}{MAGENTA} Press Enter to open a new window to take a screenshot or press any other key then press Enter to skip.{END}")
-                if user_input == '':
-                    open_new_terminal_and_run_sslscan(ip)
+                # No findings, so automatically open sslscan in a new window
+                print(f"\n{YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.{END}", flush=True)
+                open_new_terminal_and_run_sslscan(ip)
+                # Pause the script to allow the user to take a screenshot
+                input(f"{GREEN}A new window has been opened. Press Enter after taking a screenshot to continue...{END}")
