@@ -23,7 +23,7 @@ def print_progress(stop_event):
     while not stop_event.is_set():
         print(".", end="", flush=True)
         time.sleep(0.5)
-    print(f"{COLOR_RESET}")
+    print(f"")
 
 
 def is_git_repository(path):
@@ -86,17 +86,17 @@ def perform_update(repo_dir):
         stop_event.set()
         progress_thread.join()  # Wait for the progress thread to finish
 
-        print(f"\n{BOLD_GREEN}Update completed successfully.{COLOR_RESET}")
+        print(f"\n{BOLD_GREEN}Update completed successfully.")
 
         # Set executable permissions for script files
-        print(f"{BOLD_YELLOW}Checking file permissions and setting executable if necessary...{COLOR_RESET}", end="", flush=True)
+        print(f"{BOLD_YELLOW}Checking file permissions and setting executable if necessary...", end="", flush=True)
         set_permissions_for_all_executables(repo_dir)
-        print(f"{BOLD_GREEN} Done.{COLOR_RESET}")
+        print(f"{BOLD_GREEN} Done.")
 
     except subprocess.CalledProcessError as e:
         stop_event.set()
         progress_thread.join()  # Ensure the progress thread is stopped
-        print(f"\n{BOLD_RED}An error occurred while updating: {e}{COLOR_RESET}")
+        print(f"\n{BOLD_RED}An error occurred while updating: {e}")
 
 
 def check_and_update():
@@ -110,22 +110,22 @@ def check_and_update():
         latest_version_tag = get_latest_version_from_github(github_repo)
 
         if update_needed(local_version, latest_version_tag):
-            print(f"{BOLD_GREEN}New update available: {latest_version_tag}{COLOR_RESET}")
-            print(f"{BOLD_RED}Your version: {local_version}{COLOR_RESET}")
+            print(f"{BOLD_GREEN}New update available: {latest_version_tag}")
+            print(f"{BOLD_RED}Your version: {local_version}")
             # Proceed with the update after user confirmation
-            input(f"{BOLD_YELLOW}Press any key to start the update or Ctrl+C to cancel...{COLOR_RESET}")
+            input(f"{BOLD_YELLOW}Press any key to start the update or Ctrl+C to cancel...")
             perform_update(dir_of_script)
             print("Update was successful. Please restart the tool to apply the updates.")
             return True  # Indicate that an update was performed
         else:
-            print(f"{BOLD_GREEN}You are up-to-date with version {local_version}.{COLOR_RESET}")
+            print(f"{BOLD_GREEN}You are up-to-date with version {local_version}.")
 
         # Wait for user input before returning to the main menu #
-        input(f"{BOLD_YELLOW}Press any key to return to the main menu...{COLOR_RESET}")
+        input(f"{BOLD_YELLOW}Press any key to return to the main menu...")
 
         return False #No Update Neccessary
 
     except requests.HTTPError as http_err:
-        print(f"{BOLD_RED}HTTP error occurred: {http_err}{COLOR_RESET}")
+        print(f"{BOLD_RED}HTTP error occurred: {http_err}")
     except Exception as err:
-        print(f"{BOLD_RED}An error occurred: {err}{COLOR_RESET}")
+        print(f"{BOLD_RED}An error occurred: {err}")

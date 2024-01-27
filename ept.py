@@ -1,19 +1,28 @@
 import os
 import subprocess
+import ipaddress
+import re
 import sys
 from bbot.bbot_parse import bbot_main
 from bbot.check_bbot import is_bbot_installed, install_bbot
 from updater import check_and_update
 from icmpecho import run_fping
+from colorama import init, Fore, Style
 
-# Define colors
-IT_MAG = "\033[35;3m"
-BOLD_BLUE = "\033[34;1m"
-COLOR_RESET = "\033[0m"
-BOLD_CYAN = "\033[36;1m"
-BOLD_GREEN = "\033[32;1m"
-BOLD_RED = "\033[31;1m"
-BOLD_YELLOW = "\033[33;1m"
+
+## Moved from ANSI to Colorama
+# Initialize Colorama
+init(autoreset=True)
+
+
+# Define colors using Colorama
+DEFAULT_COLOR = Fore.WHITE
+IT_MAG = Fore.MAGENTA + Style.BRIGHT
+BOLD_BLUE = Fore.BLUE + Style.BRIGHT
+BOLD_CYAN = Fore.CYAN + Style.BRIGHT
+BOLD_GREEN = Fore.GREEN + Style.BRIGHT
+BOLD_RED = Fore.RED + Style.BRIGHT
+BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
 
 # AORT Integration
@@ -40,21 +49,21 @@ def run_aort(domain):
     print("+" + "-" * (width - 2) + "+")
     # End Module Info Box
 
-    print(f"{BOLD_CYAN}Running AORT for domain: {COLOR_RESET}{BOLD_GREEN}{domain}{COLOR_RESET}\n")
+    print(f"{BOLD_CYAN}Running AORT for domain: {BOLD_GREEN}{domain}\n")
 
     script_directory = os.path.dirname(os.path.realpath(__file__))
     aort_script_path = os.path.join(script_directory, 'aort/AORT.py')
     aort_command = f"python3 {aort_script_path} -d {domain} -a -w -n --output aort_dns.txt"
 
-    print(f"{BOLD_BLUE}AORT is starting, subdomains will be saved to aort_dns.txt.{COLOR_RESET}\n")
+    print(f"{BOLD_BLUE}AORT is starting, subdomains will be saved to aort_dns.txt.\n")
 
     try:
         # Call AORT and let it handle the output directly
         os.system(aort_command)
     except Exception as e:
-        print(f"{BOLD_RED}An error occurred while running AORT: {e}{COLOR_RESET}")
+        print(f"{BOLD_RED}An error occurred while running AORT: {e}")
 
-    input(f"\n{BOLD_GREEN}Press Enter to return to proceed with DNSRecon...{COLOR_RESET}")
+    input(f"\n{BOLD_GREEN}Press Enter to return to proceed with DNSRecon...")
 
 
 def run_bbot(domain, display_menu):
@@ -65,16 +74,16 @@ def run_bbot(domain, display_menu):
 
     # Clear the screen and display sample commands
     os.system('clear')
-    print(f"{BOLD_CYAN}Select the bbot command to run:{COLOR_RESET}")
-    print(f"{BOLD_YELLOW}All output is saved to the bbot/ folder\n{COLOR_RESET}")
+    print(f"{BOLD_CYAN}Select the bbot command to run:")
+    print(f"{BOLD_YELLOW}All output is saved to the bbot/ folder\n")
     print(f"1. Enumerate Subdomains")
     print(f"2. Subdomains, Port Scans, and Web Screenshots")
     print(f"3. Subdomains and Basic Web Scan")
-    print(f"4. Full Enumeration {BOLD_YELLOW}--- Enumerates subdomains, emails, cloud buckets, port scan with nmap, basic web scan, nuclei scan, and web screenshots{COLOR_RESET}")
+    print(f"4. Full Enumeration {BOLD_YELLOW}--- Enumerates subdomains, emails, cloud buckets, port scan with nmap, basic web scan, nuclei scan, and web screenshots")
 
 
     # Get user choice
-    choice = input(f"\n{BOLD_GREEN}Enter your choice (1-4): {COLOR_RESET}").strip()
+    choice = input(f"\n{BOLD_GREEN}Enter your choice (1-4): ").strip()
 
     # Map user choice to bbot command
     commands = {
@@ -84,18 +93,18 @@ def run_bbot(domain, display_menu):
         '4': "-f subdomain-enum email-enum cloud-enum web-basic -m nmap gowitness nuclei --allow-deadly",
     }
 
-    if choice in commands:
+    if choice.isdigit() in commands:
         command = commands[choice]
         full_command = f"bbot -t {domain} {command} -o . --name bbot"
-        print(f"{BOLD_YELLOW}Executing: {full_command}{COLOR_RESET}")
+        print(f"{BOLD_YELLOW}Executing: {full_command}")
         try:
             os.system(full_command)
         except Exception as e:
-            print(f"{BOLD_RED}An error occurred while running bbot: {e}{COLOR_RESET}")
+            print(f"{BOLD_RED}An error occurred while running bbot: {e}")
     else:
-        print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.{COLOR_RESET}")
+        print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.")
 
-    input(f"{BOLD_GREEN}Press any key to return to the menu...{COLOR_RESET}")
+    input(f"{BOLD_GREEN}Press any key to return to the menu...")
     os.system('clear')
     display_menu(get_version())
 
@@ -103,19 +112,19 @@ def run_bbot(domain, display_menu):
 # DNSRecon Integration
 def run_dnsrecon(domain):
     os.system('clear')
-    print(f"{BOLD_CYAN}Running DNSRecon for domain: {COLOR_RESET}{BOLD_GREEN}{domain}{COLOR_RESET}\n")
+    print(f"{BOLD_CYAN}Running DNSRecon for domain: {BOLD_GREEN}{domain}\n")
 
     dnsrecon_command = f"dnsrecon -d {domain} -t std"
 
-    print(f"{BOLD_BLUE}DNSRecon is starting, results will be saved to dnsrecon_results.json.{COLOR_RESET}\n")
+    print(f"{BOLD_BLUE}DNSRecon is starting, results will be saved to dnsrecon_results.json.\n")
 
     try:
         # Call DNSRecon and let it handle the output directly
         os.system(dnsrecon_command)
     except Exception as e:
-        print(f"{BOLD_RED}An error occurred while running DNSRecon: {e}{COLOR_RESET}")
+        print(f"{BOLD_RED}An error occurred while running DNSRecon: {e}")
 
-    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
 
 # Function to check if dnsrecon is installed
@@ -126,57 +135,79 @@ def is_dnsrecon_installed():
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
 
-
 # Nikto Integration
+
+
+def is_valid_ip(ip):
+    try:
+        ipaddress.ip_address(ip)
+        return True
+    except ValueError:
+        return False
+
+
+def is_valid_hostname(hostname):
+    if not hostname:
+        return False
+    if len(hostname) > 255:
+        return False
+    if hostname[-1] == ".":
+        hostname = hostname[:-1]  # strip exactly one dot from the right, if present
+    allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
+    return all(allowed.match(x) for x in hostname.split("."))
+
+
 def run_nikto(targets):
     os.system('clear')  # Clear the screen
-
     nikto_dir = 'nikto'
     os.makedirs(nikto_dir, exist_ok=True)  # Create the nikto directory if it doesn't exist
-
+    hosts = targets
     # Check if the input is a file or a single host
     if os.path.isfile(targets):
         with open(targets) as file:
             hosts = file.read().splitlines()
-    else:
+    elif is_valid_ip(targets) or is_valid_hostname(targets):
         hosts = [targets]  # If it's a single host, put it in a list
+    else:
+        print(f"{BOLD_RED}Invalid target: {targets} is not a valid IP, hostname, or file.")
+        return
 
     for host in hosts:
         output_filename = f"nikto_{host.replace(':', '_').replace('/', '_')}.txt"  # Replace special characters
         output_path = os.path.join(nikto_dir, output_filename)
 
-        print(f"{BOLD_CYAN}Running Nikto for {host}.{COLOR_RESET}")
+        print(f"{BOLD_CYAN}Running Nikto for {host} in a new window.")
         nikto_command = f"nikto -h {host} -C all -Tuning 13 -o {output_path} -Format txt"
 
-        try:
-            # Run Nikto and save the output to a file
-            subprocess.run(nikto_command, shell=True)
-            print(f"{BOLD_GREEN}Nikto scan for {host} completed. Results saved to {output_path}.{COLOR_RESET}")
-        except Exception as e:
-            print(f"{BOLD_RED}An error occurred while running Nikto for {host}: {e}{COLOR_RESET}")
+        # Open a new terminal window to run Nikto
+        terminal_command = ['x-terminal-emulator', '-e', f'sudo {nikto_command}']
+        subprocess.Popen(terminal_command)
 
-        print(f"{BOLD_YELLOW}---{COLOR_RESET}")
-
-    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")
+    print(f"{BOLD_GREEN}Nikto scans launched in separate windows.")
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
 
 # Handle FPING
 def check_alive_hosts():
     os.system('clear')
-    hosts_input = input(
-        f"{BOLD_GREEN}Enter the file name containing a list of IPs or input a single IP address: {COLOR_RESET}").strip()
+    hosts_input = input(f"{BOLD_GREEN}Enter the file name containing a list of IPs or input a single IP address: ").strip()
+
+    # Check if input is a file or a valid IP
     if os.path.isfile(hosts_input):
         with open(hosts_input) as file:
             hosts = file.read().splitlines()
-    else:
+    elif is_valid_ip(hosts_input):
         hosts = [hosts_input]
+    else:
+        print(f"{BOLD_RED}Invalid input: {hosts_input} is neither a valid IP address nor a file path.")
+        return
 
     alive_hosts = run_fping(hosts)
-    print(f"\n{BOLD_CYAN}Alive Hosts:{COLOR_RESET}")
+    print(f"\n{BOLD_CYAN}Alive Hosts:")
     for host in alive_hosts:
-        print(f"\n{BOLD_YELLOW}{host}{COLOR_RESET}")
+        print(f"\n{BOLD_YELLOW}{host}")
 
-    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
 
 # Function to get the current version from a file
@@ -190,7 +221,7 @@ def get_version():
 
 
 # Function to run EyeWitness
-def run_eyewitness():
+def run_eyewitness(domain):
     os.system('clear')  # Clear the screen at the beginning of the function
     script_directory = os.path.dirname(os.path.realpath(__file__))
     eyewitness_script_path = os.path.join(script_directory, 'eyewitness.py')
@@ -200,9 +231,9 @@ def run_eyewitness():
 
     # Prompt user for input
     print(
-        f"\n{BOLD_CYAN}If you provide a domain, it will enumerate subdomains and attempt to screenshot them after enumeration.{COLOR_RESET}")
+        f"\n{BOLD_CYAN}If you provide a domain, it will enumerate subdomains and attempt to screenshot them after enumeration.")
     user_input = input(
-        f"\n{BOLD_GREEN}Enter a single IP, domain, or path to a file with domains (leave blank to use default aort_dns.txt from nmap_grep): {COLOR_RESET}").strip()
+        f"\n{BOLD_GREEN}Enter a single IP, domain, or path to a file with domains (leave blank to use default aort_dns.txt from nmap_grep): ").strip()
 
     # Determine which file or IP to use
     if user_input:
@@ -220,7 +251,7 @@ def run_eyewitness():
     subprocess.run(['python3', eyewitness_script_path, input_file])
 
     input(
-        f"{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
+        f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
 
 
 # Function to run sslscan and parse results
@@ -250,23 +281,23 @@ def run_sslscanparse():
     # End Module Info Box
 
     print(
-        f"\n{BOLD_RED}By default, this scans 'https-hosts.txt' which might not include all forward-facing web servers on non-standard ports such as 10443, etc.{COLOR_RESET}")
+        f"\n{BOLD_RED}By default, this scans 'https-hosts.txt' which might not include all forward-facing web servers on non-standard ports such as 10443, etc.")
     use_default = input(
-        f"\n{BOLD_BLUE}Do you want to use the default https-hosts.txt file? (Y/n): {COLOR_RESET}").strip().lower()
+        f"\n{BOLD_BLUE}Do you want to use the default https-hosts.txt file? (Y/n): ").strip().lower()
 
     if use_default == '' or use_default.startswith('y'):
         input_file = default_file
     else:
         input_file = input(
-            f"{BOLD_BLUE}Enter the path to your custom .txt file with HTTPS hosts: {COLOR_RESET}").strip()
+            f"{BOLD_BLUE}Enter the path to your custom .txt file with HTTPS hosts: ").strip()
 
     # Check if the file exists
     if not os.path.isfile(input_file):
-        print(f"{BOLD_RED}The file {input_file} does not exist. Please enter a valid file name.{COLOR_RESET}")
+        print(f"{BOLD_RED}The file {input_file} does not exist. Please enter a valid file name.")
         return
 
     # Run the sslscanparse script
-    print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}{COLOR_RESET}")
+    print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}")
     process = subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()  # Wait for the subprocess to finish
@@ -278,7 +309,7 @@ def run_sslscanparse():
     if stderr:
         print(f"{BOLD_RED}An error occurred:\n" + stderr.decode())
 
-    input(f"{BOLD_BLUE}Press Enter to return to the menu...{COLOR_RESET}")
+    input(f"{BOLD_BLUE}Press Enter to return to the menu...")
 
 
 # Function to run whois script
@@ -296,20 +327,20 @@ def run_whois():
     width = max(len(line) for line in message_lines) + 4  # padding for the sides of the box
 
     # Print the top border of the box
-    print("+" + "-" * (width - 2) + "+")
+    print(f"{BOLD_GREEN}+" + "-" * (width - 2) + f"+")
 
     # Print each line of the message, centered within the box
     for line in message_lines:
-        print("| " + line.center(width - 4) + " |")
+        print(f"{BOLD_GREEN}| " + line.center(width - 4) + f"{BOLD_GREEN} |")
 
     # Print the bottom border of the box
-    print("+" + "-" * (width - 2) + "+")
+    print(f"{BOLD_GREEN}+" + "-" * (width - 2) + f"+")
     # End Module Info Box
 
-    ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: {COLOR_RESET}").strip()
+    ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: ").strip()
 
     # Run the whois script
-    print(f"\n{BOLD_GREEN}Running whois_script.sh on {ip_input}{COLOR_RESET}\n")
+    print(f"\n{BOLD_GREEN}Running whois_script.sh on {ip_input}\n")
     process = subprocess.Popen(['bash', whois_script_path, ip_input], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()  # Wait for the subprocess to finish
 
@@ -321,7 +352,7 @@ def run_whois():
         print(f"{BOLD_RED}An error occurred:\n" + stderr.decode())
 
     input(
-        f"{BOLD_GREEN}Press any key to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
+        f"{BOLD_GREEN}Press any key to return to the menu...")  # Allow users to see the message before returning to the menu
 
 
 def run_ngrep(scan_type):
@@ -341,103 +372,136 @@ def run_ngrep(scan_type):
             return  # Exit the function if the user does not want to overwrite
 
     # Continue with running the nmap-grep.sh script
-    print(f"{BOLD_GREEN}Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans{COLOR_RESET}")
+    print(f"{BOLD_GREEN}Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans")
     subprocess.run(['bash', ngrep_script_path, output_file, scan_type.upper()])
     input(
-        f"{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
+        f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
 
 ### Start Menu
 # Function to run nmap scan
 def run_nmap():
     os.system('clear')  # Clear the screen at the beginning of the function
-    ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: {COLOR_RESET}")
-    print(f"\n{BOLD_CYAN} NMAP Scans will run the following commands for TCP and UDP: {COLOR_RESET}")
-    print(f"\n{BOLD_CYAN} TCP: nmap -sSV --top-ports 4000 -Pn {COLOR_RESET}")
-    print(f"{BOLD_CYAN} UDP: nmap -sU --top-ports 400 -Pn {COLOR_RESET}")
-    scan_type = input(f"\n{BOLD_GREEN}Enter scan type (tcp/udp/both): {COLOR_RESET}").lower()
+    ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: ")
+
+    # Check if ip_input is a valid IP address or a file path
+    if not (is_valid_ip(ip_input) or os.path.isfile(ip_input)):
+        print(f"{BOLD_RED}Invalid input: {ip_input} is neither a valid IP address nor a file path.")
+        return
+
+    print(f"\n{BOLD_CYAN}NMAP Scans will run the following commands for TCP and UDP: ")
+    print(f"\n{BOLD_CYAN} TCP: nmap -sSV --top-ports 4000 -Pn ")
+    print(f"{BOLD_CYAN} UDP: nmap -sU --top-ports 400 -Pn ")
+
+    scan_type = input(f"\n{BOLD_GREEN}Enter scan type (tcp/udp/both): ").lower()
+
+    # Validate scan_type
+    if scan_type not in ['tcp', 'udp', 'both']:
+        print(f"{BOLD_RED}Invalid scan type: {scan_type}. Please enter 'tcp', 'udp', or 'both'.")
+        return
+
     script_directory = os.path.dirname(os.path.realpath(__file__))
     nmap_script_path = os.path.join(script_directory, 'nmap_scan.py')
 
     # Make sure the input is not empty
     if ip_input and scan_type in ['tcp', 'udp', 'both']:
-        print(f"\n{BOLD_GREEN}Running nmap_scan.py from {nmap_script_path}{COLOR_RESET}")
+        print(f"\n{BOLD_GREEN}Running nmap_scan.py from {nmap_script_path}")
         if scan_type in ['tcp', 'both']:
             tcp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} tcp']
             subprocess.Popen(tcp_command)
         if scan_type in ['udp', 'both']:
             udp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} udp']
             subprocess.Popen(udp_command)
-        print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched in separate windows.{COLOR_RESET}")
+        print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched in separate windows.")
     else:
-        print(f"{BOLD_YELLOW}Invalid input. Make sure you enter a valid IP, file path, and scan type.{COLOR_RESET}")
+        print(f"{BOLD_YELLOW}Invalid input. Make sure you enter a valid IP, file path, and scan type.")
 
     input(
-        f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
+        f"\n{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
 
 
 # OSINT Sub menu
+def is_valid_domain(domain):
+    # Basic pattern for validating a standard domain name
+    pattern = r"^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$"
+    return re.match(pattern, domain) is not None
+
 def osint_submenu():
     os.system('clear')  # Clear the screen
     domain = ''
 
     while True:
-        print(f"{BOLD_CYAN}OSINT Submenu for {domain}:{COLOR_RESET}")
-        print("\n1. Set Domain")
-        print("1. Run AORT and DNSRecon")
-        print("2. Run bbot (useful for black-box pen testing)")
-        print("3. Parse bbot results")
-        print(f"\n{BOLD_RED}X. Return to main menu{COLOR_RESET}")
+        print(f"{BOLD_CYAN}OSINT Submenu for {domain}:")
+        if not domain:
+            print(f"{BOLD_YELLOW}No domain has been set!\n")
+        if not domain:
+            print(f"{BOLD_YELLOW}1. Set Domain")
+        else:
+            print(f"{BOLD_GREEN}1. Set Domain")
+        print("2. Run AORT and DNSRecon")
+        print("3. Run bbot (useful for black-box pen testing)")
+        print("4. Parse bbot results")
+        print("5. Run EyeWitness")
+        print(f"\n{BOLD_RED}X. Return to main menu")
 
-        choice = input(f"\n{BOLD_GREEN}Enter your choice: {COLOR_RESET}").lower()
+        choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
 
         if choice == '1':
-            domain = input(f"{BOLD_CYAN}Please Input the Domain (i.e. google.com): {COLOR_RESET}")
-            print(f"{BOLD_GREEN}Domain set to: {domain}{COLOR_RESET}")
-            input(f"{BOLD_CYAN}Press Enter to continue...{COLOR_RESET}")
+            domain_input = input(f"{BOLD_CYAN}Please Input the Domain (i.e. google.com): ").strip()
+            if is_valid_domain(domain_input):
+                domain = domain_input
+                print(f"{BOLD_GREEN}Domain set to: {domain}")
+            else:
+                print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
+                continue
+            input(f"{BOLD_CYAN}Press Enter to continue...")
             os.system('clear')
-        if choice == '2':
+        elif choice == '2':
             run_aort(domain)
             if is_dnsrecon_installed():
                 run_dnsrecon(domain)
             else:
-                print(f"{BOLD_RED}DNSRecon is not installed. Please install it to use this feature.{COLOR_RESET}")
-                input(f"\n{BOLD_GREEN}Press Enter to return to the submenu...{COLOR_RESET}")
+                print(f"{BOLD_RED}DNSRecon is not installed. Please install it to use this feature.")
+                input(f"\n{BOLD_GREEN}Press Enter to return to the submenu...")
         elif choice == '3':
             run_bbot(domain, display_menu)
         elif choice == '4':
             bbot_main()
+        elif choice == '5':
+            if domain:
+                run_eyewitness(domain)  # Make sure domain is set before calling the function
+            else:
+                print(f"{BOLD_RED}Please set a domain first using option 1.")
         elif choice == 'x':
             break
         else:
-            print(f"{BOLD_YELLOW}Invalid choice, please try again.{COLOR_RESET}")
+            print(f"{BOLD_YELLOW}Invalid choice, please try again.")
 
 
 # Function to display the menu
 def display_menu(version):
     os.system('clear')  # Clear the screen
-    print(f"{BOLD_CYAN}External Penetration Test Script v{version}{COLOR_RESET}")
-    print(f"{BOLD_YELLOW}https://github.com/jivy26/ept{COLOR_RESET}")
-    print(f"{BOLD_YELLOW}Created by Joshua Ivy{COLOR_RESET}\n\n")
+    print(f"{BOLD_CYAN}External Penetration Test Script v{version}")
+    print(f"{BOLD_YELLOW}https://github.com/jivy26/ept")
+    print(f"{BOLD_YELLOW}Created by Joshua Ivy\n\n")
 
     menu_options = [
         ("1. Whois", "Perform WHOIS lookups and parse results."),
         ("2. ICMP Echo ", "Ping requests and parse live hosts."),
-        ("3. OSINT and Black Box OSINT", "AORT, DNS Recon, and BBOT tools available."),
+        ("3. OSINT and Black Box OSINT", "AORT, DNS Recon, BBOT, and EyeWitness available."),
         ("4. NMAP Scans", "Discover open ports and services on the network."),
         ("5. Parse NMAP Scans", "Parse NMAP TCP/UDP Scans."),
         ("6. SSLScan and Parse", "Run SSLScan for Single IP or Range and Parse Findings."),
-        ("7. Run EyeWitness", "Automated DNS Enumeration and Screenshotting."),
-        ("8. Nikto Web Scans", "Scan web servers to identify potential security issues.")
+        ("7. Nikto Web Scans", "Scan web servers to identify potential security issues.")
     ]
 
     for option, description in menu_options:
-        print(f"{BOLD_GREEN}{option.ljust(30)}{COLOR_RESET}{description}")
+        print(f"{BOLD_GREEN}{option.ljust(30)}{description}")
 
-    print(f"\n{BOLD_CYAN}Utilities:{COLOR_RESET}")
-    print(f"{BOLD_GREEN}U. Update Check{COLOR_RESET}".ljust(30) + " Check for the latest updates of the script.")
-    print(f"{BOLD_GREEN}X. Exit{COLOR_RESET}".ljust(30) + " Exit the application.\n")
+    print(f"\n{BOLD_CYAN}Utilities:")
+    print(f"{BOLD_GREEN}U. Update Check".ljust(30) + " Check for the latest updates of the script.")
+    print(f"{BOLD_GREEN}X. Exit".ljust(30) + " Exit the application.\n")
 
-    choice = input(f"{BOLD_GREEN}Enter your choice: {COLOR_RESET}").lower()
+    choice = input(f"{BOLD_GREEN}Enter your choice: ").lower()
     return choice
 
 
@@ -446,7 +510,7 @@ def main():
     version = get_version()
     while True:
         choice = display_menu(version)
-        #choice = input(f"\n{BOLD_GREEN}Enter your choice: {COLOR_RESET}").lower()
+        #choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
         if choice == '1':
             run_whois()
         elif choice == '2':
@@ -456,15 +520,13 @@ def main():
         elif choice == '4':
             run_nmap()
         elif choice == '5':
-            scan_type = input(f"{BOLD_GREEN}Enter the scan type that was run (TCP/UDP): {COLOR_RESET}").upper()
+            scan_type = input(f"{BOLD_GREEN}Enter the scan type that was run (TCP/UDP): ").upper()
             run_ngrep(scan_type)
         elif choice == '6':
             run_sslscanparse()
         elif choice == '7':
-            run_eyewitness()
-        elif choice == '8':
             target_input = input(
-                f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: {COLOR_RESET}")
+                f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: ")
             run_nikto(target_input)
         elif choice == 'u':
             print("Checking for updates...")
@@ -472,7 +534,7 @@ def main():
         elif choice == 'x':
             break
         else:
-            print(f"{BOLD_YELLOW}Invalid choice, please try again.{COLOR_RESET}")
+            print(f"{BOLD_YELLOW}Invalid choice, please try again.")
 
 
 # Ensure the `packaging` library is installed
@@ -480,7 +542,7 @@ try:
     from packaging import version
 except ImportError:
     print(
-        f"{BOLD_RED}The 'packaging' library is required for version comparison. Please install it using 'pip install packaging'.{COLOR_RESET}")
+        f"{BOLD_RED}The 'packaging' library is required for version comparison. Please install it using 'pip install packaging'.")
     exit(1)
 
 if __name__ == "__main__":

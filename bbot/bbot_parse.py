@@ -50,7 +50,7 @@ def parse_bbot_output(file_path):
 
 def bbot_main():
     os.system('clear')  # This will clear the screen
-    use_default = input(f"{BOLD_CYAN}Use default bbot/output.txt? (Y/n): {COLOR_RESET}").strip().lower()
+    use_default = input(f"{BOLD_CYAN}Use default bbot/output.txt? (Y/n): ").strip().lower()
 
     if use_default == '' or use_default.startswith('y'):
         file_name = os.path.join(os.getcwd(), "bbot", "output.txt")
@@ -60,11 +60,11 @@ def bbot_main():
     try:
         parsed_results = parse_bbot_output(file_name)
         for section, items in parsed_results.items():
-            print(f"\n{BOLD_GREEN}{section} Section:{COLOR_RESET}")
+            print(f"\n{BOLD_GREEN}{section} Section:")
             for item in items:
                 print(f"- {item}")
             print()
-        input(f"\n{BOLD_CYAN}Press any key to return to the menu...{COLOR_RESET}")
+        input(f"\n{BOLD_CYAN}Press any key to return to the menu...")
         os.system('clear')  # This will clear the screen
     except FileNotFoundError:
         print("File does not exist. Please check the file name and path.")

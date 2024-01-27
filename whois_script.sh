@@ -33,6 +33,16 @@ perform_whois() {
     fi
 }
 
+# Function to validate IP address
+is_valid_ip() {
+    local ip=$1
+    if [[ $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        # Basic regex match for an IP address
+        return 0 # valid
+    fi
+    return 1 # invalid
+}
+
 # Process the input
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 <file_with_ip_addresses or single IP>"
@@ -42,9 +52,13 @@ fi
 input=$1
 
 if [ -f "$input" ]; then
+    # It's a file, process each line as an IP
     while IFS= read -r ip || [[ -n "$ip" ]]; do
         perform_whois "$ip"
     done < "$input"
+elif is_valid_ip "$input"; then
+    # It's a valid IP, process it
+    perform_whois "$input"
 else
     echo "Error: The argument is neither a valid IP address nor a file."
     exit 1
