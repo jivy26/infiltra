@@ -420,13 +420,13 @@ def display_menu(version):
     print(f"{BOLD_YELLOW}Created by Joshua Ivy{COLOR_RESET}\n\n")
 
     menu_options = [
-        ("1. Whois", "Perform WHOIS lookups and analyze the results."),
-        ("2. ICMP Echo ", "Check if hosts are alive with ICMP echo requests."),
-        ("3. OSINT and Black Box OSINT", "Gather data from publicly available sources."),
+        ("1. Whois", "Perform WHOIS lookups and parse results."),
+        ("2. ICMP Echo ", "Ping requests and parse live hosts."),
+        ("3. OSINT and Black Box OSINT", "AORT, DNS Recon, and BBOT tools available."),
         ("4. NMAP Scans", "Discover open ports and services on the network."),
-        ("5. Parse NMAP Scans", "Parse network scan output for quick insights."),
-        ("6. SSLScan and Parse", "Check SSL/TLS services for known vulnerabilities."),
-        ("7. Run EyeWitness", "Take screenshots and gather info from web services."),
+        ("5. Parse NMAP Scans", "Parse NMAP TCP/UDP Scans."),
+        ("6. SSLScan and Parse", "Run SSLScan for Single IP or Range and Parse Findings."),
+        ("7. Run EyeWitness", "Automated DNS Enumeration and Screenshotting."),
         ("8. Nikto Web Scans", "Scan web servers to identify potential security issues.")
     ]
 
