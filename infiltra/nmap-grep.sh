@@ -162,7 +162,17 @@ if [ "$varDoWebUrl" = "Y" ]; then echo "- Create web-urls.txt"; fi
 if [ "$varDoSmbUrl" = "Y" ]; then echo "- Create smb-urls.txt"; fi
 echo
 if [ "$varFlagOutExists" = "Y" ]; then echo "Note: $varOutPath already existed. Files may be appended."; echo; fi
-read -p "Press Enter to confirm..."
+# Automatic overwrite confirmation
+if [ -e "$varOutPath" ]; then
+  echo "The directory $varOutPath already exists. Overwriting..."
+  rm -r "$varOutPath"
+fi
+mkdir -p "$varOutPath"
+
+# ...
+
+# Remove the confirmation prompts
+# read -p "Press Enter to confirm..." is removed
 echo
 echo "===========================[ results ]==========================="
 
