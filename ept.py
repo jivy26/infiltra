@@ -1,7 +1,6 @@
 import os
 import subprocess
 import sys
-
 from bbot.bbot_parse import bbot_main
 from bbot.check_bbot import is_bbot_installed, install_bbot
 from updater import check_and_update
@@ -347,54 +346,7 @@ def run_ngrep(scan_type):
     input(
         f"{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
 
-
-# Function to display the menu
-def display_menu(version):
-    os.system('clear')  # Clear the screen
-    print(f"{BOLD_CYAN}TraceSecurity External Penetration Test Script{COLOR_RESET}{BOLD_GREEN} v{version}{COLOR_RESET}")
-    print(f"{BOLD_YELLOW}Created by Joshua Ivy{COLOR_RESET}")
-    print(f"\n{BOLD_GREEN}Menu Options:{COLOR_RESET}\n")
-    print(f"1. Run Whois   {BOLD_YELLOW}--- Ensure 1 IP per line.{COLOR_RESET}")
-    print(f"2. Run ICMP Echo Check   {BOLD_YELLOW}--- Ensure 1 IP per line.{COLOR_RESET}")
-    print(f"3. Run OSINT")
-    print(f"4. Run Nmap Scan   {BOLD_YELLOW}--- Use ESXI for large IP ranges.{COLOR_RESET}")
-    print("5. Run Ngrep on Nmap Output")
-    print("6. Run SSLScans and Parse Findings")
-    print("7. Run EyeWitness")
-    print("8. Run Nikto Scans")
-    print(f"\n{BOLD_CYAN}U. Check For Updates{COLOR_RESET}")
-    print(f"{BOLD_RED}X. Exit{COLOR_RESET}")
-
-
-# OSINT Sub menu
-def osint_submenu(domain):
-    os.system('clear')  # Clear the screen
-    while True:
-        print(f"{BOLD_CYAN}OSINT Submenu for {domain}:{COLOR_RESET}")
-        print("\n1. Run AORT and DNSRecon")
-        print("2. Run bbot (useful for black-box pen testing)")
-        print("3. Parse bbot results")
-        print(f"\n{BOLD_RED}X. Return to main menu{COLOR_RESET}")
-
-        choice = input(f"\n{BOLD_GREEN}Enter your choice: {COLOR_RESET}").lower()
-
-        if choice == '1':
-            run_aort(domain)
-            if is_dnsrecon_installed():
-                run_dnsrecon(domain)
-            else:
-                print(f"{BOLD_RED}DNSRecon is not installed. Please install it to use this feature.{COLOR_RESET}")
-                input(f"\n{BOLD_GREEN}Press Enter to return to the submenu...{COLOR_RESET}")
-        elif choice == '2':
-            run_bbot(domain, display_menu)
-        elif choice == '3':
-            bbot_main()
-        elif choice == 'x':
-            break
-        else:
-            print(f"{BOLD_YELLOW}Invalid choice, please try again.{COLOR_RESET}")
-
-
+### Start Menu
 # Function to run nmap scan
 def run_nmap():
     os.system('clear')  # Clear the screen at the beginning of the function
@@ -423,25 +375,84 @@ def run_nmap():
         f"\n{BOLD_GREEN}Press Enter to return to the menu...{COLOR_RESET}")  # Allow users to see the message before returning to the menu
 
 
+# OSINT Sub menu
+def osint_submenu():
+    os.system('clear')  # Clear the screen
+    domain = ''
+
+    while True:
+        print(f"{BOLD_CYAN}OSINT Submenu for {domain}:{COLOR_RESET}")
+        print("\n1. Set Domain")
+        print("1. Run AORT and DNSRecon")
+        print("2. Run bbot (useful for black-box pen testing)")
+        print("3. Parse bbot results")
+        print(f"\n{BOLD_RED}X. Return to main menu{COLOR_RESET}")
+
+        choice = input(f"\n{BOLD_GREEN}Enter your choice: {COLOR_RESET}").lower()
+
+        if choice == '1':
+            domain = input(f"{BOLD_CYAN}Please Input the Domain (i.e. google.com): {COLOR_RESET}")
+            print(f"{BOLD_GREEN}Domain set to: {domain}{COLOR_RESET}")
+            input(f"{BOLD_CYAN}Press Enter to continue...{COLOR_RESET}")
+            os.system('clear')
+        if choice == '2':
+            run_aort(domain)
+            if is_dnsrecon_installed():
+                run_dnsrecon(domain)
+            else:
+                print(f"{BOLD_RED}DNSRecon is not installed. Please install it to use this feature.{COLOR_RESET}")
+                input(f"\n{BOLD_GREEN}Press Enter to return to the submenu...{COLOR_RESET}")
+        elif choice == '3':
+            run_bbot(domain, display_menu)
+        elif choice == '4':
+            bbot_main()
+        elif choice == 'x':
+            break
+        else:
+            print(f"{BOLD_YELLOW}Invalid choice, please try again.{COLOR_RESET}")
+
+
+# Function to display the menu
+def display_menu(version):
+    os.system('clear')  # Clear the screen
+    print(f"{BOLD_CYAN}External Penetration Test Script v{version}{COLOR_RESET}")
+    print(f"{BOLD_YELLOW}https://github.com/jivy26/ept{COLOR_RESET}")
+    print(f"{BOLD_YELLOW}Created by Joshua Ivy{COLOR_RESET}\n\n")
+
+    menu_options = [
+        ("1. Whois", "Perform WHOIS lookups and analyze the results."),
+        ("2. ICMP Echo ", "Check if hosts are alive with ICMP echo requests."),
+        ("3. OSINT and Black Box OSINT", "Gather data from publicly available sources."),
+        ("4. NMAP Scans", "Discover open ports and services on the network."),
+        ("5. Parse NMAP Scans", "Parse network scan output for quick insights."),
+        ("6. SSLScan and Parse", "Check SSL/TLS services for known vulnerabilities."),
+        ("7. Run EyeWitness", "Take screenshots and gather info from web services."),
+        ("8. Nikto Web Scans", "Scan web servers to identify potential security issues.")
+    ]
+
+    for option, description in menu_options:
+        print(f"{BOLD_GREEN}{option.ljust(30)}{COLOR_RESET}{description}")
+
+    print(f"\n{BOLD_CYAN}Utilities:{COLOR_RESET}")
+    print(f"{BOLD_GREEN}U. Update Check{COLOR_RESET}".ljust(30) + " Check for the latest updates of the script.")
+    print(f"{BOLD_GREEN}X. Exit{COLOR_RESET}".ljust(30) + " Exit the application.\n")
+
+    choice = input(f"{BOLD_GREEN}Enter your choice: {COLOR_RESET}").lower()
+    return choice
+
+
 # Main function
 def main():
     version = get_version()
     while True:
-        display_menu(version)
-        choice = input(f"\n{BOLD_GREEN}Enter your choice: {COLOR_RESET}").lower()
+        choice = display_menu(version)
+        #choice = input(f"\n{BOLD_GREEN}Enter your choice: {COLOR_RESET}").lower()
         if choice == '1':
             run_whois()
         elif choice == '2':
             check_alive_hosts()
         elif choice == '3':
-            while True:
-                domain = input(f"{BOLD_GREEN}Enter the domain to OSINT: {COLOR_RESET}").strip()
-                if domain and '.' in domain:  # simple check for a '.' to ensure it's somewhat like a domain
-                    osint_submenu(domain)
-                    break
-                else:
-                    os.system('clear')  # Clear the screen at the beginning of the function
-                    print(f"{BOLD_RED}No valid domain entered, try again.{COLOR_RESET}")
+            osint_submenu()
         elif choice == '4':
             run_nmap()
         elif choice == '5':
