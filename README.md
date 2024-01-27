@@ -1,4 +1,6 @@
-<p align="center">![alt text](https://github.com/jivy26/infiltra/blob/master/logo.png "Infiltra")</p>
+<p align="center">
+  <img src="https://github.com/jivy26/infiltra/blob/master/logo.png" alt="Infiltra">
+</p>
 
 # Goal
 Automate basic external penetration test processes and integrate advanced OSINT.
