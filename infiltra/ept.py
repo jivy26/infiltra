@@ -281,7 +281,7 @@ def run_sslscanparse():
 
     # Run the sslscanparse script
     print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}", flush=True)
-    print(f"{BOLD_YELLOW}[INFO]")
+    print(f"{BOLD_YELLOW}\n[INFO]")
     print(f"{BOLD_YELLOW}- Depending on the amount of IPs provided, it might take a while.")
     print(f"{BOLD_YELLOW}- If an IP has no findings, an SSLScan will be automatically launched in a new terminal for screenshotting.")
 
