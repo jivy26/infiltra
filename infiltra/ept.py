@@ -3,10 +3,11 @@ import subprocess
 import ipaddress
 import re
 import sys
-from bbot.bbot_parse import bbot_main
-from bbot.check_bbot import is_bbot_installed, install_bbot
-from updater import check_and_update
-from icmpecho import run_fping
+import pkg_resources
+from infiltra.bbot.bbot_parse import bbot_main
+from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
+from infiltra.updater import check_and_update
+from infiltra.icmpecho import run_fping
 from colorama import init, Fore, Style
 
 
@@ -212,12 +213,14 @@ def check_alive_hosts():
 
 # Function to get the current version from a file
 def get_version():
-    # Get the directory in which the script is located
-    dir_of_script = os.path.dirname(os.path.realpath(__file__))
-    # Construct the full path to the version.txt file
-    version_file_path = os.path.join(dir_of_script, "version.txt")
-    with open(version_file_path, "r") as file:
-        return file.read().strip()
+    try:
+        # Read the version.txt from the package
+        version_file_path = pkg_resources.resource_filename('infiltra', 'version.txt')
+        with open(version_file_path, "r") as file:
+            return file.read().strip()
+    except Exception as e:
+        print(f"Could not read version file: {e}")
+        return "unknown"
 
 
 # Function to run EyeWitness

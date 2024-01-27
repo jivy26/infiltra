@@ -5,6 +5,7 @@ import requests
 import stat
 import threading
 import time
+import pkg_resources
 import sys
 
 # Exit Code
@@ -54,8 +55,12 @@ def set_permissions_for_all_executables(directory):
 
 
 def get_version(version_file_path):
-    with open(version_file_path, "r") as file:
-        return file.read().strip()
+    try:
+        with open(version_file_path, "r") as file:
+            return file.read().strip()
+    except Exception as e:
+        print(f"Could not read version file: {e}")
+        return "unknown"
 
 
 def get_latest_version_from_github(github_repo):
