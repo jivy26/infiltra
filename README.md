@@ -1,4 +1,7 @@
-## Features
+# Goal
+Automate basic external penetration test processes.
+
+# Features
 
 - **Whois Analysis** - Perform Whois lookups against an IP range and parse the results by organization name.
 
