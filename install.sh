@@ -46,14 +46,14 @@ read shell_type
 # Create .zshrc_aliases or .bashrc_aliases if it doesn't exist and add alias
 if [ "$shell_type" = "zsh" ]; then
     ZSHRC="$HOME/.zshrc"
-    ALIAS_FILE="$HOME/.zshrc_aliases"
+    ALIAS_FILE="$HOME/.zshrc"
     safe_run touch "$ALIAS_FILE"
     echo "alias ept='python3 $EPT_DIR/ept.py'" >> "$ALIAS_FILE"
     if ! grep -q "source $ALIAS_FILE" "$ZSHRC"; then
         echo "source $ALIAS_FILE" >> "$ZSHRC"
     fi
 elif [ "$shell_type" = "bash" ]; then
-    ALIAS_FILE="$HOME/.bashrc_aliases"
+    ALIAS_FILE="$HOME/.bashrc"
     safe_run touch "$ALIAS_FILE"
     echo "alias ept='python3 $EPT_DIR/ept.py'" >> "$ALIAS_FILE"
 else

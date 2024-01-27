@@ -21,17 +21,20 @@ Automate basic external penetration test processes.
 
 
 
-
-# Clone Repo
+# Installation
 :warning: _**Do not use sudo to clone repo or run install.sh script**_ :warning:
-<br /><br />
+
+- **Clone Repo**
+<br />
 Run the following command in Kali terminal `git clone https://github.com/jivy26/ept`
 <br /><br />
-
-# Install Script
+- **Install Script**
+<br /> 
 Give the install script executable permissions `chmod +x install.sh`
 <br /><br />
-Then run it using `./install.sh` and follow prompts
+- **Run installation script**
+<br />
+`./install.sh` and follow prompts 
 
 # Dependencies
 
