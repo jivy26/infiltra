@@ -146,22 +146,22 @@ else
   fi
 fi
 
-echo
-echo "===========[ nmap-grep.sh ]==========="
-echo
-echo "Input File: $varInFile"
-if [ "$varOutPath" != "" ]; then echo "Output Path: $varOutPath"; fi
-if [ "$varOutPath" = "" ]; then echo "Output Path: Current Directory"; fi
-echo
-echo "Functions:"
-if [ "$varDoLiveHosts" = "Y" ]; then echo "- Create up-hosts.txt"; fi
-if [ "$varDoSummary" = "Y" ]; then echo "- Create summary.txt"; fi
-if [ "$varDoSplit" = "Y" ]; then echo "- Create [port]-[tcp/udp]-hosts.txt for each open port"; fi
-if [ "$varRenameSplit" = "Y" ]; then echo "- Rename split hosts files for common services"; fi
-if [ "$varDoWebUrl" = "Y" ]; then echo "- Create web-urls.txt"; fi
-if [ "$varDoSmbUrl" = "Y" ]; then echo "- Create smb-urls.txt"; fi
-echo
-if [ "$varFlagOutExists" = "Y" ]; then echo "Note: $varOutPath already existed. Files may be appended."; echo; fi
+#echo
+#echo "===========[ nmap-grep.sh ]==========="
+#echo
+#echo "Input File: $varInFile"
+#if [ "$varOutPath" != "" ]; then echo "Output Path: $varOutPath"; fi
+#if [ "$varOutPath" = "" ]; then echo "Output Path: Current Directory"; fi
+#echo
+#echo "Functions:"
+#if [ "$varDoLiveHosts" = "Y" ]; then echo "- Create up-hosts.txt"; fi
+#if [ "$varDoSummary" = "Y" ]; then echo "- Create summary.txt"; fi
+#if [ "$varDoSplit" = "Y" ]; then echo "- Create [port]-[tcp/udp]-hosts.txt for each open port"; fi
+#if [ "$varRenameSplit" = "Y" ]; then echo "- Rename split hosts files for common services"; fi
+#if [ "$varDoWebUrl" = "Y" ]; then echo "- Create web-urls.txt"; fi
+#if [ "$varDoSmbUrl" = "Y" ]; then echo "- Create smb-urls.txt"; fi
+#echo
+#if [ "$varFlagOutExists" = "Y" ]; then echo "Note: $varOutPath already existed. Files may be appended."; echo; fi
 # Automatic overwrite confirmation
 if [ -e "$varOutPath" ]; then
   echo "The directory $varOutPath already exists. Overwriting..."
@@ -173,8 +173,8 @@ mkdir -p "$varOutPath"
 
 # Remove the confirmation prompts
 # read -p "Press Enter to confirm..." is removed
-echo
-echo "===========================[ results ]==========================="
+#echo
+#echo "===========================[ results ]==========================="
 
 # Read input file for up-hosts.txt
 if [ "$varDoLiveHosts" = "Y" ]; then
@@ -332,17 +332,17 @@ mv -f ${varOutPath}tmp.txt ${varOutPath}port-list.txt
 sed -z 's/\n/,/g;s/,$/\n/' ${varOutPath}port-list.txt > ${varOutPath}tmp.txt
 mv -f ${varOutPath}tmp.txt ${varOutPath}port-list.txt
 
-# Output Summary
-echo
-if [ "$varFlagOutExists" = "Y" ]; then echo "Note: $varOutPath already existed."; echo "Files listed may have already existed, or been appended."; echo; fi
-if [ -e "${varOutPath}summary.txt" ]; then echo "summary.txt exists"; fi
-if [ -e "${varOutPath}smb-urls.txt" ]; then echo "smb-urls.txt exists"; fi
-if [ -e "${varOutPath}web-urls.txt" ]; then echo "web-urls.txt exists"; fi
-if [ -e "${varOutPath}summary.txt" ] || [ -e "${varOutPath}smb-urls.txt" ] || [ -e "${varOutPath}web-urls.txt" ]; then echo; fi
-echo "*-hosts.txt in $varOutPath:"
-echo
-wc -l ${varOutPath}*-hosts.txt | grep -v 'total' | tr '/' ' ' | awk '{print $1, $NF}'
-echo
+## Output Summary
+#echo
+#if [ "$varFlagOutExists" = "Y" ]; then echo "Note: $varOutPath already existed."; echo "Files listed may have already existed, or been appended."; echo; fi
+#if [ -e "${varOutPath}summary.txt" ]; then echo "summary.txt exists"; fi
+#if [ -e "${varOutPath}smb-urls.txt" ]; then echo "smb-urls.txt exists"; fi
+#if [ -e "${varOutPath}web-urls.txt" ]; then echo "web-urls.txt exists"; fi
+#if [ -e "${varOutPath}summary.txt" ] || [ -e "${varOutPath}smb-urls.txt" ] || [ -e "${varOutPath}web-urls.txt" ]; then echo; fi
+#echo "*-hosts.txt in $varOutPath:"
+#echo
+#wc -l ${varOutPath}*-hosts.txt | grep -v 'total' | tr '/' ' ' | awk '{print $1, $NF}'
+#echo
 
 # Display summary without asking
 if [ "$varShowSummary" = "Y" ]; then
@@ -351,16 +351,16 @@ if [ "$varShowSummary" = "Y" ]; then
 fi
 
 # Display port list without asking
-if [ "$varShowPortList" = "Y" ] && [ -e "${varOutPath}port-list.txt" ]; then
-  cat ${varOutPath}port-list.txt
-  echo
-fi
+#if [ "$varShowPortList" = "Y" ] && [ -e "${varOutPath}port-list.txt" ]; then
+#  cat ${varOutPath}port-list.txt
+#  echo
+#fi
 
 echo "=============================[ fin ]============================="
 echo
 
-if [ "$varShowPortList" = "Y" ] || [ "$varShowPortList" = "y" ]; then
-  echo
-  cat ${varOutPath}port-list.txt
-  echo
-fi
+#if [ "$varShowPortList" = "Y" ] || [ "$varShowPortList" = "y" ]; then
+#  echo
+#  cat ${varOutPath}port-list.txt
+#  echo
+#fi
