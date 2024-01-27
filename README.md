@@ -19,7 +19,10 @@ Automate basic external penetration test processes.
 
 - **Web Server Scanning** - Conduct Nikto scans over an IP range.
 
+# Dependencies
 
+**pup and httprobe required for Eyewitness** `apt install pup && httprobe -y`
+<br />
 
 # Installation
 :warning: _**Do not use sudo to clone repo or run install.sh script**_ :warning:
@@ -35,22 +38,3 @@ Give the install script executable permissions `chmod +x install.sh`
 - **Run installation script**
 <br />
 `./install.sh` and follow prompts 
-
-# Dependencies
-
-**pup and httprobe required for Eyewitness** `apt install pup && httprobe -y`
-<br /><br />
-
-# Folder Structure
-As long as the EPT folder structure is maintained, you can place the EPT folder anywhere you prefer. Changing the structure will break functionality.
-<br /><br />
-ept/<br />
-├── ept.py<br />
-├── aort<br />
-├── eyewitness/<br />
-│   └── eyewitness.py<br />
-├── nmap-grep.sh<br />
-├── nmap_scan.py<br />
-├── sslscanparse.py<br />
-├── version.txt<br />
-└── whois_script.sh<br />
