@@ -480,26 +480,26 @@ def osint_submenu():
 # Function to display the menu
 def display_menu(version):
     os.system('clear')  # Clear the screen
-    print(f"{BOLD_CYAN}External Penetration Test Script v{version}")
+    print(f"{BOLD_CYAN}External Penetration Test Tool v{version}")
     print(f"{BOLD_YELLOW}https://github.com/jivy26/ept")
     print(f"{BOLD_YELLOW}Created by Joshua Ivy\n\n")
 
     menu_options = [
-        ("1. Whois", "Perform WHOIS lookups and parse results."),
-        ("2. ICMP Echo ", "Ping requests and parse live hosts."),
-        ("3. OSINT and Black Box OSINT", "AORT, DNS Recon, BBOT, and EyeWitness available."),
-        ("4. NMAP Scans", "Discover open ports and services on the network."),
-        ("5. Parse NMAP Scans", "Parse NMAP TCP/UDP Scans."),
-        ("6. SSLScan and Parse", "Run SSLScan for Single IP or Range and Parse Findings."),
-        ("7. Nikto Web Scans", "Scan web servers to identify potential security issues.")
+        ("1. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
+        ("2. ICMP Echo ", f"{DEFAULT_COLOR}Ping requests and parse live hosts."),
+        ("3. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
+        ("4. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network."),
+        ("5. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
+        ("6. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
+        ("7. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues.")
     ]
 
     for option, description in menu_options:
         print(f"{BOLD_GREEN}{option.ljust(30)}{description}")
 
     print(f"\n{BOLD_CYAN}Utilities:")
-    print(f"{BOLD_GREEN}U. Update Check".ljust(30) + " Check for the latest updates of the script.")
-    print(f"{BOLD_GREEN}X. Exit".ljust(30) + " Exit the application.\n")
+    print(f"{BOLD_YELLOW}U. Update Check".ljust(30) + f"{DEFAULT_COLOR} Check for the latest updates of this tool.")
+    print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
 
     choice = input(f"{BOLD_GREEN}Enter your choice: ").lower()
     return choice
