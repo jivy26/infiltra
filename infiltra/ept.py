@@ -485,7 +485,7 @@ def display_menu(version):
     print(f"{BOLD_YELLOW}            Author: @jivy26")
     print(f"{BOLD_CYAN}========================================================\n")
     current_directory = os.getcwd()
-    print(f"\n{BOLD_CYAN}Current Directory: {current_directory}"\n)
+    print(f"\n{BOLD_CYAN}Current Directory: {current_directory}\n")
 
     menu_options = [
         ("1. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
