@@ -1,5 +1,5 @@
 # Goal
-Automate basic external penetration test processes.
+Automate basic external penetration test processes and integrate advanced OSINT.
 
 # Features
 
@@ -28,13 +28,8 @@ Automate basic external penetration test processes.
 :warning: _**Do not use sudo to clone repo or run install.sh script**_ :warning:
 
 - **Clone Repo**
-<br />
 Run the following command in Kali terminal `git clone https://github.com/jivy26/ept`
-<br /><br />
 - **Install Script**
-<br /> 
-Give the install script executable permissions `chmod +x install.sh`
-<br /><br />
+Give the install script executable permissions `chmod +x install.sh`<br />
 - **Run installation script**
-<br />
 `./install.sh` and follow prompts 
