@@ -3,6 +3,10 @@
 # Script for parsing and splitting grepable nmap output files
 # Created by Ted Raffle and improvements made by Bobby Methiven
 
+# Set these variables to 'Y' to always perform the action
+varShowSummary="Y"
+varShowPortList="Y"
+
 # Use the first argument as the scan type
 varScanType=$2  # Assuming $1 is the output file
 if [ "$varScanType" == "TCP" ]; then
@@ -330,23 +334,15 @@ echo
 wc -l ${varOutPath}*-hosts.txt | grep -v 'total' | tr '/' ' ' | awk '{print $1, $NF}'
 echo
 
-varShowSummary="N"
-if [ -e "${varOutPath}summary.txt" ]; then
-  read -p "Enter 'y' if you want to display summary.txt... " varShowSummary
-  echo
-fi
-
-
-if [ "$varShowSummary" = "Y" ] || [ "$varShowSummary" = "y" ]; then
-  echo
+# Display summary without asking
+if [ "$varShowSummary" = "Y" ]; then
   cat ${varOutPath}summary.txt
   echo
 fi
 
-
-varShowPortList="N"
-if [ -e "${varOutPath}port-list.txt" ]; then
-  read -p "Enter 'y' if you want to display port-list.txt (unique open ports) before ending... " varShowPortList
+# Display port list without asking
+if [ "$varShowPortList" = "Y" ] && [ -e "${varOutPath}port-list.txt" ]; then
+  cat ${varOutPath}port-list.txt
   echo
 fi
 
