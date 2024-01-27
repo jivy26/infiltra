@@ -1,3 +1,5 @@
+
+
 # Goal
 Automate basic external penetration test processes and integrate advanced OSINT.
 

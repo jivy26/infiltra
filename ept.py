@@ -478,11 +478,25 @@ def osint_submenu():
 
 
 # Function to display the menu
+
+def get_ascii_art(text):
+    # Run the toilet command with subprocess and capture the output
+    try:
+        result = subprocess.run(['toilet', '-f', 'mono9', '-F', 'gay', text], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+        # Decode the result from bytes to a string and return it
+        return result.stdout.decode()
+    except subprocess.CalledProcessError as e:
+        return f"Error generating ASCII art: {e}"
+
 def display_menu(version):
     os.system('clear')  # Clear the screen
-    print(f"{BOLD_CYAN}External Penetration Test Tool v{version}")
-    print(f"{BOLD_YELLOW}https://github.com/jivy26/ept")
-    print(f"{BOLD_YELLOW}Created by Joshua Ivy\n\n")
+    ascii_art = get_ascii_art("Infiltra")
+    print(ascii_art)  # Print the ASCII art at the top of the menu
+    print(f"{BOLD_CYAN}========================================================")
+    print(f"{BOLD_CYAN}                Current Version: v{version}")
+    print(f"{BOLD_YELLOW}            https://github.com/jivy26/ept")
+    print(f"{BOLD_YELLOW}            Author: @jivy26")
+    print(f"{BOLD_CYAN}========================================================\n")
 
     menu_options = [
         ("1. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
