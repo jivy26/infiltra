@@ -1,4 +1,4 @@
-
+[logo]: https://github.com/jivy26/infiltra/blob/master/logo.png?raw=true
 
 # Goal
 Automate basic external penetration test processes and integrate advanced OSINT.
