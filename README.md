@@ -33,3 +33,7 @@ Chage to infiltra directory `cd infiltra`<br />
 `pip install .` 
 - Change directory to your home `cd ~/`
 - Use `infiltra` from anywhere to load the tool
+
+<p align="center">
+  <img src="hhttps://i.postimg.cc/XvzrRRP1/Virtual-Box-VM-4-VM8n-DYU0-A.gif" alt="Install">
+</p>
