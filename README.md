@@ -25,8 +25,9 @@ Automate basic external penetration test processes and integrate advanced OSINT.
 
 # Installation
 
-- **One-liner Install**
-Run the following command in Kali terminal `git clone https://github.com/jivy26/infiltra.git && cd infiltra && pip install . && cd ~/ && sudo rm -R infiltra && infiltra`
+- **One-liner Install**<br />
+Run the following command in Kali terminal:<br />
+`git clone https://github.com/jivy26/infiltra.git && cd infiltra && pip install . && cd ~/ && sudo rm -R infiltra && infiltra`
 <br /><br />
 - Use `infiltra` from anywhere to load the tool
 

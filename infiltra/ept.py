@@ -274,38 +274,28 @@ def run_sslscanparse():
     sslscan_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py')
     default_file = 'tcp_parsed/https-hosts.txt'
 
-    print(
-        f"\n{BOLD_RED}By default, this scans 'https-hosts.txt' which might not include all forward-facing web servers on non-standard ports such as 10443, etc.")
-    use_default = input(
-        f"\n{BOLD_BLUE}Do you want to use the default https-hosts.txt file? (Y/n): ").strip().lower()
+    print(f"\n{BOLD_RED}By default, this scans 'https-hosts.txt'.")
+    use_default = input(f"\n{BOLD_BLUE}Use the default https-hosts.txt file? (Y/n): ").strip().lower()
 
-    if use_default == '' or use_default.startswith('y'):
-        input_file = default_file
-    else:
-        input_file = input(
-            f"{BOLD_BLUE}Enter the path to your custom .txt file with HTTPS hosts: ").strip()
+    input_file = default_file if use_default in ('', 'y') else input(f"{BOLD_BLUE}Enter custom file path: ").strip()
 
-    # Check if the file exists
     if not os.path.isfile(input_file):
-        print(f"{BOLD_RED}The file {input_file} does not exist. Please enter a valid file name.")
+        print(f"{BOLD_RED}File does not exist: {input_file}")
         return
 
-    # Run the sslscanparse script
-    print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}", flush=True)
-    print(f"{BOLD_YELLOW}\n[INFO]")
-    print(f"{BOLD_YELLOW}- Depending on the amount of IPs provided, it might take a while.")
-    print(f"{BOLD_YELLOW}- If an IP has no findings, an SSLScan will be automatically launched in a new terminal for screenshotting.")
-
-    process = subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()  # Wait for the subprocess to finish
-
-    # Display the output
-    print(stdout.decode())
-
-    # Check for errors
-    if stderr:
-        print(f"{BOLD_RED}An error occurred:\n" + stderr.decode())
+    print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}")
+    with subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
+        try:
+            # Output each line as it's generated
+            for line in process.stdout:
+                print(line, end='')  # stdout is already newline-terminated
+            process.wait()
+            # After the process ends, check for any remaining stderr output
+            stderr_output = process.stderr.read()
+            if stderr_output:
+                print(f"{BOLD_RED}Error:\n{stderr_output}")
+        except Exception as e:
+            print(f"{BOLD_RED}An error occurred: {e}")
 
     input(f"{BOLD_BLUE}Press Enter to return to the menu...")
 
