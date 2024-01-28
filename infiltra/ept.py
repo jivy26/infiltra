@@ -9,7 +9,7 @@ from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
 from infiltra.updater import check_and_update
 from infiltra.icmpecho import run_fping
 from colorama import init, Fore, Style
-from infiltra.nuclei import nuclei_submenu
+from infiltra.nuclei import nuclei_main
 
 ## Moved from ANSI to Colorama
 # Initialize Colorama
@@ -533,7 +533,7 @@ def main():
                 f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: ")
             run_nikto(target_input)
         elif choice == '8':
-            nuclei_submenu()
+            nuclei_main()
         elif choice == 'u':
             print("Checking for updates...")
             updated = check_and_update()

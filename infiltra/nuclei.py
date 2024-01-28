@@ -67,7 +67,8 @@ def nuclei_submenu():
         else:
             print(f"{BOLD_RED}Invalid choice, please try again.")
 
-def main():
+def nuclei_main():
+    os.system('clear')
     if not is_go_installed():
         print(f"{BOLD_RED}Go is not installed. Installing Go...")
         install_go()
@@ -75,7 +76,9 @@ def main():
     else:
         print(f"{BOLD_GREEN}Go is already installed.")
 
+    os.system('clear')
     install_nuclei()
+    os.system('clear')
     nuclei_submenu()
 
 if __name__ == "__main__":
