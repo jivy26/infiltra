@@ -49,7 +49,7 @@ def setup_go_environment():
 
 def install_nuclei():
     print(f"{BOLD_GREEN}Installing Nuclei...")
-    os.system("go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest")
+    os.system("sudo apt install nuclei")
 
 def update_nuclei():
     print(f"{BOLD_YELLOW}Checking for Nuclei updates...")
