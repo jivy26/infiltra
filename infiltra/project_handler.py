@@ -47,8 +47,8 @@ def delete_project(org_name):
 
 
 def project_submenu():
+    project_path = None  # Initialize project_path to None
     while True:
-        project_path = None
         print("\nProject Management Menu:")
         print("1. Create Project")
         print("2. Load Project")
@@ -59,10 +59,10 @@ def project_submenu():
 
         if choice == '1':
             org_name = input("Enter the organization name for the new project: ").strip()
-            create_project_directory(org_name)
+            project_path = create_project_directory(org_name)  # This will set project_path
         elif choice == '2':
             org_name = input("Enter the organization name to load the project: ").strip()
-            load_project(org_name)
+            project_path = load_project(org_name)  # This should set project_path
         elif choice == '3':
             org_name = input("Enter the organization name to delete the project: ").strip()
             delete_project(org_name)
@@ -71,4 +71,5 @@ def project_submenu():
             break
         else:
             print(f"{BOLD_RED}Invalid choice, please try again.")
-        return project_path
+        # Do not return inside the loop
+    return project_path  # Return the project_path after exiting the loop

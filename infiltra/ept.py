@@ -477,7 +477,7 @@ def get_ascii_art(text):
     except subprocess.CalledProcessError as e:
         return f"Error generating ASCII art: {e}"
 
-def display_menu(version):
+def display_menu(version, project_path):
     os.system('clear')  # Clear the screen
     ascii_art = get_ascii_art("Infiltra")
     print(ascii_art)  # Print the ASCII art at the top of the menu
@@ -486,7 +486,7 @@ def display_menu(version):
     print(f"{BOLD_YELLOW}            https://github.com/jivy26/ept")
     print(f"{BOLD_YELLOW}            Author: @jivy26")
     print(f"{BOLD_CYAN}========================================================\n")
-    current_directory = os.getcwd()
+    current_directory = project_path if project_path else os.getcwd()
     print(f"\n{BOLD_CYAN}Current Directory: {current_directory}\n")
 
     menu_options = [
@@ -508,7 +508,7 @@ def display_menu(version):
     print(f"{BOLD_YELLOW}U. Update Check".ljust(30) + f"{DEFAULT_COLOR} Check for the latest updates of this tool.")
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
 
-    choice = input(f"{BOLD_GREEN}Enter your choice: ").lower()
+    choice = display_menu(version, project_path)
     return choice
 
 
@@ -521,9 +521,9 @@ def main():
         #choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
         if choice == '1':
             new_project_path = project_submenu()
-            if new_project_path:
+            if new_project_path:  # Check if a new project path was returned
                 project_path = new_project_path
-                os.chdir(project_path)
+                os.chdir(project_path)  # Change the working directory
                 print(f"Changed directory to {project_path}")
         elif choice == '2':
             run_whois()
