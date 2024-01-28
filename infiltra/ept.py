@@ -536,7 +536,10 @@ def main():
     #     sys.exit(1)
 
     # Check for last used project
+    os.system('clear')  # Clear the screen
     last_project_file = 'last_project.txt'
+    ascii_art = get_ascii_art("Infiltra")
+    print(ascii_art)  # Print the ASCII art at the top of the menu
     if os.path.isfile(last_project_file):
         with open(last_project_file, 'r') as file:
             last_project = file.read().strip()
