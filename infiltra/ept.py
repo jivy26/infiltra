@@ -429,9 +429,9 @@ def osint_submenu(project_path):
         if not domain:
             print(f"{BOLD_YELLOW}No domain has been set!\n")
         if not domain:
-            print(f"{BOLD_YELLOW}1. Set Domain")
+            print(f"\n{BOLD_YELLOW}1. Set Domain")
         else:
-            print(f"{BOLD_GREEN}1. Set Domain")
+            print(f"{BOLD_GREEN}1. Domain Is Set")
         print("2. Run AORT and DNSRecon")
         print("3. Run bbot (useful for black-box pen testing)")
         print("4. Parse bbot results")
@@ -526,13 +526,26 @@ def display_menu(version, project_path):
 
 # Main function
 def main():
-    project_path = os.path.expanduser('~/projects')
+    projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
+    project_path = projects_base_path  # Initialize project_path
     version = get_version()
 
     # # Check if the script is running in a terminal
     # if not sys.stdin.isatty():
     #     print(f"{BOLD_RED}This script is not running in an interactive mode. Exiting...")
     #     sys.exit(1)
+
+    # Check for last used project
+    last_project_file = 'last_project.txt'
+    if os.path.isfile(last_project_file):
+        with open(last_project_file, 'r') as file:
+            last_project = file.read().strip()
+        if last_project:
+            use_last_project = input(f"Do you want to load the recent project '{last_project}'? (Y/n): ").strip().lower()
+            if use_last_project in ['', 'y']:
+                project_path = os.path.join(projects_base_path, last_project)
+                os.chdir(project_path)
+                print(f"{BOLD_GREEN}Loaded the recent project: {last_project}")
 
     while True:
         try:

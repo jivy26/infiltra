@@ -31,6 +31,11 @@ def create_project_directory(org_name):
     return project_path
 
 
+def save_last_project(project_name):
+    with open('last_project.txt', 'w') as file:
+        file.write(project_name)
+
+
 def load_project():
     os.system('clear')
     projects = list_projects()
@@ -112,11 +117,13 @@ def project_submenu():
             os.system('clear')
             org_name = input(f"{BOLD_GREEN}Enter the organization name for the new project: ").strip()
             project_path = create_project_directory(org_name)
+            save_last_project(org_name)
             if project_path:
                 os.chdir(project_path)
         elif choice == '2':
             os.system('clear')
             project_path = load_project()
+            save_last_project(os.path.basename(project_path))
             if project_path:
                 os.chdir(project_path)
         elif choice == '3':
