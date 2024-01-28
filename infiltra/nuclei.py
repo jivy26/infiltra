@@ -55,6 +55,7 @@ def update_nuclei():
 
 
 def nuclei_submenu():
+    os.system('clear')
     while True:
         print(f"\n{BOLD_CYAN}Nuclei Scanner\n")
         print(f"{BOLD_GREEN}1. Basic Vulnerability Scan")
@@ -70,7 +71,7 @@ def nuclei_submenu():
             domain = input(f"{BOLD_GREEN} Enter the domain: ").strip().lower()
             print(f"{BOLD_BLUE}Running Basic Vulnerability Scan...")
             #os.system(f"nuclei -u https://{domain}")
-            command = f"""qterminal -e bash -c 'nuclei -u https://{domain}; echo "Press enter to close..."; read'"""
+            command = f"""qterminal -e bash -c 'nuclei -u https://{domain} -o nuclei.txt; echo "Press enter to close..."; read'"""
             subprocess.Popen(command, shell=True)
         elif choice in ['2', '3', '4']:
             print(f"{BOLD_RED}This feature is not yet implemented.")
