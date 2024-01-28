@@ -15,14 +15,23 @@ setup(
     # Include additional files into the package
     include_package_data=True,
     package_data={
-        # If your package is named 'infiltra', and you have non-code files in it:
-        'infiltra': ['version.txt', '*.json', '*.sh', '*.yaml', '*.png', 'venv/*', 'eyewitness/*', 'bbot/*', 'aort/*'],
+        'infiltra': [
+            'version.txt',
+            '*.json',
+            '*.sh',
+            '*.yaml',
+            '*.png',
+            'venv/*',
+            'eyewitness/*',
+            'bbot/*',
+            'aort/*',
+            'nuclei-templates/**/*',  # Note the change here to include all files recursively
+        ],
     },
-
     # Metadata
     author='@jivy26',
     author_email='jivy26@gmail.com',
     description='CLI Based to that Automates Various Pentest Tools',
-    license='MIT',  # This must match the license file you have
+    license='MIT',
     keywords='infiltra penetration cybersecurity scanning',
 )
