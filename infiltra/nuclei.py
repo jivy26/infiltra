@@ -71,10 +71,10 @@ def nuclei_submenu():
         os.system('clear')
         print(f"\n{BOLD_CYAN}Nuclei Scanner\n")
         print(f"{BOLD_GREEN}1. Basic Vulnerability Scan")
-        print(f"{BOLD_GREEN}2. [Placeholder for future functionality]")
-        print(f"{BOLD_GREEN}3. [Placeholder for future functionality]")
+        print(f"{BOLD_GREEN}2. Moderate Scan")
+        print(f"{BOLD_GREEN}3. Advanced Invasive Scan")
         print(f"{BOLD_GREEN}4. [Placeholder for future functionality]")
-        print(f"{BOLD_GREEN}5. Check for Updates")
+        #print(f"{BOLD_GREEN}5. Check for Updates")
         print(f"{BOLD_RED}X. Exit Submenu")
 
         choice = input(f"\n{BOLD_YELLOW}Enter your choice: ").strip().lower()
@@ -82,12 +82,20 @@ def nuclei_submenu():
         if choice == '1':
             domain = input(f"{BOLD_GREEN} Enter the domain: ").strip().lower()
             print(f"{BOLD_BLUE}Running Basic Vulnerability Scan...")
-            command = f"""qterminal -e bash -c 'nuclei -u https://{domain} -t {ssl_templates_path} -t {fuzzing_templates_path} -o nuclei.txt; echo "Press enter to close..."; read'"""
-            subprocess.Popen(command, shell=True)
-        elif choice in ['2', '3', '4']:
-            print(f"{BOLD_RED}This feature is not yet implemented.")
-        elif choice == '5':
-            update_nuclei()
+            command = f"nuclei -u https://{domain} -t {ssl_templates_path} -t {fuzzing_templates_path} -severity low,medium -o basic_scan_results.txt"
+            os.system(f"qterminal -e bash -c '{command}; echo \"Press enter to close...\"; read'")
+        elif choice == '2':
+            domain = input(f"{BOLD_GREEN} Enter the domain: ").strip().lower()
+            print(f"{BOLD_BLUE}Running Moderate Scan...")
+            command = f"nuclei -u https://{domain} -t {nuclei_templates_path} -severity low,medium -o moderate_scan_results.txt"
+            os.system(f"qterminal -e bash -c '{command}; echo \"Press enter to close...\"; read'")
+        elif choice == '3':
+            domain = input(f"{BOLD_GREEN} Enter the domain: ").strip().lower()
+            print(f"{BOLD_BLUE}Running Advanced Invasive Scan...")
+            command = f"nuclei -u https://{domain} -t {nuclei_templates_path} -severity high,critical -o advanced_scan_results.txt"
+            os.system(f"qterminal -e bash -c '{command}; echo \"Press enter to close...\"; read'")
+        # elif choice == '5':
+        #     update_nuclei()
         elif choice == 'x':
             print(f"{BOLD_RED}Exiting Nuclei Submenu...")
             break
