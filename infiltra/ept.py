@@ -411,7 +411,7 @@ def is_valid_domain(domain):
     pattern = r"^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$"
     return re.match(pattern, domain) is not None
 
-def osint_submenu():
+def osint_submenu(project_path):
     os.system('clear')  # Clear the screen
     domain = ''
 
@@ -449,7 +449,7 @@ def osint_submenu():
                 print(f"{BOLD_RED}DNSRecon is not installed. Please install it to use this feature.")
                 input(f"\n{BOLD_GREEN}Press Enter to return to the submenu...")
         elif choice == '3':
-            run_bbot(domain, display_menu)
+            run_bbot(domain, display_menu, project_path)
         elif choice == '4':
             bbot_main()
         elif choice == '5':
@@ -534,7 +534,7 @@ def main():
         elif choice == '3':
             check_alive_hosts()
         elif choice == '4':
-            osint_submenu()
+            osint_submenu(project_path)
         elif choice == '5':
             run_nmap()
         elif choice == '6':
