@@ -508,7 +508,7 @@ def display_menu(version, project_path):
     print(f"{BOLD_YELLOW}U. Update Check".ljust(30) + f"{DEFAULT_COLOR} Check for the latest updates of this tool.")
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
 
-    choice = display_menu(version, project_path)
+    choice = input(f"{BOLD_GREEN}Enter your choice: ").lower()
     return choice
 
 
@@ -517,8 +517,7 @@ def main():
     project_path = None
     version = get_version()
     while True:
-        choice = display_menu(version)
-        #choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
+        choice = display_menu(version, project_path)
         if choice == '1':
             new_project_path = project_submenu()
             if new_project_path:  # Check if a new project path was returned
