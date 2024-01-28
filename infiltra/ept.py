@@ -68,7 +68,7 @@ def run_aort(domain):
     input(f"\n{BOLD_GREEN}Press Enter to return to proceed with DNSRecon...")
 
 
-def run_bbot(domain, display_menu):
+def run_bbot(domain, display_menu, project_path):
     # Check if bbot is installed
     if not is_bbot_installed():
         print("bbot is not installed, installing now...")
@@ -108,7 +108,7 @@ def run_bbot(domain, display_menu):
 
     input(f"{BOLD_GREEN}Press any key to return to the menu...")
     os.system('clear')
-    display_menu(get_version())
+    display_menu(get_version(), project_path)
 
 
 # DNSRecon Integration
