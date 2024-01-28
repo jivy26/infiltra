@@ -502,17 +502,17 @@ def display_menu(version, project_path):
     print(f"{BOLD_CYAN}Current Directory: {current_directory}\n")
 
     # Check tool statuses
-    tools_statuses = {
-        'bbot': os.path.isdir(os.path.join(current_directory, 'bbot')),
-        'nikto': os.path.isdir(os.path.join(current_directory, 'nikto')),
-        'tcp_parsed': os.path.isdir(os.path.join(current_directory, 'tcp_parsed')),
-        'udp_parsed': os.path.isdir(os.path.join(current_directory, 'udp_parsed')),
-        'aort_dns.txt': os.path.isfile(os.path.join(current_directory, 'aort_dns.txt')),
-        'icmpecho': any(fname.startswith('icmpecho_') for fname in os.listdir(current_directory)),
-        'tcp.txt': os.path.isfile(os.path.join(current_directory, 'tcp.txt')),
-        'udp.txt': os.path.isfile(os.path.join(current_directory, 'udp.txt')),
-        'whois': any(fname.startswith('whois_output') for fname in os.listdir(current_directory))
-    }
+    tools_statuses = [
+        ('bbot', os.path.isdir(os.path.join(project_path, 'bbot'))),
+        ('nikto', os.path.isdir(os.path.join(project_path, 'nikto'))),
+        ('tcp_parsed', os.path.isdir(os.path.join(project_path, 'tcp_parsed'))),
+        ('udp_parsed', os.path.isdir(os.path.join(project_path, 'udp_parsed'))),
+        ('aort_dns.txt', os.path.isfile(os.path.join(project_path, 'aort_dns.txt'))),
+        ('icmpecho', any(fname.startswith('icmpecho_') for fname in os.listdir(project_path))),
+        ('nmap TCP', os.path.isfile(os.path.join(project_path, 'tcp.txt'))),
+        ('nmap UDP', os.path.isfile(os.path.join(project_path, 'udp.txt'))),
+        ('whois', any(fname.startswith('whois_output') for fname in os.listdir(project_path)))
+    ]
 
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
@@ -535,10 +535,13 @@ def display_menu(version, project_path):
 
     # Display tool statuses
     print(f"{BOLD_CYAN}Tool Statuses:")
-    for tool, ran in tools_statuses.items():
-        color = BOLD_GREEN if ran else BOLD_RED
-        status = 'Ran' if ran else 'Not Ran'
-        print(f"{color}{tool.ljust(15)}: {status}")
+    # Display the status indicators
+    status_line1 = ' | '.join(BOLD_GREEN if status else BOLD_RED for tool, status in tools_statuses[:4])
+    status_line2 = ' | '.join(BOLD_GREEN if status else BOLD_RED for tool, status in tools_statuses[4:])
+
+    print(f"{status_line1}{Style.RESET_ALL}")
+    print(f"{status_line2}{Style.RESET_ALL}")
+
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
     return choice
 
