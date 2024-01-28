@@ -587,7 +587,7 @@ def main(tools_statuses):
 
     while True:
         try:
-            choice = display_menu(version, project_path, tools_statuses)
+            choice = display_menu(version, project_path)
             if choice == '1':
                 new_project_path = project_submenu()
                 if new_project_path is not None:  # Check if a new project path was returned or if it's a deletion
