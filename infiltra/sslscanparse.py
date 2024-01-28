@@ -235,8 +235,8 @@ def ssl_scan(ip):
         return {f"Error scanning {ip}": [str(e)]}
 
 
-# Read IPs from file and run sslscan
-with open(ip_file_path, 'r') as file:
+# Read IPs from file and run sslscan, output to sslscan.txt
+with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
     for ip in file:
         ip = ip.strip()
         if ip:
@@ -244,15 +244,19 @@ with open(ip_file_path, 'r') as file:
             self_signed_found = False
             tls_fallback_scsv_found = False
 
+            output_file.write(f"\n\n=============[Scanning {ip}]=============\n")
             print(f"\n\n{BLUE}=============[{END}{GREEN}Scanning {ip}{END}{BLUE}]============={END}", flush=True)
             scan_results = ssl_scan(ip)
             if scan_results:
                 for vuln, lines in scan_results.items():
+                    output_file.write(f"\n- {vuln} Found on {ip}\n\n")
+                    output_file.writelines('\n'.join(lines) + '\n')
                     print(f"\n{GREEN}{BOLD}- {vuln} Found on {ip}{END}\n", flush=True)
                     for line in lines:
                         print(line)
             else:
                 # No findings, so automatically open sslscan in a new window
+                output_file.write(f"\nNo findings for {ip}, automatically loading a window to run scans for a screenshot.\n")
                 print(f"\n{YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.{END}", flush=True)
                 open_new_terminal_and_run_sslscan(ip)
                 # Pause the script to allow the user to take a screenshot

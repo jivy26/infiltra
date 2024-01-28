@@ -499,7 +499,9 @@ def display_menu(version, project_path):
     print(f"{BOLD_YELLOW}            Author: @jivy26")
     print(f"{BOLD_CYAN}========================================================\n")
     current_directory = project_path if project_path else os.getcwd()
-    print(f"\n{BOLD_CYAN}Current Directory: {current_directory}\n")
+    print(f"{BOLD_CYAN}Tool Statuses:")
+    print(f"{BOLD_CYAN}Tool Statuses:")
+    print(f"{BOLD_CYAN}Current Directory: {current_directory}\n")
 
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
