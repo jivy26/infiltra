@@ -520,6 +520,18 @@ def display_menu(version, project_path, tools_statuses):
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_CYAN}Current Directory: {current_directory}\n")
 
+    tools_statuses = {
+        'bbot': os.path.isdir(os.path.join(current_directory, 'bbot')),
+        'nikto': os.path.isdir(os.path.join(current_directory, 'nikto')),
+        'tcp_parsed': os.path.isdir(os.path.join(current_directory, 'tcp_parsed')),
+        'udp_parsed': os.path.isdir(os.path.join(current_directory, 'udp_parsed')),
+        'aort_dns.txt': os.path.isfile(os.path.join(current_directory, 'aort_dns.txt')),
+        'icmpecho': any(fname.startswith('icmpecho_') for fname in os.listdir(current_directory)),
+        'tcp.txt': os.path.isfile(os.path.join(current_directory, 'tcp.txt')),
+        'udp.txt': os.path.isfile(os.path.join(current_directory, 'udp.txt')),
+        'whois': any(fname.startswith('whois_output') for fname in os.listdir(current_directory))
+    }
+
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
         ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
@@ -548,7 +560,7 @@ def display_menu(version, project_path, tools_statuses):
 
 
 # Main function
-def main():
+def main(tools_statuses):
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
@@ -575,7 +587,7 @@ def main():
 
     while True:
         try:
-            choice = display_menu(version, project_path)
+            choice = display_menu(version, project_path, tools_statuses)
             if choice == '1':
                 new_project_path = project_submenu()
                 if new_project_path is not None:  # Check if a new project path was returned or if it's a deletion
