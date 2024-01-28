@@ -25,15 +25,11 @@ Automate basic external penetration test processes and integrate advanced OSINT.
 
 # Installation
 
-- **Clone Repo**
-Run the following command in Kali terminal `git clone https://github.com/jivy26/ept`
-- **Install Script**
-Chage to infiltra directory `cd infiltra`<br />
-- **Install with Pip**
-`pip install .` 
-- Change directory to your home `cd ~/`
+- **One-liner Install**
+Run the following command in Kali terminal `git clone https://github.com/jivy26/infiltra.git && cd infiltra && pip install . && cd ~/ && sudo rm -R infiltra && infiltra`
+<br /><br />
 - Use `infiltra` from anywhere to load the tool
 
 <p align="center">
-  <img src="https://i.postimg.cc/XvzrRRP1/Virtual-Box-VM-4-VM8n-DYU0-A.gif" alt="Install">
+  <img src="https://i.postimg.cc/LhdtrDTw/Virtual-Box-VM-V0x-Ym-EYobq.gif" alt="Install">
 </p>
