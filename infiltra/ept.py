@@ -4,6 +4,7 @@ import ipaddress
 import re
 import sys
 from importlib.metadata import version as get_distribution_version
+from infiltra.project_handler import project_submenu
 from infiltra.bbot.bbot_parse import bbot_main
 from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
 from infiltra.updater import check_and_update
@@ -489,14 +490,15 @@ def display_menu(version):
     print(f"\n{BOLD_CYAN}Current Directory: {current_directory}\n")
 
     menu_options = [
-        ("1. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
-        ("2. ICMP Echo ", f"{DEFAULT_COLOR}Ping requests and parse live hosts."),
-        ("3. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
-        ("4. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network."),
-        ("5. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
-        ("6. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
-        ("7. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues."),
-        (f"8. Vulnerability Scanner {BOLD_YELLOW}(In-Progress)","")
+        ("1. Project", f"{DEFAULT_COLOR}Create a new project or Load an existing project"),
+        ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
+        ("3. ICMP Echo ", f"{DEFAULT_COLOR}Ping requests and parse live hosts."),
+        ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
+        ("5. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network."),
+        ("6. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
+        ("7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
+        ("8. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues."),
+        (f"9. Vulnerability Scanner {BOLD_YELLOW}(In-Progress)","")
     ]
 
     for option, description in menu_options:
@@ -517,23 +519,25 @@ def main():
         choice = display_menu(version)
         #choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
         if choice == '1':
-            run_whois()
+            project_submenu()
         elif choice == '2':
-            check_alive_hosts()
+            run_whois()
         elif choice == '3':
-            osint_submenu()
+            check_alive_hosts()
         elif choice == '4':
-            run_nmap()
+            osint_submenu()
         elif choice == '5':
+            run_nmap()
+        elif choice == '6':
             scan_type = input(f"{BOLD_GREEN}Enter the scan type that was run (TCP/UDP): ").upper()
             run_ngrep(scan_type)
-        elif choice == '6':
-            run_sslscanparse()
         elif choice == '7':
+            run_sslscanparse()
+        elif choice == '8':
             target_input = input(
                 f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: ")
             run_nikto(target_input)
-        elif choice == '8':
+        elif choice == '9':
             nuclei_main()
         elif choice == 'u':
             print("Checking for updates...")
