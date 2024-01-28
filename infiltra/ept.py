@@ -539,7 +539,7 @@ def display_menu(version, project_path):
         color = BOLD_GREEN if ran else BOLD_RED
         status = 'Ran' if ran else 'Not Ran'
         print(f"{color}{tool.ljust(15)}: {status}")
-    choice = input(f"{BOLD_GREEN}Enter your choice: ").lower()
+    choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
     return choice
 
 
