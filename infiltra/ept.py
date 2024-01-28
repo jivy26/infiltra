@@ -489,26 +489,7 @@ def get_ascii_art(text):
     except subprocess.CalledProcessError as e:
         return f"Error generating ASCII art: {e}"
 
-
-def display_tool_statuses(tools_statuses):
-    # Split the statuses into two lines
-    line1_tools = tools_statuses[:4]
-    line2_tools = tools_statuses[4:]
-
-    # Function to format tool name with its status color
-    def format_tool(tool, status):
-        return (BOLD_GREEN if status else BOLD_RED) + tool
-
-    # Format each tool and status for both lines
-    line1_status = ' | '.join(format_tool(tool, status) for tool, status in line1_tools)
-    line2_status = ' | '.join(format_tool(tool, status) for tool, status in line2_tools)
-
-    # Print the two lines with statuses
-    print(f"{line1_status}{Style.RESET_ALL}")
-    print(f"{line2_status}{Style.RESET_ALL}")
-
-
-def display_menu(version, project_path, tools_statuses):
+def display_menu(version, project_path):
     os.system('clear')  # Clear the screen
     ascii_art = get_ascii_art("Infiltra")
     print(ascii_art)  # Print the ASCII art at the top of the menu
@@ -520,6 +501,7 @@ def display_menu(version, project_path, tools_statuses):
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_CYAN}Current Directory: {current_directory}\n")
 
+    # Check tool statuses
     tools_statuses = {
         'bbot': os.path.isdir(os.path.join(current_directory, 'bbot')),
         'nikto': os.path.isdir(os.path.join(current_directory, 'nikto')),
@@ -553,14 +535,16 @@ def display_menu(version, project_path, tools_statuses):
 
     # Display tool statuses
     print(f"{BOLD_CYAN}Tool Statuses:")
-    display_tool_statuses(tools_statuses)
-
+    for tool, ran in tools_statuses.items():
+        color = BOLD_GREEN if ran else BOLD_RED
+        #status = 'Ran' if ran else 'Not Ran'
+        print(f"{color}{tool.ljust(15)}")
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
     return choice
 
 
 # Main function
-def main(tools_statuses):
+def main():
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
