@@ -109,10 +109,9 @@ def run_bbot(domain, display_menu, project_path):
     try:
         input(f"{BOLD_GREEN}Press any key to return to the menu...")
     except EOFError:
-        # Non-interactive mode, unable to receive input
         print(f"{BOLD_YELLOW}Input not available. Returning to the menu automatically...")
+        # Instead of waiting for input, automatically proceed
     except KeyboardInterrupt:
-        # User initiated interrupt (Ctrl+C)
         print(f"{BOLD_RED}Operation cancelled by user. Returning to the menu...")
 
     # Clear the screen and display the menu
