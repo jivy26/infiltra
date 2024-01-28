@@ -496,7 +496,7 @@ def display_menu(version):
         ("5. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
         ("6. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
         ("7. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues."),
-        (f"8. Vulnerability Scanner {BOLD_YELLOW}(In-Progress)")
+        (f"8. Vulnerability Scanner {BOLD_YELLOW}(In-Progress)","")
     ]
 
     for option, description in menu_options:
