@@ -69,65 +69,58 @@ def run_aort(domain):
 
 
 def run_bbot(domain, display_menu, project_path):
+    # Make sure the domain is valid before proceeding
+    if not is_valid_domain(domain):
+        print(f"{BOLD_RED}Invalid domain provided: {domain}")
+        return
+
     # Check if bbot is installed
     if not is_bbot_installed():
-        print("bbot is not installed, installing now...")
+        print(f"{BOLD_YELLOW}bbot is not installed, installing now...")
         install_bbot()
 
     # Clear the screen and display sample commands
     os.system('clear')
     print(f"{BOLD_CYAN}Select the bbot command to run:")
     print(f"{BOLD_YELLOW}All output is saved to the bbot/ folder\n")
-    print(f"1. Enumerate Subdomains")
-    print(f"2. Subdomains, Port Scans, and Web Screenshots")
-    print(f"3. Subdomains and Basic Web Scan")
-    print(f"4. Full Enumeration {BOLD_YELLOW}--- Enumerates subdomains, emails, cloud buckets, port scan with nmap, basic web scan, nuclei scan, and web screenshots")
 
-    # Get user choice
-    choice = input(f"\n{BOLD_GREEN}Enter your choice (1-4): ").strip()
-
-    # Map user choice to bbot command
+    # Define bbot commands
     commands = {
-        '1': "-f subdomain-enum",
-        '2': "-f subdomain-enum -m nmap gowitness",
-        '3': "-f subdomain-enum web-basic",
-        '4': "-f subdomain-enum email-enum cloud-enum web-basic -m nmap gowitness nuclei --allow-deadly",
+        '1': ["-f", "subdomain-enum"],
+        '2': ["-f", "subdomain-enum", "-m", "nmap", "gowitness"],
+        '3': ["-f", "subdomain-enum", "web-basic"],
+        '4': ["-f", "subdomain-enum", "email-enum", "cloud-enum", "web-basic", "-m", "nmap", "gowitness", "nuclei",
+              "--allow-deadly"],
     }
 
-    if choice.isdigit() and choice in commands:
-        command = commands[choice]
-        full_command = f"bbot -t {domain} {command} -o . --name bbot"
-        print(f"{BOLD_YELLOW}Executing: {full_command}")
+    choice = input(f"{BOLD_GREEN}Enter your choice (1-4): ").strip()
 
-        process = subprocess.Popen(full_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if choice in commands:
+        # Change directory to the project path
+        os.chdir(project_path)
+        command_list = ["bbot", "-t", domain, *commands[choice], "-o", project_path, "--name", "bbot"]
+        print(f"{BOLD_YELLOW}Executing bbot with options: {' '.join(command_list)}")
 
-        # Monitor both stdout and stderr
-        while True:
-            output = process.stdout.readline()
-            if output:
-                print(output.strip().decode())
-            error_output = process.stderr.readline()
-            if error_output:
-                print(f"{BOLD_RED}Error: {error_output.strip().decode()}")
+        try:
+            # Run the bbot command
+            process = subprocess.Popen(command_list, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-            # Check if process has terminated
-            if process.poll() is not None and output == b'' and error_output == b'':
-                break
+            # Real-time output and error display
+            for line in process.stdout:
+                print(line, end='')
 
+            # Check for errors
+            errors = process.stderr.read()
+            if errors:
+                print(f"{BOLD_RED}bbot errors:\n{errors}")
+
+        except Exception as e:
+            print(f"{BOLD_RED}An error occurred while running bbot: {e}")
     else:
         print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.")
 
-    # Handle input for continuing or exiting based on the execution context (interactive or non-interactive)
-    try:
-        input(f"{BOLD_GREEN}Press any key to return to the menu...")
-    except EOFError:
-        print(f"{BOLD_YELLOW}Input not available. Returning to the menu automatically...")
-        # Instead of waiting for input, automatically proceed
-    except KeyboardInterrupt:
-        print(f"{BOLD_RED}Operation cancelled by user. Returning to the menu...")
-
-    # Clear the screen and display the menu
-    os.system('clear')
+    # Wait for the user to acknowledge before returning to the menu
+    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
     display_menu(get_version(), project_path)
 
 
