@@ -524,45 +524,58 @@ def display_menu(version, project_path):
 def main():
     project_path = os.path.expanduser('~/projects')
     version = get_version()
+
+    # Check if the script is running in a terminal
+    if not sys.stdin.isatty():
+        print(f"{BOLD_RED}This script is not running in an interactive mode. Exiting...")
+        sys.exit(1)
+
     while True:
-        choice = display_menu(version, project_path)
-        if choice == '1':
-            new_project_path = project_submenu()
-            if new_project_path is not None:  # Check if a new project path was returned or if it's a deletion
-                project_path = new_project_path
-                os.chdir(project_path)  # Change the working directory
-                print(f"Changed directory to {project_path}")
+        try:
+            choice = display_menu(version, project_path)
+            if choice == '1':
+                new_project_path = project_submenu()
+                if new_project_path is not None:  # Check if a new project path was returned or if it's a deletion
+                    project_path = new_project_path
+                    os.chdir(project_path)  # Change the working directory
+                    print(f"Changed directory to {project_path}")
+                else:
+                    # If None is returned, reset to the base projects directory (e.g. after deletion)
+                    project_path = os.path.expanduser('~/projects')
+                    os.chdir(project_path)
+                    print(f"Changed directory to the base projects directory {project_path}")
+            elif choice == '2':
+                run_whois()
+            elif choice == '3':
+                check_alive_hosts()
+            elif choice == '4':
+                osint_submenu(project_path)
+            elif choice == '5':
+                run_nmap()
+            elif choice == '6':
+                scan_type = input(f"{BOLD_GREEN}Enter the scan type that was run (TCP/UDP): ").upper()
+                run_ngrep(scan_type)
+            elif choice == '7':
+                run_sslscanparse()
+            elif choice == '8':
+                target_input = input(
+                    f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: ")
+                run_nikto(target_input)
+            elif choice == '9':
+                nuclei_main()
+            elif choice == 'u':
+                print("Checking for updates...")
+                updated = check_and_update()
+            elif choice == 'x':
+                break
             else:
-                # If None is returned, reset to the base projects directory (e.g. after deletion)
-                project_path = os.path.expanduser('~/projects')
-                os.chdir(project_path)
-                print(f"Changed directory to the base projects directory {project_path}")
-        elif choice == '2':
-            run_whois()
-        elif choice == '3':
-            check_alive_hosts()
-        elif choice == '4':
-            osint_submenu(project_path)
-        elif choice == '5':
-            run_nmap()
-        elif choice == '6':
-            scan_type = input(f"{BOLD_GREEN}Enter the scan type that was run (TCP/UDP): ").upper()
-            run_ngrep(scan_type)
-        elif choice == '7':
-            run_sslscanparse()
-        elif choice == '8':
-            target_input = input(
-                f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: ")
-            run_nikto(target_input)
-        elif choice == '9':
-            nuclei_main()
-        elif choice == 'u':
-            print("Checking for updates...")
-            updated = check_and_update()
-        elif choice == 'x':
-            break
-        else:
-            print(f"{BOLD_YELLOW}Invalid choice, please try again.")
+                print(f"{BOLD_YELLOW}Invalid choice, please try again.")
+        except EOFError:
+            print(f"{BOLD_RED}EOFError encountered. Exiting...")
+            sys.exit(1)
+        except KeyboardInterrupt:
+            print(f"{BOLD_RED}Operation cancelled by user. Exiting...")
+            sys.exit(1)
 
 
 # Ensure the `packaging` library is installed
