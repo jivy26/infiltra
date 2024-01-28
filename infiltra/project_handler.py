@@ -110,7 +110,7 @@ def project_submenu():
 
         if choice == '1':
             os.system('clear')
-            org_name = input("Enter the organization name for the new project: ").strip()
+            org_name = input(f"{BOLD_GREEN}Enter the organization name for the new project: ").strip()
             project_path = create_project_directory(org_name)
             if project_path:
                 os.chdir(project_path)
