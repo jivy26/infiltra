@@ -69,26 +69,22 @@ def run_aort(domain):
 
 
 def run_bbot(domain, display_menu, project_path):
+    # Make sure the domain is valid before proceeding
+    if not is_valid_domain(domain):
+        print(f"{BOLD_RED}Invalid domain provided: {domain}")
+        return
 
     # Check if bbot is installed
     if not is_bbot_installed():
-        print("bbot is not installed, installing now...")
+        print(f"{BOLD_YELLOW}bbot is not installed, installing now...")
         install_bbot()
 
     # Clear the screen and display sample commands
     os.system('clear')
     print(f"{BOLD_CYAN}Select the bbot command to run:")
     print(f"{BOLD_YELLOW}All output is saved to the bbot/ folder\n")
-    print(f"1. Enumerate Subdomains")
-    print(f"2. Subdomains, Port Scans, and Web Screenshots")
-    print(f"3. Subdomains and Basic Web Scan")
-    print(f"4. Full Enumeration {BOLD_YELLOW}--- Enumerates subdomains, emails, cloud buckets, port scan with nmap, basic web scan, nuclei scan, and web screenshots")
 
-
-    # Get user choice
-    choice = input(f"\n{BOLD_GREEN}Enter your choice (1-4): ").strip()
-
-    # Map user choice to bbot command
+    # Define bbot commands
     commands = {
         '1': "-f subdomain-enum",
         '2': "-f subdomain-enum -m nmap gowitness",
@@ -96,19 +92,29 @@ def run_bbot(domain, display_menu, project_path):
         '4': "-f subdomain-enum email-enum cloud-enum web-basic -m nmap gowitness nuclei --allow-deadly",
     }
 
-    if choice.isdigit() in commands:
+    choice = input(f"{BOLD_GREEN}Enter your choice (1-4): ").strip()
+
+    if choice in commands:
         command = commands[choice]
         full_command = f"bbot -t {domain} {command} -o . --name bbot"
+
+        # Change directory to the project path
+        os.chdir(project_path)
+
+        # Print the command being executed for the user's reference
         print(f"{BOLD_YELLOW}Executing: {full_command}")
-        try:
-            os.system(full_command)
-        except Exception as e:
-            print(f"{BOLD_RED}An error occurred while running bbot: {e}")
+
+        # Run the bbot command
+        exit_status = os.system(full_command)
+
+        # Check exit status
+        if exit_status != 0:
+            print(f"{BOLD_RED}bbot command failed with exit status {exit_status}")
     else:
         print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.")
 
-    input(f"{BOLD_GREEN}Press any key to return to the menu...")
-    os.system('clear')
+    # Wait for the user to acknowledge before returning to the menu
+    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
     display_menu(get_version(), project_path)
 
 
