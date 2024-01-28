@@ -13,6 +13,15 @@ BOLD_GREEN = Fore.GREEN + Style.BRIGHT
 BOLD_RED = Fore.RED + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
+
+def get_nuclei_version():
+    try:
+        result = subprocess.run(["nuclei", "-version"], capture_output=True, text=True, check=True)
+        return result.stdout.strip()
+    except Exception as e:
+        return f"Nuclei not installed or error retrieving version: {e}"
+
+
 def is_go_installed():
     try:
         subprocess.run(["go", "version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -20,9 +29,11 @@ def is_go_installed():
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
 
+
 def install_go():
     print(f"{BOLD_YELLOW}Updating package list and installing Go...")
     os.system("sudo apt update && sudo apt install -y golang-go")
+
 
 def setup_go_environment():
     print(f"{BOLD_CYAN}Setting up Go environment...")
@@ -35,22 +46,31 @@ def setup_go_environment():
             zshrc.write(bashrc_update)
     os.system("source ~/.bashrc")
 
+
 def install_nuclei():
     print(f"{BOLD_GREEN}Installing Nuclei...")
     os.system("go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest")
 
+def update_nuclei():
+    print(f"{BOLD_YELLOW}Checking for Nuclei updates...")
+    try:
+        subprocess.run(["nuclei", "-update"], check=True)
+        print(f"{BOLD_GREEN}Nuclei has been updated to the latest version.")
+    except subprocess.CalledProcessError as e:
+        print(f"{BOLD_RED}An error occurred during Nuclei update: {e}")
+    except FileNotFoundError:
+        print(f"{BOLD_RED}Nuclei is not installed.")
+
+
 def nuclei_submenu():
     while True:
-        print(f"\n{BOLD_CYAN}Nuclei:")
-        print(
-            f'{BOLD_CYAN} - Nuclei is used to send requests across targets based on a template, leading to zero '
-            f'false positives and providing fast scanning on a large number of hosts. Nuclei offers scanning for a '
-            f'variety of protocols, including TCP, DNS, HTTP, SSL, File, Whois, Websocket, Headless, Code etc. With '
-            f'powerful and flexible templating, Nuclei can be used to model all kinds of security checks.\n')
+        current_nuclei_version = get_nuclei_version()
+        print(f"\n{BOLD_CYAN}Nuclei Scanner version: {current_nuclei_version}\n")
         print(f"{BOLD_GREEN}1. Basic Vulnerability Scan")
         print(f"{BOLD_GREEN}2. [Placeholder for future functionality]")
         print(f"{BOLD_GREEN}3. [Placeholder for future functionality]")
         print(f"{BOLD_GREEN}4. [Placeholder for future functionality]")
+        print(f"{BOLD_GREEN}5. Check for Updates")
         print(f"{BOLD_RED}X. Exit Submenu")
 
         choice = input(f"\n{BOLD_YELLOW}Enter your choice: ").strip().lower()
@@ -60,6 +80,8 @@ def nuclei_submenu():
             # Add your logic for Basic Vulnerability Scan here
         elif choice in ['2', '3', '4']:
             print(f"{BOLD_RED}This feature is not yet implemented.")
+        elif choice == '5':
+            update_nuclei()
         elif choice == 'x':
             print(f"{BOLD_RED}Exiting Nuclei Submenu...")
             break
