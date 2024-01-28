@@ -57,16 +57,35 @@ def load_project():
     return None
 
 
-def delete_project(org_name):
+def delete_project():
     os.system('clear')
-    project_path = os.path.join(projects_base_path, org_name)
-    if os.path.exists(project_path):
-        shutil.rmtree(project_path)
-        print(f"{BOLD_GREEN}Deleted project directory for '{org_name}'.")
-        return projects_base_path  # Return the base path after deletion
-    else:
-        print(f"{BOLD_RED}Project directory for '{org_name}' does not exist or has already been deleted.")
+    projects = list_projects()
+    if not projects:
+        print(f"{BOLD_RED}There are no projects to delete.")
         return None
+
+    print(f"{BOLD_CYAN}Available Projects:")
+    for idx, project in enumerate(projects, start=1):
+        print(f"{BOLD_GREEN}{idx}. {project}")
+
+    choice = input(f"{BOLD_YELLOW}Enter the number of the project to delete: ").strip()
+    if choice.isdigit():
+        choice_idx = int(choice) - 1
+        if 0 <= choice_idx < len(projects):
+            org_name = projects[choice_idx]
+            confirm = input(f"{BOLD_RED}Are you sure you want to delete the project '{org_name}'? (y/N): ").strip().lower()
+            if confirm == 'y':
+                project_path = os.path.join(projects_base_path, org_name)
+                shutil.rmtree(project_path)
+                print(f"{BOLD_GREEN}Deleted project '{org_name}'.")
+                return projects_base_path
+            else:
+                print(f"{BOLD_YELLOW}Project deletion cancelled.")
+        else:
+            print(f"{BOLD_RED}Invalid project number.")
+    else:
+        print(f"{BOLD_RED}Please enter a valid number.")
+    return None
 
 
 def list_projects():
@@ -76,7 +95,7 @@ def list_projects():
 
 def project_submenu():
     os.system('clear')
-    project_path = None  # Initialize project_path to None
+    project_path = None
     while True:
         print("\nProject Management Menu:")
         print("1. Create Project")
@@ -88,23 +107,22 @@ def project_submenu():
 
         if choice == '1':
             org_name = input("Enter the organization name for the new project: ").strip()
-            project_path = create_project_directory(org_name)  # This will set project_path
+            project_path = create_project_directory(org_name)
             if project_path:
-                os.chdir(project_path)  # Change the working directory
+                os.chdir(project_path)
         elif choice == '2':
-            project_path = load_project()  # This will handle the project loading
+            project_path = load_project()
             if project_path:
-                os.chdir(project_path)  # Change the current working directory to the project path
+                os.chdir(project_path)
         elif choice == '3':
-            org_name = input("Enter the organization name to delete the project: ").strip()
-            project_path = delete_project(org_name)  # This should handle the deletion
+            project_path = delete_project()
             if project_path:
-                os.chdir(project_path)  # Change the current working directory to the base path
+                os.chdir(project_path)
         elif choice == 'x':
             print(f"{BOLD_YELLOW}Returning to the main menu...")
-            break  # This is where the function exits the loop and returns
+            break
         else:
             print(f"{BOLD_RED}Invalid choice, please try again.")
 
-    # If no project is currently selected, return to the base projects path or home directory
     return project_path or projects_base_path
+
