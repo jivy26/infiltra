@@ -490,7 +490,7 @@ def display_menu(version, project_path):
     print(f"\n{BOLD_CYAN}Current Directory: {current_directory}\n")
 
     menu_options = [
-        ("1. Project", f"{DEFAULT_COLOR}Create a new project or Load an existing project"),
+        ("1. Project", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
         ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
         ("3. ICMP Echo ", f"{DEFAULT_COLOR}Ping requests and parse live hosts."),
         ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),

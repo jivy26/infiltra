@@ -89,6 +89,7 @@ def delete_project():
 
 
 def list_projects():
+    os.system('clear')
     projects = [d for d in os.listdir(projects_base_path) if os.path.isdir(os.path.join(projects_base_path, d))]
     return projects
 
@@ -97,11 +98,13 @@ def project_submenu():
     os.system('clear')
     project_path = None
     while True:
-        print("\nProject Management Menu:")
-        print("1. Create Project")
-        print("2. Load Project")
-        print("3. Delete Project")
-        print("X. Return to Main Menu")
+        print(f"\n{BOLD_GREEN}Project Management Menu:\n")
+        print(f"{BOLD_GREEN}1. Create Project")
+        print(f"{BOLD_GREEN}2. Load Project")
+        print(f"{BOLD_GREEN}3. Delete Project")
+
+        print(f"\n{BOLD_CYAN}Utilities:")
+        print(f"{BOLD_RED}X. Return to Main Menu")
 
         choice = input("\nEnter your choice: ").strip().lower()
 
