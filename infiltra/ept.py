@@ -106,7 +106,15 @@ def run_bbot(domain, display_menu, project_path):
     else:
         print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.")
 
-    input(f"{BOLD_GREEN}Press any key to return to the menu...")
+    try:
+        # Check if running in an interactive mode
+        if sys.stdin.isatty():
+            input(f"{BOLD_GREEN}Press any key to return to the menu...")
+        else:
+            print(f"{BOLD_GREEN}Non-interactive mode, automatically returning to the menu...")
+    except EOFError as e:
+        print(f"{BOLD_RED}EOFError encountered: {e}")
+
     os.system('clear')
     display_menu(get_version(), project_path)
 
