@@ -1,0 +1,33 @@
+id: tilda-takeover
+
+info:
+  name: tilda takeover detection
+  author: pdteam
+  severity: high
+  description: Bigcartel takeover was detected.
+  reference:
+    - https://github.com/EdOverflow/can-i-take-over-xyz/issues/155
+  metadata:
+    max-request: 1
+  tags: takeover
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - Host != ip
+
+      - type: word
+        words:
+          - Please go to the site settings and put the domain name in the Domain tab.
+
+      - type: word
+        words:
+          - "<title>Please renew your subscription</title>"
+        negative: true
+# digest: 490a0046304402206c667558baa8b90339340fb5c8c0d9bd68484fbfe3c00c4b73c87b32758ba6ca02206f8b44dd51aceccc70a60f9cf333a4075780fbfd0cacf802fea40695984e6251:922c64590222798bb761d5b6d8e72950

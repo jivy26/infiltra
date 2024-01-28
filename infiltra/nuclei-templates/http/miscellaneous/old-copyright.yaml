@@ -1,0 +1,44 @@
+id: old-copyright
+
+info:
+  name: Find Pages with Old Copyright Dates
+  author: geeknik
+  severity: info
+  metadata:
+    verified: true
+    max-request: 1
+  tags: miscellaneous,misc,generic
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}"
+
+    host-redirects: true
+    max-redirects: 3
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - '2023'
+        negative: true
+
+      - type: regex
+        part: body
+        regex:
+          - 'Copyright [1-9]\d* ?\-? ?[1-9]?\d*'
+          - '© [1-9]\d* ?\-? ?[1-9]?\d*'
+          - '&copy; [1-9]\d* ?\-? ?[1-9]?\d*'
+          - '&#169; [1-9]\d* ?\-? ?[1-9]?\d*'
+
+    extractors:
+      - type: regex
+        part: body
+        regex:
+          - 'Copyright [1-9]\d* ?\-? ?[1-9]?\d*'
+          - '© [1-9]\d* ?\-? ?[1-9]?\d*'
+          - '&copy; [1-9]\d* ?\-? ?[1-9]?\d*'
+          - '&#169; [1-9]\d* ?\-? ?[1-9]?\d*'
+# digest: 490a0046304402203b0d7054ec7440e4af55a3ed31bb27389cbdd2431a549132ca629f8cdada1a1c02203ffb118db83989ec0c0286c66b3d04f29d9cddeccb598ebeb786e66cf5f4d55a:922c64590222798bb761d5b6d8e72950

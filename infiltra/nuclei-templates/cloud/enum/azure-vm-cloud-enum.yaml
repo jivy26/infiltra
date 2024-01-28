@@ -1,0 +1,65 @@
+id: azure-vm-cloud-enum
+
+info:
+  name: Azure Virtual Machines - Cloud Enumeration
+  author: initstring
+  severity: info
+  description: |
+    Searches for Azure virtual machines via their registered DNS names.
+  metadata:
+    verified: true
+  tags: cloud,cloud-enum,azure,fuzz,enum
+
+self-contained: true
+
+variables:
+  BaseDNS: "cloudapp.azure.com"
+  regionname:
+    - eastasia
+    - southeastasia
+    - centralus
+    - eastus
+    - eastus2
+    - westus
+    - northcentralus
+    - southcentralus
+    - northeurope
+    - westeurope
+    - japanwest
+    - japaneast
+    - brazilsouth
+    - australiaeast
+    - australiasoutheast
+    - southindia
+    - centralindia
+    - westindia
+    - canadacentral
+    - canadaeast
+    - uksouth
+    - ukwest
+    - westcentralus
+    - westus2
+    - koreacentral
+    - koreasouth
+    - francecentral
+    - francesouth
+    - australiacentral
+    - australiacentral2
+    - southafricanorth
+    - southafricawest
+
+dns:
+  - name: "{{wordlist}}.{{regionname}}.{{BaseDNS}}"
+    type: A
+    class: inet
+
+    recursion: true
+
+    attack: batteringram
+
+    matchers:
+      - type: word
+        part: answer
+        words:
+          - "IN\tA"
+# digest: 4a0a0047304502200d2b5746a9587aae254172355d61125cc131378f0b2653fe8552687918d1df6c022100d07630497846e941860e65221e56fc2378f1aa5bb31adecfdee17e45e431842e:922c64590222798bb761d5b6d8e72950

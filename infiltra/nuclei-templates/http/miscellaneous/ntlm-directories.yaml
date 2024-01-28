@@ -1,0 +1,85 @@
+id: ntlm-directories
+
+info:
+  name: Discovering directories w/ NTLM
+  author: puzzlepeaches,incogbyte
+  severity: info
+  reference:
+    - https://medium.com/swlh/internal-information-disclosure-using-hidden-ntlm-authentication-18de17675666
+  metadata:
+    max-request: 47
+  tags: miscellaneous,misc,fuzz,windows
+
+http:
+  - raw:
+      - |
+        GET {{path}} HTTP/1.1
+        Host: {{Hostname}}
+        Authorization: NTLM TlRMTVNTUAABAAAAB4IIAAAAAAAAAAAAAAAAAAAAAAA=
+
+    threads: 10
+    payloads:
+      path:
+        - /
+        - /abs/
+        - /ecp/
+        - /etc/
+        - /ews/
+        - /mcx/
+        - /oab/
+        - /owa/
+        - /rgs/
+        - /rpc/
+        - /conf/
+        - /meet/
+        - /ocsp/
+        - /ucwa/
+        - /adfs/
+        - /dialin/
+        - /public/
+        - /certsrv/
+        - /exchweb/
+        - /meeting/
+        - /certprov/
+        - /exchange/
+        - /scheduler/
+        - /webticket/
+        - /autoupdate/
+        - /certenroll/
+        - /powershell/
+        - /rgsclients/
+        - /rpcwithcert/
+        - /autodiscover/
+        - /hybridconfig/
+        - /reach/sip.svc
+        - /aspnet_client/
+        - /groupexpansion/
+        - /persistentchat/
+        - /requesthandler/
+        - /unifiedmessaging/
+        - /mcx/mcxservice.svc
+        - /phoneconferencing/
+        - /requesthandlerext/
+        - /deviceupdatefiles_ext/
+        - /deviceupdatefiles_int/
+        - /microsoft-server-activesync/
+        - /webticket/webticketservice.svc
+        - /webticket/webticketservice.svcabs/
+        - /adfs/services/trust/2005/windowstransport
+        - /internal_windows_authentication/
+
+    matchers-condition: and
+    matchers:
+      - type: dsl
+        dsl:
+          - "contains(tolower(header), 'www-authenticate: ntlm')"
+
+      - type: status
+        status:
+          - 401
+
+    extractors:
+      - type: kval
+        kval:
+          - 'www_authenticate'
+# digest: 490a004630440220577e2e4f836fb48680664f144ec49d2f6d82f22a02fec67c28e01e640935ec3802203d6090db0f8cb8fbefedb50ed64af171442c8098a6897037412153a6bf6ff3a8:922c64590222798bb761d5b6d8e72950

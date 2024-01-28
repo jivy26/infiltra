@@ -1,0 +1,30 @@
+id: wordpress-themes-detect
+
+info:
+  name: WordPress Theme Detection
+  author: 0xcrypto
+  severity: info
+  metadata:
+    max-request: 24434
+  tags: fuzzing,fuzz,wordpress
+
+http:
+  - raw:
+      - |
+        GET /wp-content/themes/{{themeSlug}}/readme.txt HTTP/1.1
+        Host: {{Hostname}}
+
+    payloads:
+      themeSlug: helpers/wordlists/wordpress-themes.txt
+    threads: 50
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: word
+        words:
+          - "== Description =="
+# digest: 4a0a0047304502202b37969bfdaaf1238cb6e7cd6340e2069c0bf154cce5c9e5bf8c91998a39c68902210098ee542747d0596b189f5d7e99dfaf48bc5e4bee6b94ddd732d0fe13dcc442e5:922c64590222798bb761d5b6d8e72950

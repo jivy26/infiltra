@@ -1,0 +1,38 @@
+id: settings-php-files
+
+info:
+  name: settings.php - Information Disclosure
+  author: sheikhrishad
+  severity: medium
+  description: settings.php source code was detected via backup files.
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N
+    cvss-score: 5.3
+    cwe-id: CWE-200
+  metadata:
+    max-request: 6
+  tags: exposure,backup
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/settings.php.bak"
+      - "{{BaseURL}}/settings.php.dist"
+      - "{{BaseURL}}/settings.php.old"
+      - "{{BaseURL}}/settings.php.save"
+      - "{{BaseURL}}/settings.php.swp"
+      - "{{BaseURL}}/settings.php.txt"
+      - "{{BaseURL}}config/settings.old.php"
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "DB_NAME"
+          - "DB"
+        condition: and
+
+      - type: status
+        status:
+          - 200
+# digest: 4a0a00473045022100d8ec7d721ed649e9048fb14ef6cf04bc470bea19b608f01a87f08282940d980e022020b229fbb0f2a15fed82cfcb7bd56fb6a335dc100beb7ad4ffab73b7b53da0d8:922c64590222798bb761d5b6d8e72950

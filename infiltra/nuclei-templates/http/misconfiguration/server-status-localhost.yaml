@@ -1,0 +1,36 @@
+id: server-status-localhost
+
+info:
+  name: Server Status Disclosure
+  author: pdteam,geeknik
+  severity: low
+  description: Server Status is exposed.
+  metadata:
+    max-request: 1
+  tags: apache,debug,misconfig
+
+http:
+  - method: GET
+
+    headers:
+      Forwarded: "127.0.0.1"
+      X-Client-IP: "127.0.0.1"
+      X-Forwarded-By: "127.0.0.1"
+      X-Forwarded-For: "127.0.0.1"
+      X-Forwarded-For-IP: "127.0.0.1"
+      X-Forwarded-Host: "127.0.0.1"
+      X-Host: "127.0.0.1"
+      X-Originating-IP: "127.0.0.1"
+      X-Remote-Addr: "127.0.0.1"
+      X-Remote-IP: "127.0.0.1"
+      X-True-IP: "127.0.0.1"
+    path:
+      - "{{BaseURL}}/server-status"
+
+    matchers:
+      - type: word
+        words:
+          - "Apache Server Status"
+          - "Server Version"
+        condition: and
+# digest: 4b0a00483046022100b1d7367f280fcefee5a7187a5fb87a1593b22b0aaee129adbc613fe55558c3c702210089576edace1c1b6aef9abe9bb6199c0dee699be2afec2297597657eb9989ce0b:922c64590222798bb761d5b6d8e72950

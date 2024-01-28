@@ -1,0 +1,40 @@
+id: reactapp-env-js
+
+info:
+  name: React App Environment Js
+  author: random-robbie,rinolock
+  severity: unknown
+  metadata:
+    verified: true
+    max-request: 2
+    github-query: "REACT_APP_"
+  tags: react,exposure,config,js,javascript
+
+http:
+  - method: GET
+    path:
+      - "{{BaseURL}}/env.js"
+      - "{{BaseURL}}/config.js"
+      - "{{BaseURL}}/config/env.js"
+      - "{{BaseURL}}/config/runtime-env.js"
+
+    stop-at-first-match: true
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "REACT_APP_"
+
+      - type: word
+        part: header
+        words:
+          - "application/octet-stream"
+          - "application/javascript"
+          - "text/plain"
+        condition: or
+
+      - type: status
+        status:
+          - 200
+# digest: 4a0a00473045022100f8112d506fff9a2a8543e3e590d7bab8887dbdcd0db7167829aa12c6efa05e4e02202278697f241244a6555c2a49b8e6267a1b732ae8ec43a5b4363b67dba9147391:922c64590222798bb761d5b6d8e72950

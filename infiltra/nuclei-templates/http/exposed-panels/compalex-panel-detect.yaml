@@ -1,0 +1,43 @@
+id: compalex-panel-detect
+
+info:
+  name: Compalex Panel - Detect
+  author: MaStErCho
+  severity: medium
+  reference:
+    - http://compalex.net/
+  metadata:
+    verified: true
+    shodan-query: title:"COMPALEX"
+  tags: tech,php,compalex,sql
+
+http:
+  - method: GET
+    path:
+      - '{{BaseURL}}'
+      - '{{BaseURL}}/{{paths}}/'
+      - '{{paths}}.{{BaseURL}}/'
+
+    payloads:
+      paths:
+        - 'db'
+        - 'sql'
+        - 'compalex'
+        - '_db'
+        - 'dbdiff'
+
+    stop-at-first-match: true
+    host-redirects: true
+    max-redirects: 3
+    matchers-condition: and
+    matchers:
+      - type: word
+        words:
+          - "<title>COMPALEX"
+          - "<h1>Compalex"
+        condition: or
+
+      - type: status
+        status:
+          - 200
+# digest: 4a0a0047304502200a33412709b87ff201ab38c94f81eb914226966ba54956ca69fd276073c76c0b022100ab36f517ed32cd98b9d0d12f54b7628b94bce2d4b60214457aa143078d9cae49:922c64590222798bb761d5b6d8e72950

@@ -1,0 +1,25 @@
+id: valid-gmail-checker
+
+info:
+  name: Valid Google Mail Checker
+  author: dievus,dwisiswant0
+  severity: info
+  reference:
+    - https://github.com/dievus/geeMailUserFinder
+  metadata:
+    max-request: 1
+  tags: fuzzing,fuzz,gmail
+
+self-contained: true
+
+http:
+  - method: HEAD
+    path:
+      - "https://mail.google.com/mail/gxlu?email={{email}}"
+
+    matchers:
+      - type: word
+        part: header
+        words:
+          - "COMPASS"
+# digest: 4a0a0047304502206a721d8766cf1ae24ff1198f29fdd177ff3d09848c1167bde30de8db05da0be4022100a2a7570de706a28f5a7f53ede8fdec8cc594baef69fe094b3383fa713717732a:922c64590222798bb761d5b6d8e72950

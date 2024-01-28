@@ -1,0 +1,42 @@
+id: ibm-websphere-panel
+
+info:
+  name: IBM WebSphere Portal Login Panel - Detect
+  author: pdteam
+  severity: info
+  description: IBM WebSphere Portal login panel was detected.
+  classification:
+    cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N
+    cvss-score: 0
+    cwe-id: CWE-200
+  metadata:
+    max-request: 1
+    shodan-query: http.html:"IBM WebSphere Portal"
+  tags: ibm,websphere,panel
+
+http:
+  - method: GET
+    path:
+      - '{{RootURL}}/wps/portal'
+
+    host-redirects: true
+    max-redirects: 2
+
+    matchers-condition: and
+    matchers:
+      - type: status
+        status:
+          - 200
+
+      - type: word
+        words:
+          - 'IBM WebSphere Portal'
+          - 'IBMPortalWeb'
+        condition: or
+
+      - type: regex
+        part: header
+        regex:
+          - "Content-Location: .+"
+        negative: true
+# digest: 4a0a00473045022100d3c2b2aa3ba320693e70fc23d5c40fe54a751b2a5a4f02dfbc5a6db861ceecfc0220097b265afa4b0f9f9d3fe48e004de169dcc8e754422232e15079bdf6a9441396:922c64590222798bb761d5b6d8e72950

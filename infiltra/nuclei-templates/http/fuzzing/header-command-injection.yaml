@@ -1,0 +1,42 @@
+id: header-command-injection
+
+info:
+  name: Header - Remote Command Injection
+  author: geeknik
+  severity: critical
+  description: Headers were tested for remote command injection vulnerabilities.
+  classification:
+    cvss-metrics: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H
+    cvss-score: 10
+    cwe-id: CWE-77
+  metadata:
+    max-request: 7650
+  tags: fuzzing,fuzz,rce
+
+http:
+  - raw:
+      - |
+        GET /?{{header}} HTTP/1.1
+        Host: {{Hostname}}
+        {{header}}: {{payload}}
+
+    payloads:
+      header: helpers/payloads/request-headers.txt
+      payload: helpers/payloads/command-injection.txt
+    attack: clusterbomb
+    host-redirects: true
+    stop-at-first-match: true
+
+    matchers-condition: or
+    matchers:
+      - type: word
+        words:
+          - "uid="
+          - "gid="
+          - "groups="
+        condition: and
+
+      - type: regex
+        regex:
+          - "root:.*:0:0:"
+# digest: 4a0a004730450221008d095ccf19a35169d1d4bec6151a7647f80e4720cb35d1f1cde20f3281e3d83102201b1a27a1ea0dcb5d5e87399e25fb9d17688a2d58f04bd4c3e8cbcb3d82222c29:922c64590222798bb761d5b6d8e72950

