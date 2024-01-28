@@ -83,7 +83,6 @@ def run_bbot(domain, display_menu, project_path):
     print(f"3. Subdomains and Basic Web Scan")
     print(f"4. Full Enumeration {BOLD_YELLOW}--- Enumerates subdomains, emails, cloud buckets, port scan with nmap, basic web scan, nuclei scan, and web screenshots")
 
-
     # Get user choice
     choice = input(f"\n{BOLD_GREEN}Enter your choice (1-4): ").strip()
 
@@ -106,15 +105,17 @@ def run_bbot(domain, display_menu, project_path):
     else:
         print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.")
 
+    # Handle input for continuing or exiting based on the execution context (interactive or non-interactive)
     try:
-        # Check if running in an interactive mode
-        if sys.stdin.isatty():
-            input(f"{BOLD_GREEN}Press any key to return to the menu...")
-        else:
-            print(f"{BOLD_GREEN}Non-interactive mode, automatically returning to the menu...")
-    except EOFError as e:
-        print(f"{BOLD_RED}EOFError encountered: {e}")
+        input(f"{BOLD_GREEN}Press any key to return to the menu...")
+    except EOFError:
+        # Non-interactive mode, unable to receive input
+        print(f"{BOLD_YELLOW}Input not available. Returning to the menu automatically...")
+    except KeyboardInterrupt:
+        # User initiated interrupt (Ctrl+C)
+        print(f"{BOLD_RED}Operation cancelled by user. Returning to the menu...")
 
+    # Clear the screen and display the menu
     os.system('clear')
     display_menu(get_version(), project_path)
 
