@@ -514,15 +514,17 @@ def display_menu(version):
 
 # Main function
 def main():
+    project_path = None
     version = get_version()
     while True:
         choice = display_menu(version)
         #choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
         if choice == '1':
-            project_path = project_submenu()
-            if project_path:
+            new_project_path = project_submenu()
+            if new_project_path:
+                project_path = new_project_path
                 os.chdir(project_path)
-                print(f"{BOLD_GREEN}Current working directory is now {project_path}")
+                print(f"Changed directory to {project_path}")
         elif choice == '2':
             run_whois()
         elif choice == '3':

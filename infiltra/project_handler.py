@@ -48,6 +48,7 @@ def delete_project(org_name):
 
 def project_submenu():
     while True:
+        project_path = None
         print("\nProject Management Menu:")
         print("1. Create Project")
         print("2. Load Project")
@@ -70,3 +71,4 @@ def project_submenu():
             break
         else:
             print(f"{BOLD_RED}Invalid choice, please try again.")
+        return project_path
