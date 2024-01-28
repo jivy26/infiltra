@@ -23,6 +23,7 @@ def create_project_directory(org_name):
         print(f"{BOLD_GREEN}Created project directory for '{org_name}' at {project_path}")
     else:
         print(f"{BOLD_YELLOW}Project directory for '{org_name}' already exists at {project_path}")
+    return project_path
 
 
 def load_project(org_name):

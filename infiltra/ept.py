@@ -519,7 +519,10 @@ def main():
         choice = display_menu(version)
         #choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
         if choice == '1':
-            project_submenu()
+            project_path = project_submenu()
+            if project_path:
+                os.chdir(project_path)
+                print(f"{BOLD_GREEN}Current working directory is now {project_path}")
         elif choice == '2':
             run_whois()
         elif choice == '3':
