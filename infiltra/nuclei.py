@@ -55,8 +55,8 @@ def update_nuclei():
 
 
 def nuclei_submenu():
-    os.system('clear')
     while True:
+        os.system('clear')
         print(f"\n{BOLD_CYAN}Nuclei Scanner\n")
         print(f"{BOLD_GREEN}1. Basic Vulnerability Scan")
         print(f"{BOLD_GREEN}2. [Placeholder for future functionality]")
