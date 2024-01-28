@@ -69,7 +69,9 @@ def nuclei_submenu():
         if choice == '1':
             domain = input(f"{BOLD_GREEN} Enter the domain: ").strip().lower()
             print(f"{BOLD_BLUE}Running Basic Vulnerability Scan...")
-            os.system(f"nuclei -u https://{domain}")
+            #os.system(f"nuclei -u https://{domain}")
+            command = f"""qterminal -e bash -c 'nuclei -u https://{domain}; echo "Press enter to close..."; read'"""
+            subprocess.Popen(command, shell=True)
         elif choice in ['2', '3', '4']:
             print(f"{BOLD_RED}This feature is not yet implemented.")
         elif choice == '5':
@@ -85,9 +87,10 @@ def nuclei_main():
     if not is_go_installed():
         print(f"{BOLD_RED}Go is not installed. Installing Go...")
         install_go()
-        setup_go_environment()
     else:
         print(f"{BOLD_GREEN}Go is already installed.")
+
+    setup_go_environment()
 
     os.system('clear')
     install_nuclei()
