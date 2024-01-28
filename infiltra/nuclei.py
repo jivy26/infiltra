@@ -1,6 +1,18 @@
 import os
 import subprocess
 from colorama import init, Fore, Style
+import pkg_resources
+
+# This will give you the path to where the 'infiltra' package is installed
+infiltra_path = pkg_resources.resource_filename('infiltra', '')
+
+# Construct the path to the 'nuclei-templates' directory
+nuclei_templates_path = os.path.join(infiltra_path, 'nuclei-templates')
+ssl_templates_path = os.path.join(nuclei_templates_path, 'ssl')
+fuzzing_templates_path = os.path.join(nuclei_templates_path, 'http/fuzzing/')
+
+# Now you can use this path in your nuclei command
+nuclei_command = f"nuclei -t {nuclei_templates_path}"
 
 # Initialize Colorama with autoreset
 init(autoreset=True)
@@ -70,8 +82,7 @@ def nuclei_submenu():
         if choice == '1':
             domain = input(f"{BOLD_GREEN} Enter the domain: ").strip().lower()
             print(f"{BOLD_BLUE}Running Basic Vulnerability Scan...")
-            #os.system(f"nuclei -u https://{domain}")
-            command = f"""qterminal -e bash -c 'nuclei -u https://{domain} -o nuclei.txt; echo "Press enter to close..."; read'"""
+            command = f"""qterminal -e bash -c 'nuclei -u https://{domain} -t {ssl_templates_path} -t {fuzzing_templates_path} -o nuclei.txt; echo "Press enter to close..."; read'"""
             subprocess.Popen(command, shell=True)
         elif choice in ['2', '3', '4']:
             print(f"{BOLD_RED}This feature is not yet implemented.")
