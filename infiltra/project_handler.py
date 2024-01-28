@@ -21,6 +21,7 @@ projects_base_path = os.path.expanduser('~/projects')
 
 
 def create_project_directory(org_name):
+    os.system('clear')
     project_path = os.path.join(projects_base_path, org_name)
     if not os.path.exists(project_path):
         os.makedirs(project_path)
@@ -31,6 +32,7 @@ def create_project_directory(org_name):
 
 
 def load_project(org_name):
+    os.system('clear')
     project_path = os.path.join(projects_base_path, org_name)
     if os.path.exists(project_path):
         print(f"{BOLD_GREEN}Loaded project for '{org_name}'.")
@@ -42,12 +44,15 @@ def load_project(org_name):
 
 
 def delete_project(org_name):
+    os.system('clear')
     project_path = os.path.join(projects_base_path, org_name)
     if os.path.exists(project_path):
         shutil.rmtree(project_path)
         print(f"{BOLD_GREEN}Deleted project directory for '{org_name}'.")
+        return projects_base_path  # Return the base path after deletion
     else:
         print(f"{BOLD_RED}Project directory for '{org_name}' does not exist or has already been deleted.")
+        return None
 
 
 def project_submenu():
@@ -80,4 +85,4 @@ def project_submenu():
         else:
             print(f"{BOLD_RED}Invalid choice, please try again.")
         # Do not return inside the loop
-    return project_path  # Return the project_path after exiting the loop
+    return project_path or None

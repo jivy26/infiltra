@@ -514,16 +514,21 @@ def display_menu(version, project_path):
 
 # Main function
 def main():
-    project_path = None
+    project_path = os.path.expanduser('~/projects')
     version = get_version()
     while True:
         choice = display_menu(version, project_path)
         if choice == '1':
             new_project_path = project_submenu()
-            if new_project_path:  # Check if a new project path was returned
+            if new_project_path is not None:  # Check if a new project path was returned or if it's a deletion
                 project_path = new_project_path
                 os.chdir(project_path)  # Change the working directory
                 print(f"Changed directory to {project_path}")
+            else:
+                # If None is returned, reset to the base projects directory (e.g. after deletion)
+                project_path = os.path.expanduser('~/projects')
+                os.chdir(project_path)
+                print(f"Changed directory to the base projects directory {project_path}")
         elif choice == '2':
             run_whois()
         elif choice == '3':
