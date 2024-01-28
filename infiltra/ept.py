@@ -101,16 +101,19 @@ def run_bbot(domain, display_menu, project_path):
 
         process = subprocess.Popen(full_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        # Read output line by line as it is produced
+        # Monitor both stdout and stderr
         while True:
             output = process.stdout.readline()
-            if process.poll() is not None and output == '':
-                break
             if output:
                 print(output.strip().decode())
-        stderr = process.stderr.read().decode()
-        if stderr:
-            print(f"Errors:\n{stderr}")
+            error_output = process.stderr.readline()
+            if error_output:
+                print(f"{BOLD_RED}Error: {error_output.strip().decode()}")
+
+            # Check if process has terminated
+            if process.poll() is not None and output == b'' and error_output == b'':
+                break
+
     else:
         print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.")
 
