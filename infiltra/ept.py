@@ -83,6 +83,10 @@ def run_bbot(domain, display_menu, project_path):
     os.system('clear')
     print(f"{BOLD_CYAN}Select the bbot command to run:")
     print(f"{BOLD_YELLOW}All output is saved to the bbot/ folder\n")
+    print(f"1. Enumerate Subdomains")
+    print(f"2. Subdomains, Port Scans, and Web Screenshots")
+    print(f"3. Subdomains and Basic Web Scan")
+    print(f"4. Full Enumeration {BOLD_YELLOW}--- Enumerates subdomains, emails, cloud buckets, port scan with nmap, basic web scan, nuclei scan, and web screenshots")
 
     # Define bbot commands
     commands = {
@@ -96,7 +100,7 @@ def run_bbot(domain, display_menu, project_path):
 
     if choice in commands:
         command = commands[choice]
-        full_command = f"bbot -t {domain} {command} -o . --name bbot"
+        full_command = 'qterminal', '-e', f'bbot -t {domain} {command} -o . --name bbot'
 
         # Change directory to the project path
         os.chdir(project_path)
@@ -105,11 +109,12 @@ def run_bbot(domain, display_menu, project_path):
         print(f"{BOLD_YELLOW}Executing: {full_command}")
 
         # Run the bbot command
-        exit_status = os.system(full_command)
-
-        # Check exit status
-        if exit_status != 0:
-            print(f"{BOLD_RED}bbot command failed with exit status {exit_status}")
+        subprocess.Popen(full_command)
+        # exit_status = os.system(full_command)
+        #
+        # # Check exit status
+        # if exit_status != 0:
+        #     print(f"{BOLD_RED}bbot command failed with exit status {exit_status}")
     else:
         print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.")
 
@@ -524,10 +529,10 @@ def main():
     project_path = os.path.expanduser('~/projects')
     version = get_version()
 
-    # Check if the script is running in a terminal
-    if not sys.stdin.isatty():
-        print(f"{BOLD_RED}This script is not running in an interactive mode. Exiting...")
-        sys.exit(1)
+    # # Check if the script is running in a terminal
+    # if not sys.stdin.isatty():
+    #     print(f"{BOLD_RED}This script is not running in an interactive mode. Exiting...")
+    #     sys.exit(1)
 
     while True:
         try:
