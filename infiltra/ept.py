@@ -3,7 +3,7 @@ import subprocess
 import ipaddress
 import re
 import sys
-import pkg_resources
+from importlib.metadata import version as get_distribution_version
 from infiltra.bbot.bbot_parse import bbot_main
 from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
 from infiltra.updater import check_and_update
@@ -11,7 +11,7 @@ from infiltra.icmpecho import run_fping
 from colorama import init, Fore, Style
 from infiltra.nuclei import nuclei_main
 
-## Moved from ANSI to Colorama
+# Moved from ANSI to Colorama
 # Initialize Colorama
 init(autoreset=True)
 
@@ -214,12 +214,10 @@ def check_alive_hosts():
 # Function to get the current version from a file
 def get_version():
     try:
-        # Read the version.txt from the package
-        version_file_path = pkg_resources.resource_filename('infiltra', 'version.txt')
-        with open(version_file_path, "r") as file:
-            return file.read().strip()
+        # Replace 'my-package-name' with the actual package name
+        return get_distribution_version('infiltra')
     except Exception as e:
-        print(f"Could not read version file: {e}")
+        print(f"Could not read version: {e}")
         return "unknown"
 
 
@@ -465,7 +463,10 @@ def osint_submenu():
 
 
 # Function to display the menu
-
+# def get_ascii_art(text):
+#     f = pyfiglet.Figlet(font='block')
+#     ascii_art = f.renderText(text)
+#     return ascii_art
 def get_ascii_art(text):
     # Run the toilet command with subprocess and capture the output
     try:
