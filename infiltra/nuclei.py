@@ -14,14 +14,6 @@ BOLD_RED = Fore.RED + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
 
-def get_nuclei_version():
-    try:
-        result = subprocess.run(["nuclei", "-version"], capture_output=True, text=True, check=True)
-        return result.stdout.strip()
-    except Exception as e:
-        return f"Nuclei not installed or error retrieving version: {e}"
-
-
 def is_go_installed():
     try:
         subprocess.run(["go", "version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -64,8 +56,7 @@ def update_nuclei():
 
 def nuclei_submenu():
     while True:
-        current_nuclei_version = get_nuclei_version()
-        print(f"\n{BOLD_CYAN}Nuclei Scanner version: {current_nuclei_version}\n")
+        print(f"\n{BOLD_CYAN}Nuclei Scanner\n")
         print(f"{BOLD_GREEN}1. Basic Vulnerability Scan")
         print(f"{BOLD_GREEN}2. [Placeholder for future functionality]")
         print(f"{BOLD_GREEN}3. [Placeholder for future functionality]")
@@ -76,8 +67,9 @@ def nuclei_submenu():
         choice = input(f"\n{BOLD_YELLOW}Enter your choice: ").strip().lower()
 
         if choice == '1':
+            domain = input(f"{BOLD_GREEN} Enter the domain: ").strip().lower()
             print(f"{BOLD_BLUE}Running Basic Vulnerability Scan...")
-            # Add your logic for Basic Vulnerability Scan here
+            os.system(f"nuclei -u https://{domain}")
         elif choice in ['2', '3', '4']:
             print(f"{BOLD_RED}This feature is not yet implemented.")
         elif choice == '5':
