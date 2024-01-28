@@ -489,6 +489,26 @@ def get_ascii_art(text):
     except subprocess.CalledProcessError as e:
         return f"Error generating ASCII art: {e}"
 
+
+# Display tool statuses
+def display_tool_statuses(tools_statuses):
+    # Split the tools into two lines
+    line1_tools = list(tools_statuses.items())[:4]
+    line2_tools = list(tools_statuses.items())[4:]
+
+    # Function to format tool name with its status color
+    def format_tool(tool, status):
+        return (BOLD_GREEN if status else BOLD_RED) + tool
+
+    # Format each tool and status for both lines
+    line1_status = ' | '.join(format_tool(tool, status) for tool, status in line1_tools)
+    line2_status = ' | '.join(format_tool(tool, status) for tool, status in line2_tools)
+
+    # Print the two lines with statuses
+    print(line1_status)
+    print(line2_status)
+
+
 def display_menu(version, project_path):
     os.system('clear')  # Clear the screen
     ascii_art = get_ascii_art("Infiltra")
@@ -509,8 +529,8 @@ def display_menu(version, project_path):
         'udp_parsed': os.path.isdir(os.path.join(current_directory, 'udp_parsed')),
         'aort_dns.txt': os.path.isfile(os.path.join(current_directory, 'aort_dns.txt')),
         'icmpecho': any(fname.startswith('icmpecho_') for fname in os.listdir(current_directory)),
-        'tcp.txt': os.path.isfile(os.path.join(current_directory, 'tcp.txt')),
-        'udp.txt': os.path.isfile(os.path.join(current_directory, 'udp.txt')),
+        'nmap TCP': os.path.isfile(os.path.join(current_directory, 'tcp.txt')),
+        'nmap UDP': os.path.isfile(os.path.join(current_directory, 'udp.txt')),
         'whois': any(fname.startswith('whois_output') for fname in os.listdir(current_directory))
     }
 
@@ -535,10 +555,8 @@ def display_menu(version, project_path):
 
     # Display tool statuses
     print(f"{BOLD_CYAN}Tool Statuses:")
-    for tool, ran in tools_statuses.items():
-        color = BOLD_GREEN if ran else BOLD_RED
-        #status = 'Ran' if ran else 'Not Ran'
-        print(f"{color}{tool.ljust(15)}")
+    display_tool_statuses(tools_statuses)
+
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
     return choice
 
