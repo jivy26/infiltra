@@ -8,8 +8,12 @@ from colorama import init, Fore, Style
 init(autoreset=True)
 
 # Define colors using Colorama
-BOLD_RED = Fore.RED + Style.BRIGHT
+DEFAULT_COLOR = Fore.WHITE
+IT_MAG = Fore.MAGENTA + Style.BRIGHT
+BOLD_BLUE = Fore.BLUE + Style.BRIGHT
+BOLD_CYAN = Fore.CYAN + Style.BRIGHT
 BOLD_GREEN = Fore.GREEN + Style.BRIGHT
+BOLD_RED = Fore.RED + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
 # Base projects directory path
@@ -47,6 +51,7 @@ def delete_project(org_name):
 
 
 def project_submenu():
+    os.system('clear')
     project_path = None  # Initialize project_path to None
     while True:
         print("\nProject Management Menu:")
@@ -55,7 +60,10 @@ def project_submenu():
         print("3. Delete Project")
         print("4. Return to Main Menu")
 
-        choice = input("\nEnter your choice: ").strip()
+        print(f"\n{BOLD_CYAN}Utilities:")
+        print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
+
+        choice = input("\nEnter your choice: ").strip().lower()
 
         if choice == '1':
             org_name = input("Enter the organization name for the new project: ").strip()
@@ -66,7 +74,7 @@ def project_submenu():
         elif choice == '3':
             org_name = input("Enter the organization name to delete the project: ").strip()
             delete_project(org_name)
-        elif choice == '4':
+        elif choice == 'x':
             print(f"{BOLD_YELLOW}Returning to the main menu...")
             break
         else:
