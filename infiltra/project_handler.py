@@ -31,16 +31,30 @@ def create_project_directory(org_name):
     return project_path
 
 
-def load_project(org_name):
+def load_project():
     os.system('clear')
-    project_path = os.path.join(projects_base_path, org_name)
-    if os.path.exists(project_path):
-        print(f"{BOLD_GREEN}Loaded project for '{org_name}'.")
-        # Implement any specific logic for loading a project here
-        # For example, you could change the current working directory:
-        # os.chdir(project_path)
+    projects = list_projects()
+    if not projects:
+        print(f"{BOLD_RED}There are no projects to load.")
+        return None
+
+    print(f"{BOLD_CYAN}Available Projects:")
+    for idx, project in enumerate(projects, start=1):
+        print(f"{BOLD_GREEN}{idx}. {project}")
+
+    choice = input(f"{BOLD_YELLOW}Enter the number of the project to load: ").strip()
+    if choice.isdigit():
+        choice_idx = int(choice) - 1
+        if 0 <= choice_idx < len(projects):
+            org_name = projects[choice_idx]
+            project_path = os.path.join(projects_base_path, org_name)
+            print(f"{BOLD_GREEN}Loaded project for '{org_name}'.")
+            return project_path
+        else:
+            print(f"{BOLD_RED}Invalid project number.")
     else:
-        print(f"{BOLD_RED}Project directory for '{org_name}' does not exist.")
+        print(f"{BOLD_RED}Please enter a valid number.")
+    return None
 
 
 def delete_project(org_name):
@@ -55,6 +69,11 @@ def delete_project(org_name):
         return None
 
 
+def list_projects():
+    projects = [d for d in os.listdir(projects_base_path) if os.path.isdir(os.path.join(projects_base_path, d))]
+    return projects
+
+
 def project_submenu():
     os.system('clear')
     project_path = None  # Initialize project_path to None
@@ -63,26 +82,29 @@ def project_submenu():
         print("1. Create Project")
         print("2. Load Project")
         print("3. Delete Project")
-        print("4. Return to Main Menu")
-
-        print(f"\n{BOLD_CYAN}Utilities:")
-        print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
+        print("X. Return to Main Menu")
 
         choice = input("\nEnter your choice: ").strip().lower()
 
         if choice == '1':
             org_name = input("Enter the organization name for the new project: ").strip()
             project_path = create_project_directory(org_name)  # This will set project_path
+            if project_path:
+                os.chdir(project_path)  # Change the working directory
         elif choice == '2':
-            org_name = input("Enter the organization name to load the project: ").strip()
-            project_path = load_project(org_name)  # This should set project_path
+            project_path = load_project()  # This will handle the project loading
+            if project_path:
+                os.chdir(project_path)  # Change the current working directory to the project path
         elif choice == '3':
             org_name = input("Enter the organization name to delete the project: ").strip()
-            delete_project(org_name)
+            project_path = delete_project(org_name)  # This should handle the deletion
+            if project_path:
+                os.chdir(project_path)  # Change the current working directory to the base path
         elif choice == 'x':
             print(f"{BOLD_YELLOW}Returning to the main menu...")
-            break
+            break  # This is where the function exits the loop and returns
         else:
             print(f"{BOLD_RED}Invalid choice, please try again.")
-        # Do not return inside the loop
-    return project_path or None
+
+    # If no project is currently selected, return to the base projects path or home directory
+    return project_path or projects_base_path
