@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import os
 import subprocess
 from colorama import init, Fore, Style
@@ -15,20 +14,17 @@ BOLD_RED = Fore.RED + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
 def is_go_installed():
-    """ Check if Go is installed """
     try:
         subprocess.run(["go", "version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return True
-    except subprocess.CalledProcessError:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         return False
 
 def install_go():
-    """ Install Go language """
     print(f"{BOLD_YELLOW}Updating package list and installing Go...")
-    os.system("sudo apt update && sudo apt install -y golang")
+    os.system("sudo apt update && sudo apt install -y golang-go")
 
 def setup_go_environment():
-    """ Set up Go environment variables """
     print(f"{BOLD_CYAN}Setting up Go environment...")
     gopath = subprocess.check_output("go env GOPATH", shell=True).decode().strip()
     bashrc_update = f"\nexport GOPATH={gopath}\nexport PATH=$PATH:$GOPATH/bin\n"
@@ -40,16 +36,14 @@ def setup_go_environment():
     os.system("source ~/.bashrc")
 
 def install_nuclei():
-    """ Install Nuclei """
     print(f"{BOLD_GREEN}Installing Nuclei...")
     os.system("go install -v github.com/projectdiscovery/nuclei/v3/cmd/nuclei@latest")
 
 def nuclei_submenu():
-    """ Nuclei submenu """
     while True:
         print(f"\n{BOLD_CYAN}Nuclei:")
         print(
-            f'{BOLD_GREEN} - Nuclei is used to send requests across targets based on a template, leading to zero '
+            f'{BOLD_CYAN} - Nuclei is used to send requests across targets based on a template, leading to zero '
             f'false positives and providing fast scanning on a large number of hosts. Nuclei offers scanning for a '
             f'variety of protocols, including TCP, DNS, HTTP, SSL, File, Whois, Websocket, Headless, Code etc. With '
             f'powerful and flexible templating, Nuclei can be used to model all kinds of security checks.\n')
@@ -87,4 +81,4 @@ def nuclei_main():
     nuclei_submenu()
 
 if __name__ == "__main__":
-    main()
+    nuclei_main()
