@@ -416,6 +416,12 @@ def is_valid_domain(domain):
 def osint_submenu(project_path):
     os.system('clear')  # Clear the screen
     domain = ''
+    osint_domain_file = 'osint_domain.txt'  # File to store the domain
+
+    # Check if osint_domain.txt exists and read the domain from it
+    if os.path.isfile(osint_domain_file):
+        with open(osint_domain_file, 'r') as file:
+            domain = file.read().strip()
 
     while True:
         os.system('clear')
@@ -439,6 +445,9 @@ def osint_submenu(project_path):
             if is_valid_domain(domain_input):
                 domain = domain_input
                 print(f"{BOLD_GREEN}Domain set to: {domain}")
+                # Save the domain to osint_domain.txt
+                with open(osint_domain_file, 'w') as file:
+                    file.write(domain)
             else:
                 print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
                 continue
