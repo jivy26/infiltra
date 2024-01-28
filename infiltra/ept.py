@@ -499,9 +499,20 @@ def display_menu(version, project_path):
     print(f"{BOLD_YELLOW}            Author: @jivy26")
     print(f"{BOLD_CYAN}========================================================\n")
     current_directory = project_path if project_path else os.getcwd()
-    print(f"{BOLD_CYAN}Tool Statuses:")
-    print(f"{BOLD_CYAN}Tool Statuses:")
     print(f"{BOLD_CYAN}Current Directory: {current_directory}\n")
+
+    # Check tool statuses
+    tools_statuses = {
+        'bbot': os.path.isdir(os.path.join(current_directory, 'bbot')),
+        'nikto': os.path.isdir(os.path.join(current_directory, 'nikto')),
+        'tcp_parsed': os.path.isdir(os.path.join(current_directory, 'tcp_parsed')),
+        'udp_parsed': os.path.isdir(os.path.join(current_directory, 'udp_parsed')),
+        'aort_dns.txt': os.path.isfile(os.path.join(current_directory, 'aort_dns.txt')),
+        'icmpecho': any(fname.startswith('icmpecho_') for fname in os.listdir(current_directory)),
+        'tcp.txt': os.path.isfile(os.path.join(current_directory, 'tcp.txt')),
+        'udp.txt': os.path.isfile(os.path.join(current_directory, 'udp.txt')),
+        'whois': any(fname.startswith('whois_output') for fname in os.listdir(current_directory))
+    }
 
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
@@ -523,6 +534,14 @@ def display_menu(version, project_path):
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
 
     choice = input(f"{BOLD_GREEN}Enter your choice: ").lower()
+    # Display tool statuses
+    print(f"{BOLD_CYAN}Tool Statuses:")
+    for tool, ran in tools_statuses.items():
+        color = BOLD_GREEN if ran else BOLD_RED
+        status = 'Ran' if ran else 'Not Ran'
+        print(f"{color}{tool.ljust(15)}: {status}")
+
+    choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
     return choice
 
 
