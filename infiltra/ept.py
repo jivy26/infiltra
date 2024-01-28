@@ -98,18 +98,19 @@ def run_bbot(domain, display_menu, project_path):
         command = commands[choice]
         full_command = f"bbot -t {domain} {command} -o . --name bbot"
         print(f"{BOLD_YELLOW}Executing: {full_command}")
-        try:
-            # Run the command as a subprocess and capture the output and errors
-            process = subprocess.Popen(full_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                       text=True)
-            stdout, stderr = process.communicate()  # This will wait for the process to complete
 
-            # Print the output and errors for debugging
-            print(f"Output:\n{stdout}")
-            if stderr:
-                print(f"Errors:\n{stderr}")
-        except Exception as e:
-            print(f"{BOLD_RED}An error occurred while running bbot: {e}")
+        process = subprocess.Popen(full_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # Read output line by line as it is produced
+        while True:
+            output = process.stdout.readline()
+            if process.poll() is not None and output == '':
+                break
+            if output:
+                print(output.strip().decode())
+        stderr = process.stderr.read().decode()
+        if stderr:
+            print(f"Errors:\n{stderr}")
     else:
         print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.")
 
