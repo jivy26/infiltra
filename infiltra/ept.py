@@ -533,15 +533,13 @@ def display_menu(version, project_path):
     print(f"{BOLD_YELLOW}U. Update Check".ljust(30) + f"{DEFAULT_COLOR} Check for the latest updates of this tool.")
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
 
-    choice = input(f"{BOLD_GREEN}Enter your choice: ").lower()
     # Display tool statuses
     print(f"{BOLD_CYAN}Tool Statuses:")
     for tool, ran in tools_statuses.items():
         color = BOLD_GREEN if ran else BOLD_RED
         status = 'Ran' if ran else 'Not Ran'
         print(f"{color}{tool.ljust(15)}: {status}")
-
-    choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
+    choice = input(f"{BOLD_GREEN}Enter your choice: ").lower()
     return choice
 
 
