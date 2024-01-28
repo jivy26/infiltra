@@ -9,7 +9,7 @@ from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
 from infiltra.updater import check_and_update
 from infiltra.icmpecho import run_fping
 from colorama import init, Fore, Style
-
+from infiltra.nuclei import nuclei_submenu
 
 ## Moved from ANSI to Colorama
 # Initialize Colorama
@@ -494,7 +494,8 @@ def display_menu(version):
         ("4. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network."),
         ("5. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
         ("6. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
-        ("7. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues.")
+        ("7. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues."),
+        ("8. Vulnerability Scanner", f"{DEFAULT_COLOR}Utilizes Nuclei for vulnerability scans.")
     ]
 
     for option, description in menu_options:
@@ -531,6 +532,8 @@ def main():
             target_input = input(
                 f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: ")
             run_nikto(target_input)
+        elif choice == '8':
+            nuclei_submenu()
         elif choice == 'u':
             print("Checking for updates...")
             updated = check_and_update()
