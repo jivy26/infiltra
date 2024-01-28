@@ -428,6 +428,7 @@ def osint_submenu(project_path):
     domain = ''
 
     while True:
+        os.system('clear')
         print(f"{BOLD_CYAN}OSINT Submenu for {domain}:")
         if not domain:
             print(f"{BOLD_YELLOW}No domain has been set!\n")
