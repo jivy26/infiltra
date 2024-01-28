@@ -55,16 +55,6 @@ def install_nuclei():
     print(f"{BOLD_GREEN}Installing Nuclei...")
     os.system("sudo apt install nuclei")
 
-def update_nuclei():
-    print(f"{BOLD_YELLOW}Checking for Nuclei updates...")
-    try:
-        subprocess.run(["nuclei", "-update"], check=True)
-        print(f"{BOLD_GREEN}Nuclei has been updated to the latest version.")
-    except subprocess.CalledProcessError as e:
-        print(f"{BOLD_RED}An error occurred during Nuclei update: {e}")
-    except FileNotFoundError:
-        print(f"{BOLD_RED}Nuclei is not installed.")
-
 
 def nuclei_submenu():
     while True:
@@ -74,7 +64,7 @@ def nuclei_submenu():
         print(f"{BOLD_GREEN}2. Moderate Scan")
         print(f"{BOLD_GREEN}3. Advanced Invasive Scan")
         print(f"{BOLD_GREEN}4. [Placeholder for future functionality]")
-        #print(f"{BOLD_GREEN}5. Check for Updates")
+        print(f"{BOLD_GREEN}5. Check for Updates")
         print(f"{BOLD_RED}X. Exit Submenu")
 
         choice = input(f"\n{BOLD_YELLOW}Enter your choice: ").strip().lower()
@@ -94,8 +84,8 @@ def nuclei_submenu():
             print(f"{BOLD_BLUE}Running Advanced Invasive Scan...")
             command = f"nuclei -u https://{domain} -t {nuclei_templates_path} -severity high,critical -o advanced_scan_results.txt"
             os.system(f"qterminal -e bash -c '{command}; echo \"Press enter to close...\"; read'")
-        # elif choice == '5':
-        #     update_nuclei()
+        elif choice == '5':
+            subprocess.run(["sudo apt update && sudo apt upgrade -y"], check=True)
         elif choice == 'x':
             print(f"{BOLD_RED}Exiting Nuclei Submenu...")
             break
