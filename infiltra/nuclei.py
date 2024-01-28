@@ -47,7 +47,12 @@ def install_nuclei():
 def nuclei_submenu():
     """ Nuclei submenu """
     while True:
-        print(f"\n{BOLD_CYAN}Nuclei Submenu:")
+        print(f"\n{BOLD_CYAN}Nuclei:")
+        print(
+            f'{BOLD_GREEN} - Nuclei is used to send requests across targets based on a template, leading to zero '
+            f'false positives and providing fast scanning on a large number of hosts. Nuclei offers scanning for a '
+            f'variety of protocols, including TCP, DNS, HTTP, SSL, File, Whois, Websocket, Headless, Code etc. With '
+            f'powerful and flexible templating, Nuclei can be used to model all kinds of security checks.\n')
         print(f"{BOLD_GREEN}1. Basic Vulnerability Scan")
         print(f"{BOLD_GREEN}2. [Placeholder for future functionality]")
         print(f"{BOLD_GREEN}3. [Placeholder for future functionality]")
