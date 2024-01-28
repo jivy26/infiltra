@@ -297,7 +297,7 @@ def run_sslscanparse():
         except Exception as e:
             print(f"{BOLD_RED}An error occurred: {e}")
 
-    input(f"{BOLD_BLUE}Press Enter to return to the menu...")
+    input(f"\n\n{BOLD_BLUE}Press Enter to return to the menu...")
 
 
 # Function to run whois script

@@ -244,7 +244,7 @@ with open(ip_file_path, 'r') as file:
             self_signed_found = False
             tls_fallback_scsv_found = False
 
-            print(f"\n\n{BLUE}=============[Scanning {ip}]============={END}", flush=True)
+            print(f"\n\n{BLUE}=============[{END}{GREEN}Scanning {ip}{END}{BLUE}]============={END}", flush=True)
             scan_results = ssl_scan(ip)
             if scan_results:
                 for vuln, lines in scan_results.items():
