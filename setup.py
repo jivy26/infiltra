@@ -16,7 +16,7 @@ setup(
     include_package_data=True,
     package_data={
         # If your package is named 'infiltra', and you have non-code files in it:
-        'infiltra': ['version.txt', '*.json', '*.sh', '*.yaml', '*.png', 'venv/*', 'eyewitness/*', 'bbot/*', 'aort/*', 'nuclei-tempaltes/*'],
+        'infiltra': ['version.txt', '*.json', '*.sh', '*.yaml', '*.png', 'venv/*', 'eyewitness/*', 'bbot/*', 'aort/*'],
     },
 
     # Metadata
