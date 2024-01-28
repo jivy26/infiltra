@@ -99,7 +99,9 @@ def run_bbot(domain, display_menu, project_path):
         full_command = f"bbot -t {domain} {command} -o . --name bbot"
         print(f"{BOLD_YELLOW}Executing: {full_command}")
         try:
-            os.system(full_command)
+            # Run the command as a subprocess and allow user interaction
+            process = subprocess.Popen(full_command, shell=True)
+            process.communicate()
         except Exception as e:
             print(f"{BOLD_RED}An error occurred while running bbot: {e}")
     else:
