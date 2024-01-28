@@ -523,15 +523,15 @@ def display_menu(version, project_path):
 
     # Check tool statuses
     tools_statuses = {
+        'Whois': any(fname.startswith('whois_output') for fname in os.listdir(current_directory))
+        'ICMP Echo': any(fname.startswith('icmpecho_') for fname in os.listdir(current_directory)),
+        'AORT/DNS Recon': os.path.isfile(os.path.join(current_directory, 'aort_dns.txt')),
         'bbot': os.path.isdir(os.path.join(current_directory, 'bbot')),
-        'nikto': os.path.isdir(os.path.join(current_directory, 'nikto')),
-        'tcp_parsed': os.path.isdir(os.path.join(current_directory, 'tcp_parsed')),
-        'udp_parsed': os.path.isdir(os.path.join(current_directory, 'udp_parsed')),
-        'aort_dns.txt': os.path.isfile(os.path.join(current_directory, 'aort_dns.txt')),
-        'icmpecho': any(fname.startswith('icmpecho_') for fname in os.listdir(current_directory)),
-        'nmap TCP': os.path.isfile(os.path.join(current_directory, 'tcp.txt')),
-        'nmap UDP': os.path.isfile(os.path.join(current_directory, 'udp.txt')),
-        'whois': any(fname.startswith('whois_output') for fname in os.listdir(current_directory))
+        'NMAP TCP Scans': os.path.isfile(os.path.join(current_directory, 'tcp.txt')),
+        'NMAP UDP Scans': os.path.isfile(os.path.join(current_directory, 'udp.txt')),
+        'Parsed TCP Scans': os.path.isdir(os.path.join(current_directory, 'tcp_parsed')),
+        'Parsed UDP Scans': os.path.isdir(os.path.join(current_directory, 'udp_parsed')),
+        'Nikto': os.path.isdir(os.path.join(current_directory, 'nikto')),
     }
 
     menu_options = [
