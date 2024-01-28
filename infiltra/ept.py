@@ -95,7 +95,7 @@ def run_bbot(domain, display_menu, project_path):
         '4': "-f subdomain-enum email-enum cloud-enum web-basic -m nmap gowitness nuclei --allow-deadly",
     }
 
-    if choice.isdigit() in commands:
+    if choice.isdigit() and choice in commands:
         command = commands[choice]
         full_command = f"bbot -t {domain} {command} -o . --name bbot"
         print(f"{BOLD_YELLOW}Executing: {full_command}")
