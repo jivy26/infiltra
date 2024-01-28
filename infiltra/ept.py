@@ -489,7 +489,26 @@ def get_ascii_art(text):
     except subprocess.CalledProcessError as e:
         return f"Error generating ASCII art: {e}"
 
-def display_menu(version, project_path):
+
+def display_tool_statuses(tools_statuses):
+    # Split the statuses into two lines
+    line1_tools = tools_statuses[:4]
+    line2_tools = tools_statuses[4:]
+
+    # Function to format tool name with its status color
+    def format_tool(tool, status):
+        return (BOLD_GREEN if status else BOLD_RED) + tool
+
+    # Format each tool and status for both lines
+    line1_status = ' | '.join(format_tool(tool, status) for tool, status in line1_tools)
+    line2_status = ' | '.join(format_tool(tool, status) for tool, status in line2_tools)
+
+    # Print the two lines with statuses
+    print(f"{line1_status}{Style.RESET_ALL}")
+    print(f"{line2_status}{Style.RESET_ALL}")
+
+
+def display_menu(version, project_path, tools_statuses):
     os.system('clear')  # Clear the screen
     ascii_art = get_ascii_art("Infiltra")
     print(ascii_art)  # Print the ASCII art at the top of the menu
@@ -500,19 +519,6 @@ def display_menu(version, project_path):
     print(f"{BOLD_CYAN}========================================================\n")
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_CYAN}Current Directory: {current_directory}\n")
-
-    # Check tool statuses
-    tools_statuses = [
-        ('bbot', os.path.isdir(os.path.join(project_path, 'bbot'))),
-        ('nikto', os.path.isdir(os.path.join(project_path, 'nikto'))),
-        ('tcp_parsed', os.path.isdir(os.path.join(project_path, 'tcp_parsed'))),
-        ('udp_parsed', os.path.isdir(os.path.join(project_path, 'udp_parsed'))),
-        ('aort_dns.txt', os.path.isfile(os.path.join(project_path, 'aort_dns.txt'))),
-        ('icmpecho', any(fname.startswith('icmpecho_') for fname in os.listdir(project_path))),
-        ('nmap TCP', os.path.isfile(os.path.join(project_path, 'tcp.txt'))),
-        ('nmap UDP', os.path.isfile(os.path.join(project_path, 'udp.txt'))),
-        ('whois', any(fname.startswith('whois_output') for fname in os.listdir(project_path)))
-    ]
 
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
@@ -535,12 +541,7 @@ def display_menu(version, project_path):
 
     # Display tool statuses
     print(f"{BOLD_CYAN}Tool Statuses:")
-    # Display the status indicators
-    status_line1 = ' | '.join(BOLD_GREEN if status else BOLD_RED for tool, status in tools_statuses[:4])
-    status_line2 = ' | '.join(BOLD_GREEN if status else BOLD_RED for tool, status in tools_statuses[4:])
-
-    print(f"{status_line1}{Style.RESET_ALL}")
-    print(f"{status_line2}{Style.RESET_ALL}")
+    display_tool_statuses(tools_statuses)
 
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
     return choice
