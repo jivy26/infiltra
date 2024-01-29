@@ -516,6 +516,7 @@ def display_menu(version, project_path):
     print(f"{BOLD_YELLOW}            https://github.com/jivy26/ept")
     print(f"{BOLD_YELLOW}            Author: @jivy26")
     print(f"{BOLD_CYAN}========================================================\n")
+
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_CYAN}Current Directory: {current_directory}\n")
 
@@ -532,6 +533,9 @@ def display_menu(version, project_path):
         'Nikto': os.path.isdir(os.path.join(current_directory, 'nikto'))
 
     }
+
+    # Display tool statuses
+    display_tool_statuses(tools_statuses)
 
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
@@ -551,9 +555,6 @@ def display_menu(version, project_path):
     print(f"\n{BOLD_CYAN}Utilities:")
     print(f"{BOLD_YELLOW}U. Update Check".ljust(30) + f"{DEFAULT_COLOR} Check for the latest updates of this tool.")
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
-
-    # Display tool statuses
-    display_tool_statuses(tools_statuses)
 
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
     return choice
