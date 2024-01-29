@@ -1,3 +1,30 @@
+"""
+Infiltra - Open-Source CLI Penetration Testing Tool To Automate Various Processes
+
+This script is designed for automating various network and security tasks.
+It integrates multiple tools and utilities to facilitate domain analysis, network scanning, vulnerability
+assessment, and more. Key features include:
+
+- WHOIS lookups and parsing: Automates the process of gathering and interpreting WHOIS data.
+- ICMP Echo: Implements ping requests to identify live hosts in a network.
+- OSINT and Black Box OSINT: Integrates tools like AORT and DNS Recon for open-source intelligence gathering.
+- BBOT: Utilizes the black-box testing tool for detailed domain and network analysis.
+- NMAP Scans: Offers functionalities to perform comprehensive port and service scanning.
+- SSLScan and Parsing: Facilitates scanning for SSL vulnerabilities and interpreting the results.
+- Nikto Web Scans: Implements Nikto for scanning web servers for potential security issues.
+- Additional Utilities: Includes features for update checking, vulnerability scanning, and more.
+
+The script provides a user-friendly command-line interface for easy navigation and execution of various tasks.
+
+Author: @jivy26
+GitHub: https://github.com/jivy26/infiltra
+
+Usage:
+    Run the script in a Python environment with necessary privileges. Navigate through the menu to access
+    various functionalities. Input and output formats are dependent on the specific tools used within the script.
+
+"""
+
 import os
 import subprocess
 import ipaddress
@@ -172,7 +199,7 @@ def is_valid_hostname(hostname):
 
 
 def run_nikto(targets):
-    os.system('clear')  # Clear the screen
+    os.system('clear')
     nikto_dir = 'nikto'
     os.makedirs(nikto_dir, exist_ok=True)  # Create the nikto directory if it doesn't exist
     hosts = targets
@@ -236,7 +263,7 @@ def get_version():
 
 # Function to run EyeWitness
 def run_eyewitness(domain):
-    os.system('clear')  # Clear the screen at the beginning of the function
+    os.system('clear')
     script_directory = os.path.dirname(os.path.realpath(__file__))
     eyewitness_script_path = os.path.join(script_directory, 'eyewitness.py')
 
@@ -270,7 +297,7 @@ def run_eyewitness(domain):
 
 # Function to run sslscan and parse results
 def run_sslscanparse():
-    os.system('clear')  # Clear the screen at the beginning of the function
+    os.system('clear')
     sslscan_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py')
     default_file = 'tcp_parsed/https-hosts.txt'
 
@@ -302,7 +329,7 @@ def run_sslscanparse():
 
 # Function to run whois script
 def run_whois():
-    os.system('clear')  # Clear the screen at the beginning of the function
+    os.system('clear')
     whois_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'whois_script.sh')
 
     # Module Info Box
@@ -344,7 +371,7 @@ def run_whois():
 
 
 def run_ngrep(scan_type):
-    os.system('clear')  # Clear the screen at the beginning of the function
+    os.system('clear')
     script_directory = os.path.dirname(os.path.realpath(__file__))
     ngrep_script_path = os.path.join(script_directory, 'nmap-grep.sh')
     output_file = f"{scan_type.lower()}.txt"  # Assume the output file is named tcp.txt or udp.txt based on the scan_type
@@ -368,7 +395,7 @@ def run_ngrep(scan_type):
 ### Start Menu
 # Function to run nmap scan
 def run_nmap():
-    os.system('clear')  # Clear the screen at the beginning of the function
+    os.system('clear')
     ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: ")
 
     # Check if ip_input is a valid IP address or a file path
@@ -414,7 +441,7 @@ def is_valid_domain(domain):
     return re.match(pattern, domain) is not None
 
 def osint_submenu(project_path):
-    os.system('clear')  # Clear the screen
+    os.system('clear')
     domain = ''
     osint_domain_file = 'osint_domain.txt'  # File to store the domain
 
@@ -515,7 +542,7 @@ def display_tool_statuses(tools_statuses):
 
 
 def display_menu(version, project_path):
-    os.system('clear')  # Clear the screen
+    os.system('clear')
     ascii_art = get_ascii_art("Infiltra")
     print(ascii_art)  # Print the ASCII art at the top of the menu
     print(f"{BOLD_CYAN}========================================================")
@@ -579,7 +606,7 @@ def main():
     #     sys.exit(1)
 
     # Check for last used project
-    os.system('clear')  # Clear the screen
+    os.system('clear')
     last_project_file = 'last_project.txt'
     ascii_art = get_ascii_art("Infiltra")
     print(ascii_art)  # Print the ASCII art at the top of the menu
