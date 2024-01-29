@@ -22,10 +22,8 @@ GitHub: https://github.com/jivy26/infiltra
 
 import os
 import subprocess
-import ipaddress
 import re
 import sys
-from importlib.metadata import version as get_distribution_version
 from infiltra.project_handler import project_submenu
 from infiltra.bbot.bbot_parse import bbot_main
 from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
@@ -33,7 +31,7 @@ from infiltra.updater import check_and_update
 from infiltra.icmpecho import run_fping
 from colorama import init, Fore, Style
 from infiltra.nuclei import nuclei_main
-from utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
+from .utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
 
 # Moved from ANSI to Colorama
 # Initialize Colorama
