@@ -33,6 +33,7 @@ from infiltra.updater import check_and_update
 from infiltra.icmpecho import run_fping
 from colorama import init, Fore, Style
 from infiltra.nuclei import nuclei_main
+from utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
 
 # Moved from ANSI to Colorama
 # Initialize Colorama
@@ -173,26 +174,6 @@ def is_dnsrecon_installed():
 
 # Nikto Integration
 
-
-def is_valid_ip(ip):
-    try:
-        ipaddress.ip_address(ip)
-        return True
-    except ValueError:
-        return False
-
-
-def is_valid_hostname(hostname):
-    if not hostname:
-        return False
-    if len(hostname) > 255:
-        return False
-    if hostname[-1] == ".":
-        hostname = hostname[:-1]  # strip exactly one dot from the right, if present
-    allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
-    return all(allowed.match(x) for x in hostname.split("."))
-
-
 def run_nikto(targets):
     os.system('clear')
     nikto_dir = 'nikto'
@@ -246,14 +227,7 @@ def check_alive_hosts():
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
 
-# Function to get the current version from a file
-def get_version():
-    try:
-        # Replace 'my-package-name' with the actual package name
-        return get_distribution_version('infiltra')
-    except Exception as e:
-        print(f"Could not read version: {e}")
-        return "unknown"
+
 
 
 # Function to run EyeWitness
@@ -502,14 +476,6 @@ def osint_submenu(project_path):
 #     f = pyfiglet.Figlet(font='block')
 #     ascii_art = f.renderText(text)
 #     return ascii_art
-def get_ascii_art(text):
-    # Run the toilet command with subprocess and capture the output
-    try:
-        result = subprocess.run(['toilet', '-f', 'mono9', '-F', 'gay', text], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        # Decode the result from bytes to a string and return it
-        return result.stdout.decode()
-    except subprocess.CalledProcessError as e:
-        return f"Error generating ASCII art: {e}"
 
 
 # Display tool statuses
