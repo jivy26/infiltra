@@ -1,4 +1,6 @@
-# project_handler.py
+'''
+project_handler.py
+'''
 
 import os
 import shutil

@@ -1,6 +1,8 @@
-# SSLScanner and Parser
-# Author: Joshua Ivy
-# Modified: 1/1/2024
+'''
+SSLScanner and Parser
+Author: Joshua Ivy
+Modified: 1/1/2024
+'''
 
 import subprocess
 import re

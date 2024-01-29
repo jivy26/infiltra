@@ -1,3 +1,7 @@
+'''
+Nuclei Functionality, currently limited
+'''
+
 import os
 import subprocess
 from colorama import init, Fore, Style

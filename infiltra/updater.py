@@ -1,3 +1,8 @@
+'''
+Handles Infiltra updating
+#Need to add wrapper to allow updating and reloading of ept.py without having to close.
+'''
+
 import os
 import subprocess
 from packaging import version
