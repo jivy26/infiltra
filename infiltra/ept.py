@@ -498,7 +498,7 @@ def display_tool_statuses(tools_statuses):
 
     # Function to format tool name with its status color
     def format_tool(tool, status):
-        return (BOLD_GREEN if status else BOLD_RED) + tool
+        return (BOLD_CYAN if status else BOLD_RED) + tool
 
     # Format each tool and status for both lines
     line1_status = ' | '.join(format_tool(tool, status) for tool, status in line1_tools)
@@ -555,7 +555,7 @@ def display_menu(version, project_path):
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
 
     # Display tool statuses
-    print(f"{BOLD_CYAN}Tool Statuses: {BOLD_GREEN}Green means you've ran the script in this project {BOLD_RED} Red means you haven't\n")
+    print(f"{BOLD_CYAN}Tool Statuses: {BOLD_CYAN}Green means you've ran the script in this project | {BOLD_RED} Red means you haven't\n")
     display_tool_statuses(tools_statuses)
 
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
