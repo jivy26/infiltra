@@ -525,7 +525,7 @@ def display_menu(version, project_path):
     print(f"{BOLD_CYAN}========================================================\n")
 
     current_directory = project_path if project_path else os.getcwd()
-    print(f"{BOLD_CYAN}Current Directory: {current_directory}\n")
+    print(f"{BOLD_GREEN}Current Directory: {current_directory}\n")
 
     # Check tool statuses
     tools_statuses = {
@@ -542,8 +542,8 @@ def display_menu(version, project_path):
 
     # Display tool statuses
     display_tool_statuses(tools_statuses)
-    print(f"\n{BOLD_CYAN}Main Menu")
-    print(f"{BOLD_CYAN}========================================================\n")
+    print(f"\n{BOLD_GREEN}Main Menu")
+    print(f"{BOLD_GREEN}========================================================\n")
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
         ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
