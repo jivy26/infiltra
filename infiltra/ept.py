@@ -536,7 +536,8 @@ def display_menu(version, project_path):
 
     # Display tool statuses
     display_tool_statuses(tools_statuses)
-    print(f"\n{BOLD_CYAN}Main Menu\n")
+    print(f"\n{BOLD_CYAN}Main Menu")
+    print(f"{BOLD_CYAN}========================================================\n")
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
         ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
