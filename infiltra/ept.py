@@ -490,6 +490,23 @@ def get_ascii_art(text):
         return f"Error generating ASCII art: {e}"
 
 
+# Function to display the header information with modern styling
+def display_header(version, github_url, author):
+    # Define the header border and title style
+    header_border = f"{BOLD_CYAN}{'=' * 60}"
+    title_style = f"{Style.BRIGHT}{Fore.BLUE}"
+
+    # Clear the console before printing the header
+    os.system('clear')
+
+    # Print the header with modern styling
+    print(header_border)
+    print(f"{title_style}Current Version: v{version}")
+    print(f"{title_style}{github_url}")
+    print(f"{title_style}Author: {author}")
+    print(header_border)
+
+
 # Display tool statuses
 # Function to display tool statuses in a table format
 def display_tool_statuses(tools_statuses):
@@ -511,11 +528,10 @@ def display_menu(version, project_path):
     os.system('clear')  # Clear the screen
     ascii_art = get_ascii_art("Infiltra")
     print(ascii_art)  # Print the ASCII art at the top of the menu
-    print(f"{BOLD_CYAN}========================================================")
-    print(f"{BOLD_CYAN}                Current Version: v{version}")
-    print(f"{BOLD_YELLOW}            https://github.com/jivy26/ept")
-    print(f"{BOLD_YELLOW}            Author: @jivy26")
-    print(f"{BOLD_CYAN}========================================================\n")
+    # Display the modern header
+    github_url = "https://github.com/jivy26/ept"
+    author = "@jivy26"
+    display_header(version, github_url, author)
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_CYAN}Current Directory: {current_directory}\n")
 
