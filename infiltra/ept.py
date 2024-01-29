@@ -491,22 +491,20 @@ def get_ascii_art(text):
 
 
 # Display tool statuses
+# Function to display tool statuses in a table format
 def display_tool_statuses(tools_statuses):
-    # Split the tools into two lines
-    line1_tools = list(tools_statuses.items())[:4]
-    line2_tools = list(tools_statuses.items())[4:]
+    # Define header row
+    header = f"{BOLD_CYAN}{'Tool':<20}Status"
+    print(header)
+    print(f"{BOLD_CYAN}{'-' * len(header)}")
 
-    # Function to format tool name with its status color
-    def format_tool(tool, status):
-        return (BOLD_CYAN if status else BOLD_YELLOW) + tool
+    # Print each tool and its status
+    for tool, status in tools_statuses.items():
+        status_text = f"{BOLD_GREEN}Ran" if status else f"{BOLD_YELLOW}Not Ran"
+        print(f"{tool:<20}{status_text}")
 
-    # Format each tool and status for both lines
-    line1_status = ' | '.join(format_tool(tool, status) for tool, status in line1_tools)
-    line2_status = ' | '.join(format_tool(tool, status) for tool, status in line2_tools)
-
-    # Print the two lines with statuses
-    print(line1_status)
-    print(line2_status)
+    # Print a separator
+    print(f"{BOLD_CYAN}{'-' * len(header)}\n")
 
 
 def display_menu(version, project_path):
