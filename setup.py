@@ -25,7 +25,7 @@ setup(
             'eyewitness/*',
             'bbot/*',
             'aort/*',
-            'nuclei-templates/**/*',  # Note the change here to include all files recursively
+            'nuclei-templates/**/*',
         ],
     },
     # Metadata
