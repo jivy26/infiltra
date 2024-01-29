@@ -493,18 +493,25 @@ def get_ascii_art(text):
 # Display tool statuses
 # Function to display tool statuses in a table format
 def display_tool_statuses(tools_statuses):
-    # Define header row
-    header = f"{BOLD_CYAN}{'Tool':<20}Status"
-    print(header)
-    print(f"{BOLD_CYAN}{'-' * len(header)}")
+    # Define header and status colors
+    header_style = f"{Style.BRIGHT}{Fore.BLUE}"
+    ran_style = f"{Fore.GREEN}"
+    not_ran_style = f"{Fore.RED}"
 
-    # Print each tool and its status
-    for tool, status in tools_statuses.items():
-        status_text = f"{BOLD_GREEN}Ran" if status else f"{BOLD_YELLOW}Not Ran"
-        print(f"{tool:<20}{status_text}")
+    # Define the header
+    header_border = f"{header_style}{'=' * 50}"
+    print(header_border)
+    print(f"{header_style}Tool Statuses Run Against This Project")
+    print(header_border)
 
-    # Print a separator
-    print(f"{BOLD_CYAN}{'-' * len(header)}\n")
+    # Loop through the tools and display their status
+    for tool, ran in tools_statuses.items():
+        status_color = ran_style if ran else not_ran_style
+        status = 'Ran' if ran else 'Not Ran'
+        print(f"{header_style}{tool.ljust(20)}{status_color}{status}")
+
+    # Print footer border
+    print(header_border)
 
 
 def display_menu(version, project_path):
@@ -522,16 +529,15 @@ def display_menu(version, project_path):
 
     # Check tool statuses
     tools_statuses = {
-        'Whois': any(fname.startswith('whois_output') for fname in os.listdir(current_directory)),
-        'ICMP Echo': any(fname.startswith('icmpecho_') for fname in os.listdir(current_directory)),
-        'AORT/DNSRecon': os.path.isfile(os.path.join(current_directory, 'aort_dns.txt')),
-        'bbot': os.path.isdir(os.path.join(current_directory, 'bbot')),
-        'NMAP TCP': os.path.isfile(os.path.join(current_directory, 'tcp.txt')),
-        'NMAP UDP': os.path.isfile(os.path.join(current_directory, 'udp.txt')),
-        'NMAP TCP Parsed': os.path.isdir(os.path.join(current_directory, 'tcp_parsed')),
-        'NMAP UDP Parsed': os.path.isdir(os.path.join(current_directory, 'udp_parsed')),
-        'Nikto': os.path.isdir(os.path.join(current_directory, 'nikto'))
-
+        'Whois': False,
+        'ICMP Echo': False,
+        'AORT/DNSRecon': False,
+        'bbot': False,
+        'NMAP TCP': False,
+        'NMAP UDP': False,
+        'NMAP TCP Parsed': False,
+        'NMAP UDP Parsed': False,
+        'Nikto': False
     }
 
     # Display tool statuses
