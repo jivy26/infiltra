@@ -523,15 +523,16 @@ def display_menu(version, project_path):
 
     # Check tool statuses
     tools_statuses = {
-        'Whois': any(fname.startswith('whois_output') for fname in os.listdir(current_directory))
+        'Whois': any(fname.startswith('whois_output') for fname in os.listdir(current_directory)),
         'ICMP Echo': any(fname.startswith('icmpecho_') for fname in os.listdir(current_directory)),
-        'AORT/DNS Recon': os.path.isfile(os.path.join(current_directory, 'aort_dns.txt')),
+        'AORT/DNSRecon': os.path.isfile(os.path.join(current_directory, 'aort_dns.txt')),
         'bbot': os.path.isdir(os.path.join(current_directory, 'bbot')),
-        'NMAP TCP Scans': os.path.isfile(os.path.join(current_directory, 'tcp.txt')),
-        'NMAP UDP Scans': os.path.isfile(os.path.join(current_directory, 'udp.txt')),
-        'Parsed TCP Scans': os.path.isdir(os.path.join(current_directory, 'tcp_parsed')),
-        'Parsed UDP Scans': os.path.isdir(os.path.join(current_directory, 'udp_parsed')),
-        'Nikto': os.path.isdir(os.path.join(current_directory, 'nikto')),
+        'NMAP TCP': os.path.isfile(os.path.join(current_directory, 'tcp.txt')),
+        'NMAP UDP': os.path.isfile(os.path.join(current_directory, 'udp.txt')),
+        'NMAP TCP Parsed': os.path.isdir(os.path.join(current_directory, 'tcp_parsed')),
+        'NMAP UDP Parsed': os.path.isdir(os.path.join(current_directory, 'udp_parsed')),
+        'Nikto': os.path.isdir(os.path.join(current_directory, 'nikto'))
+
     }
 
     menu_options = [
@@ -554,7 +555,7 @@ def display_menu(version, project_path):
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
 
     # Display tool statuses
-    print(f"{BOLD_CYAN}Tool Statuses: {BOLD_GREEN}Green means you've ran the script in this project {BOLD_RED} means you haven't")
+    print(f"{BOLD_CYAN}Tool Statuses: {BOLD_GREEN}Green means you've ran the script in this project {BOLD_RED}")
     display_tool_statuses(tools_statuses)
 
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
