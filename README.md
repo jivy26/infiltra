@@ -3,25 +3,31 @@
 </p>
 
 # Goal
-Automate basic external penetration test processes and integrate advanced OSINT.
+
+Automate and streamline the basic processes of external penetration testing while incorporating advanced Open Source Intelligence (OSINT) techniques to enhance the discovery and analysis phase of security assessments.
 
 # Features
 
-- **Whois Analysis** - Perform Whois lookups against an IP range and parse the results by organization name.
+- **Project Management**: Organize and manage penetration testing projects with ease, keeping track of the progress and tools used within each project.
 
-- **ICMP Echo Checking** - Check for ICMP Echo responses across an IP range and parse alive hosts.
+- **Tool Status Monitoring**: Visually identify which tools have been executed in the current project, improving workflow efficiency and management.
 
-- **Open Source Intelligence (OSINT) Tools**
-  - **AORT & DNSRecon**: Employ for detailed subdomain enumeration.
-  - **BBOT**: Utilize for comprehensive black-box penetration testing. More info on BBOT here: https://github.com/blacklanternsecurity/bbot
-  - **Subdomain Enumeration** - Enumerate subdomains and capture screenshots of any websites enumerated.
+- **Whois Analysis**: Perform comprehensive Whois lookups and extract organization names for targeted IP ranges, aiding in the identification of potential vectors.
 
-- **Network Mapping** - Run NMAP scans (TCP and UDP) and process the findings.
+- **ICMP Echo Checking**: Probe and list alive hosts across an IP range using ICMP echo requests, essential for initial network reconnaissance.
 
-- **SSL Vulnerability Assessment** - Run SSLScans on a range of IPs and parse findings.
+- **Open Source Intelligence (OSINT) Gathering**:
+  - **AORT & DNSRecon**: Leverage these tools for in-depth subdomain discovery.
+  - **BBOT**: Implement black-box penetration testing methods for a robust security posture analysis. [More about BBOT](https://github.com/blacklanternsecurity/bbot).
+  - **Subdomain Enumeration**: Automatically enumerate subdomains and snapshot live websites for a visual inventory.
 
-- **Web Server Scanning** - Conduct Nikto scans over an IP range.
+- **Network Mapping**: Conduct thorough NMAP scans (TCP/UDP) and parse the results for a detailed network structure overview.
 
+- **SSL Vulnerability Assessment**: Execute SSLScans across IP ranges and succinctly parse only the significant findings, streamlining the vulnerability identification process.
+
+- **Web Server Scanning**: Utilize Nikto for scanning single or multiple IPs to uncover potential web server vulnerabilities.
+
+- **Nuclei Vulnerability Scanning**: Integrate Nuclei scanning (limited functionality in the current version) to identify known vulnerabilities within network infrastructure.
 
 # Installation
 
