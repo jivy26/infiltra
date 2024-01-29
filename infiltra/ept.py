@@ -555,7 +555,7 @@ def display_menu(version, project_path):
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
 
     # Display tool statuses
-    print(f"{BOLD_GREEN}Tool Statuses: {BOLD_CYAN}Blue means you've ran the script in this project | {BOLD_RED} Yellow means you haven't\n")
+    print(f"{BOLD_GREEN}Tool Statuses: {BOLD_CYAN}Blue = Ran | {BOLD_YELLOW} Yellow = Not Ran\n")
     display_tool_statuses(tools_statuses)
 
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
