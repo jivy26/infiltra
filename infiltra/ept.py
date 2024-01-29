@@ -18,11 +18,6 @@ The script provides a user-friendly command-line interface for easy navigation a
 
 Author: @jivy26
 GitHub: https://github.com/jivy26/infiltra
-
-Usage:
-    Run the script in a Python environment with necessary privileges. Navigate through the menu to access
-    various functionalities. Input and output formats are dependent on the specific tools used within the script.
-
 """
 
 import os
