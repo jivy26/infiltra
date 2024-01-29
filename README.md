@@ -8,13 +8,13 @@ Automate and streamline the basic processes of external penetration testing whil
 
 # Features
 
-- **Project Management**: Organize and manage penetration testing projects with ease, keeping track of the progress and tools used within each project.
+- **Project Management**: Organize and manage penetration testing projects with ease.
 
-- **Tool Status Monitoring**: Visually identify which tools have been executed in the current project, improving workflow efficiency and management.
+- **Tool Status Monitoring**: Visually identify which tools have been executed in the current project.
 
-- **Whois Analysis**: Perform comprehensive Whois lookups and extract organization names for targeted IP ranges, aiding in the identification of potential vectors.
+- **Whois Analysis**: Perform comprehensive Whois lookups and extract organization names for targeted IP ranges.
 
-- **ICMP Echo Checking**: Probe and list alive hosts across an IP range using ICMP echo requests, essential for initial network reconnaissance.
+- **ICMP Echo Checking**: Probe and list alive hosts across an IP range using ICMP echo requests.
 
 - **Open Source Intelligence (OSINT) Gathering**:
   - **AORT & DNSRecon**: Leverage these tools for in-depth subdomain discovery.
@@ -23,7 +23,7 @@ Automate and streamline the basic processes of external penetration testing whil
 
 - **Network Mapping**: Conduct thorough NMAP scans (TCP/UDP) and parse the results for a detailed network structure overview.
 
-- **SSL Vulnerability Assessment**: Execute SSLScans across IP ranges and succinctly parse only the significant findings, streamlining the vulnerability identification process.
+- **SSL Vulnerability Assessment**: Execute SSLScans across IP ranges and succinctly parse only the significant findings.
 
 - **Web Server Scanning**: Utilize Nikto for scanning single or multiple IPs to uncover potential web server vulnerabilities.
 
