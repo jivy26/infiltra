@@ -110,7 +110,7 @@ def perform_update(repo_dir):
 
 
 def check_and_update():
-    os.system('clear')
+    clear_screen()
     dir_of_script = os.path.dirname(os.path.realpath(__file__))
     version_file_path = os.path.join(dir_of_script, "version.txt")
     local_version = get_version(version_file_path)

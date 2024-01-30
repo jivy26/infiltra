@@ -62,7 +62,7 @@ def install_nuclei():
 
 def nuclei_submenu():
     while True:
-        os.system('clear')
+        clear_screen()
         print(f"\n{BOLD_CYAN}Nuclei Scanner\n")
         print(f"{BOLD_GREEN}1. Basic Vulnerability Scan")
         print(f"{BOLD_GREEN}2. Moderate Scan")
@@ -97,7 +97,7 @@ def nuclei_submenu():
             print(f"{BOLD_RED}Invalid choice, please try again.")
 
 def nuclei_main():
-    os.system('clear')
+    clear_screen()
     if not is_go_installed():
         print(f"{BOLD_RED}Go is not installed. Installing Go...")
         install_go()
@@ -106,9 +106,9 @@ def nuclei_main():
 
     setup_go_environment()
 
-    os.system('clear')
+    clear_screen()
     install_nuclei()
-    os.system('clear')
+    clear_screen()
     nuclei_submenu()
 
 if __name__ == "__main__":

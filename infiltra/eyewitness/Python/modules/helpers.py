@@ -596,7 +596,7 @@ def title_screen():
     if platform.system() == "Windows":
         os.system('cls')
     else:
-        os.system('clear')
+        clear_screen()
     print("#" * 80)
     print("#" + " " * 34 + "EyeWitness" + " " * 34 + "#")
     print("#" * 80)

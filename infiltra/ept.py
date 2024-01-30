@@ -29,9 +29,9 @@ from infiltra.bbot.bbot_parse import bbot_main
 from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
 from infiltra.updater import check_and_update
 from infiltra.icmpecho import run_fping
-from colorama import init, Fore, Style
 from infiltra.nuclei import nuclei_main
 from .utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
+from colorama import init, Fore, Style
 
 # Moved from ANSI to Colorama
 # Initialize Colorama
@@ -47,10 +47,39 @@ BOLD_GREEN = Fore.GREEN + Style.BRIGHT
 BOLD_RED = Fore.RED + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
+# Utility Functions
+
+def read_file_lines(filepath):
+    try:
+        with open(filepath, 'r') as file:
+            return file.read().splitlines()
+    except FileNotFoundError:
+        print(f"{BOLD_RED}File not found: {filepath}")
+        return None
+
+def write_to_file(filepath, content, mode='w'):
+    try:
+        with open(filepath, mode) as file:
+            file.write(content)
+    except IOError as e:
+        print(f"{BOLD_RED}IO error occurred: {e}")
+
+def run_subprocess(command, working_directory=None, shell=False):
+    try:
+        result = subprocess.run(command, cwd=working_directory, shell=shell,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                text=True, check=True)
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"{BOLD_RED}Subprocess error: {e.stderr}")
+        return None
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 # AORT Integration
 def run_aort(domain):
-    os.system('clear')
+    clear_screen()
 
     # Module Info Box
     message_lines = [
@@ -101,7 +130,7 @@ def run_bbot(domain, display_menu, project_path):
         install_bbot()
 
     # Clear the screen and display sample commands
-    os.system('clear')
+    clear_screen()
     print(f"{BOLD_CYAN}Select the bbot command to run:")
     print(f"{BOLD_YELLOW}All output is saved to the bbot/ folder\n")
     print(f"1. Enumerate Subdomains")
@@ -146,7 +175,7 @@ def run_bbot(domain, display_menu, project_path):
 
 # DNSRecon Integration
 def run_dnsrecon(domain):
-    os.system('clear')
+    clear_screen()
     print(f"{BOLD_CYAN}Running DNSRecon for domain: {BOLD_GREEN}{domain}\n")
 
     dnsrecon_command = f"dnsrecon -d {domain} -t std"
@@ -173,14 +202,13 @@ def is_dnsrecon_installed():
 # Nikto Integration
 
 def run_nikto(targets):
-    os.system('clear')
+    clear_screen()
     nikto_dir = 'nikto'
     os.makedirs(nikto_dir, exist_ok=True)  # Create the nikto directory if it doesn't exist
     hosts = targets
     # Check if the input is a file or a single host
     if os.path.isfile(targets):
-        with open(targets) as file:
-            hosts = file.read().splitlines()
+        hosts = read_file_lines(targets)
     elif is_valid_ip(targets) or is_valid_hostname(targets):
         hosts = [targets]  # If it's a single host, put it in a list
     else:
@@ -204,7 +232,7 @@ def run_nikto(targets):
 
 # Handle FPING
 def check_alive_hosts():
-    os.system('clear')
+    clear_screen()
     hosts_input = input(f"{BOLD_GREEN}Enter the file name containing a list of IPs or input a single IP address: ").strip()
 
     # Check if input is a file or a valid IP
@@ -230,7 +258,7 @@ def check_alive_hosts():
 
 # Function to run EyeWitness
 def run_eyewitness(domain):
-    os.system('clear')
+    clear_screen()
     script_directory = os.path.dirname(os.path.realpath(__file__))
     eyewitness_script_path = os.path.join(script_directory, 'eyewitness.py')
 
@@ -264,7 +292,7 @@ def run_eyewitness(domain):
 
 # Function to run sslscan and parse results
 def run_sslscanparse():
-    os.system('clear')
+    clear_screen()
     sslscan_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py')
     default_file = 'tcp_parsed/https-hosts.txt'
 
@@ -296,7 +324,7 @@ def run_sslscanparse():
 
 # Function to run whois script
 def run_whois():
-    os.system('clear')
+    clear_screen()
     whois_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'whois_script.sh')
 
     # Module Info Box
@@ -323,22 +351,17 @@ def run_whois():
 
     # Run the whois script
     print(f"\n{BOLD_GREEN}Running whois_script.sh on {ip_input}\n")
-    process = subprocess.Popen(['bash', whois_script_path, ip_input], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()  # Wait for the subprocess to finish
+    stdout = run_subprocess(['bash', whois_script_path, ip_input])
 
     # Display the output
     print(stdout.decode())
-
-    # Check for errors
-    if stderr:
-        print(f"{BOLD_RED}An error occurred:\n" + stderr.decode())
 
     input(
         f"{BOLD_GREEN}Press any key to return to the menu...")  # Allow users to see the message before returning to the menu
 
 
 def run_ngrep(scan_type):
-    os.system('clear')
+    clear_screen()
     script_directory = os.path.dirname(os.path.realpath(__file__))
     ngrep_script_path = os.path.join(script_directory, 'nmap-grep.sh')
     output_file = f"{scan_type.lower()}.txt"  # Assume the output file is named tcp.txt or udp.txt based on the scan_type
@@ -362,7 +385,7 @@ def run_ngrep(scan_type):
 ### Start Menu
 # Function to run nmap scan
 def run_nmap():
-    os.system('clear')
+    clear_screen()
     ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: ")
 
     # Check if ip_input is a valid IP address or a file path
@@ -408,17 +431,17 @@ def is_valid_domain(domain):
     return re.match(pattern, domain) is not None
 
 def osint_submenu(project_path):
-    os.system('clear')
+    clear_screen()
     domain = ''
     osint_domain_file = 'osint_domain.txt'  # File to store the domain
 
     # Check if osint_domain.txt exists and read the domain from it
-    if os.path.isfile(osint_domain_file):
-        with open(osint_domain_file, 'r') as file:
-            domain = file.read().strip()
+    domain_lines = read_file_lines(osint_domain_file)
+    if domain_lines:
+        domain = domain_lines[0].strip()
 
     while True:
-        os.system('clear')
+        clear_screen()
         print(f"{BOLD_CYAN}OSINT Submenu for {domain}:")
         if not domain:
             print(f"{BOLD_YELLOW}No domain has been set!\n")
@@ -440,13 +463,12 @@ def osint_submenu(project_path):
                 domain = domain_input
                 print(f"{BOLD_GREEN}Domain set to: {domain}")
                 # Save the domain to osint_domain.txt
-                with open(osint_domain_file, 'w') as file:
-                    file.write(domain)
+                write_to_file(osint_domain_file, domain)
             else:
                 print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
                 continue
             input(f"{BOLD_CYAN}Press Enter to continue...")
-            os.system('clear')
+            clear_screen()
         elif choice == '2':
             run_aort(domain)
             if is_dnsrecon_installed():
@@ -467,14 +489,6 @@ def osint_submenu(project_path):
             break
         else:
             print(f"{BOLD_YELLOW}Invalid choice, please try again.")
-
-
-# Function to display the menu
-# def get_ascii_art(text):
-#     f = pyfiglet.Figlet(font='block')
-#     ascii_art = f.renderText(text)
-#     return ascii_art
-
 
 # Display tool statuses
 # Function to display tool statuses in a table format
@@ -501,7 +515,7 @@ def display_tool_statuses(tools_statuses):
 
 
 def display_menu(version, project_path):
-    os.system('clear')
+    clear_screen()
     ascii_art = get_ascii_art("Infiltra")
     print(ascii_art)  # Print the ASCII art at the top of the menu
     print(f"{BOLD_CYAN}========================================================")
@@ -565,13 +579,13 @@ def main():
     #     sys.exit(1)
 
     # Check for last used project
-    os.system('clear')
+    clear_screen()
     last_project_file = 'last_project.txt'
     ascii_art = get_ascii_art("Infiltra")
     print(ascii_art)  # Print the ASCII art at the top of the menu
-    if os.path.isfile(last_project_file):
-        with open(last_project_file, 'r') as file:
-            last_project = file.read().strip()
+    last_project = read_file_lines(last_project_file)
+    if last_project:
+        last_project = last_project[0].strip()
         if last_project:
             use_last_project = input(f"{BOLD_GREEN}Do you want to load the last project used '{last_project}'? (Y/n): ").strip().lower()
             if use_last_project in ['', 'y']:

@@ -23,7 +23,7 @@ projects_base_path = os.path.expanduser('~/projects')
 
 
 def create_project_directory(org_name):
-    os.system('clear')
+    clear_screen()
     project_path = os.path.join(projects_base_path, org_name)
     if not os.path.exists(project_path):
         os.makedirs(project_path)
@@ -39,7 +39,7 @@ def save_last_project(project_name):
 
 
 def load_project():
-    os.system('clear')
+    clear_screen()
     projects = list_projects()
     if not projects:
         print(f"{BOLD_RED}There are no projects to load.")
@@ -65,7 +65,7 @@ def load_project():
 
 
 def delete_project():
-    os.system('clear')
+    clear_screen()
     projects = list_projects()
     if not projects:
         print(f"{BOLD_RED}There are no projects to delete.")
@@ -96,13 +96,13 @@ def delete_project():
 
 
 def list_projects():
-    os.system('clear')
+    clear_screen()
     projects = [d for d in os.listdir(projects_base_path) if os.path.isdir(os.path.join(projects_base_path, d))]
     return projects
 
 
 def project_submenu():
-    os.system('clear')
+    clear_screen()
     project_path = None
     while True:
         print(f"\n{BOLD_GREEN}Project Management Menu:\n")
@@ -116,20 +116,20 @@ def project_submenu():
         choice = input("\nEnter your choice: ").strip().lower()
 
         if choice == '1':
-            os.system('clear')
+            clear_screen()
             org_name = input(f"{BOLD_GREEN}Enter the organization name for the new project: ").strip()
             project_path = create_project_directory(org_name)
             save_last_project(org_name)
             if project_path:
                 os.chdir(project_path)
         elif choice == '2':
-            os.system('clear')
+            clear_screen()
             project_path = load_project()
             save_last_project(os.path.basename(project_path))
             if project_path:
                 os.chdir(project_path)
         elif choice == '3':
-            os.system('clear')
+            clear_screen()
             project_path = delete_project()
             if project_path:
                 os.chdir(project_path)

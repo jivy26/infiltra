@@ -49,7 +49,7 @@ def parse_bbot_output(file_path):
     return sections
 
 def bbot_main():
-    os.system('clear')  # This will clear the screen
+    clear_screen()  # This will clear the screen
     use_default = input(f"{BOLD_CYAN}Use default bbot/output.txt? (Y/n): ").strip().lower()
 
     if use_default == '' or use_default.startswith('y'):
@@ -65,7 +65,7 @@ def bbot_main():
                 print(f"- {item}")
             print()
         input(f"\n{BOLD_CYAN}Press any key to return to the menu...")
-        os.system('clear')  # This will clear the screen
+        clear_screen()  # This will clear the screen
     except FileNotFoundError:
         print("File does not exist. Please check the file name and path.")
     except Exception as e:
