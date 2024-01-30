@@ -5,11 +5,17 @@ project_handler.py
 import os
 import shutil
 from colorama import init, Fore, Style
-from infiltra.ept import clear_screen
+
 
 
 # Initialize Colorama
 init(autoreset=True)
+
+
+def create_project_directory(org_name):
+    from infiltra.ept import clear_screen
+    clear_screen()
+
 
 # Define colors using Colorama
 DEFAULT_COLOR = Fore.WHITE
