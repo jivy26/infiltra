@@ -10,8 +10,9 @@ import requests
 import stat
 import threading
 import time
-import pkg_resources
-import sys
+from ept import clear_screen
+# import pkg_resources
+# import sys
 
 # Exit Code
 UPDATE_EXIT_CODE = 85

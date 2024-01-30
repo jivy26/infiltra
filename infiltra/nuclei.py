@@ -6,6 +6,8 @@ import os
 import subprocess
 from colorama import init, Fore, Style
 import pkg_resources
+from ept import clear_screen
+
 
 # This will give you the path to where the 'infiltra' package is installed
 infiltra_path = pkg_resources.resource_filename('infiltra', '')

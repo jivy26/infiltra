@@ -13,6 +13,10 @@ from netaddr import IPAddress
 from netaddr.core import AddrFormatError
 from urllib.parse import urlparse
 
+from requests.compat import basestring
+
+from infiltra.ept import clear_screen
+
 
 class XML_Parser(xml.sax.ContentHandler):
 

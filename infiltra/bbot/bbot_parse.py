@@ -1,5 +1,8 @@
 import re
 import os
+from infiltra.ept import clear_screen
+
+from infiltra.ept import main
 
 # Define colors
 IT_MAG = "\033[35;3m"
