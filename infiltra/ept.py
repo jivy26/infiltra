@@ -505,9 +505,6 @@ def display_menu(version, project_path):
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_GREEN}Current Directory: {current_directory}\n")
 
-
-    # Display tool statuses
-    display_tool_statuses(tools_statuses)
     print(f"\n{BOLD_GREEN}Main Menu")
     print(f"{BOLD_GREEN}========================================================\n")
     menu_options = [
