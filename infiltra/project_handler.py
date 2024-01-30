@@ -5,7 +5,7 @@ project_handler.py
 import os
 import shutil
 from colorama import init, Fore, Style
-from ept import clear_screen
+from infiltra.ept import clear_screen
 
 
 # Initialize Colorama
