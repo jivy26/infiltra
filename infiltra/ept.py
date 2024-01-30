@@ -354,7 +354,7 @@ def run_whois():
     stdout = run_subprocess(['bash', whois_script_path, ip_input])
 
     # Display the output
-    print(stdout.decode())
+    print(stdout)  # Removed .decode() here
 
     input(
         f"{BOLD_GREEN}Press any key to return to the menu...")  # Allow users to see the message before returning to the menu
