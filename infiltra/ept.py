@@ -490,28 +490,6 @@ def osint_submenu(project_path):
         else:
             print(f"{BOLD_YELLOW}Invalid choice, please try again.")
 
-# Display tool statuses
-# Function to display tool statuses in a table format
-def display_tool_statuses(tools_statuses):
-    # Define header and status colors
-    header_style = f"{Style.BRIGHT}{Fore.BLUE}"
-    ran_style = f"{Fore.GREEN}"
-    not_ran_style = f"{Fore.RED}"
-
-    # Define the header
-    header_border = f"{header_style}{'=' * 50}"
-    print(header_border)
-    print(f"{header_style}Tool Statuses Run Against This Project")
-    print(header_border)
-
-    # Loop through the tools and display their status
-    for tool, ran in tools_statuses.items():
-        status_color = ran_style if ran else not_ran_style
-        status = 'Ran' if ran else 'Not Ran'
-        print(f"{header_style}{tool.ljust(20)}{status_color}{status}")
-
-    # Print footer border
-    print(header_border)
 
 
 def display_menu(version, project_path):
@@ -527,18 +505,6 @@ def display_menu(version, project_path):
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_GREEN}Current Directory: {current_directory}\n")
 
-    # Check tool statuses
-    tools_statuses = {
-        'Whois': False,
-        'ICMP Echo': False,
-        'AORT/DNSRecon': False,
-        'bbot': False,
-        'NMAP TCP': False,
-        'NMAP UDP': False,
-        'NMAP TCP Parsed': False,
-        'NMAP UDP Parsed': False,
-        'Nikto': False
-    }
 
     # Display tool statuses
     display_tool_statuses(tools_statuses)
