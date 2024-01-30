@@ -1,7 +1,5 @@
 import re
 import os
-from infiltra.ept import clear_screen
-
 from infiltra.ept import main
 
 # Define colors
@@ -12,6 +10,9 @@ BOLD_CYAN = "\033[36;1m"
 BOLD_GREEN = "\033[32;1m"
 BOLD_RED = "\033[31;1m"
 BOLD_YELLOW = "\033[33;1m"
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def parse_bbot_output(file_path):
     sections = {

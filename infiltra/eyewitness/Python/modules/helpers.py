@@ -12,10 +12,11 @@ import socket
 from netaddr import IPAddress
 from netaddr.core import AddrFormatError
 from urllib.parse import urlparse
-
 from requests.compat import basestring
 
-from infiltra.ept import clear_screen
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 class XML_Parser(xml.sax.ContentHandler):

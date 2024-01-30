@@ -10,7 +10,6 @@ import requests
 import stat
 import threading
 import time
-from ept import clear_screen
 # import pkg_resources
 # import sys
 
@@ -23,6 +22,10 @@ COLOR_RESET = "\033[0m"
 BOLD_GREEN = "\033[32;1m"
 BOLD_RED = "\033[31;1m"
 BOLD_YELLOW = "\033[33;1m"
+
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def print_progress(stop_event):

@@ -6,7 +6,10 @@ import os
 import subprocess
 from colorama import init, Fore, Style
 import pkg_resources
-from ept import clear_screen
+
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 # This will give you the path to where the 'infiltra' package is installed
