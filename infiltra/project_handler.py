@@ -12,9 +12,8 @@ from colorama import init, Fore, Style
 init(autoreset=True)
 
 
-def create_project_directory(org_name):
-    from infiltra.ept import clear_screen
-    clear_screen()
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 # Define colors using Colorama
