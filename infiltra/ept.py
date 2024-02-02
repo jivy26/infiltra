@@ -49,6 +49,19 @@ BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
 # Utility Functions
 
+
+def check_and_install_toilet():
+    try:
+        # Check if toilet is installed by trying to call it
+        subprocess.check_call(['toilet', '--version'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print("toilet is already installed.")
+    except subprocess.CalledProcessError:
+        # The command above would raise an error if toilet is not found
+        print("toilet not found. Installing...")
+        subprocess.check_call(['sudo', 'apt-get', 'update'])
+        subprocess.check_call(['sudo', 'apt-get', 'install', '-y', 'toilet'])
+
+
 def read_file_lines(filepath):
     try:
         with open(filepath, 'r') as file:
@@ -532,6 +545,7 @@ def display_menu(version, project_path):
 
 # Main function
 def main():
+    check_and_install_toilet()
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
