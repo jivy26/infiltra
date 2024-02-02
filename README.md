@@ -31,6 +31,8 @@ Automate and streamline the basic processes of external penetration testing whil
 
 # Installation
 
+Depending on your environment you might need to run the one-liner with SUDO to avoid permission issues.
+
 - **One-liner Install**<br />
 Run the following command in Kali terminal:<br />
 `git clone https://github.com/jivy26/infiltra.git && cd infiltra && pip install . && cd ~/ && sudo rm -R infiltra && infiltra`
