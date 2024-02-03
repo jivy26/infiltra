@@ -35,7 +35,7 @@ Depending on your environment you might need to run the one-liner with SUDO to a
 
 - **One-liner Install**<br />
 Run the following command in Kali terminal:<br />
-`git clone https://github.com/jivy26/infiltra.git && cd infiltra && pip install . && cd ~/ && sudo rm -R infiltra && infiltra`
+`pip install infiltra`
 <br /><br />
 - Use `infiltra` from anywhere to load the tool
 
