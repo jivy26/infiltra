@@ -1,6 +1,6 @@
-import subprocess
-import sys
 import pkg_resources
+import os
+import requests
 
 # Define color constants
 BOLD_BLUE = "\033[34;1m"
