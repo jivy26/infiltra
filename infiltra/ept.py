@@ -33,6 +33,7 @@ from infiltra.nuclei import nuclei_main
 from .utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
 from colorama import init, Fore, Style
 
+
 # Moved from ANSI to Colorama
 # Initialize Colorama
 init(autoreset=True)
