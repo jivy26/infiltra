@@ -21,7 +21,6 @@ GitHub: https://github.com/jivy26/infiltra
 """
 
 import os
-import platform
 import re
 import subprocess
 import sys
@@ -497,7 +496,7 @@ def osint_submenu(project_path):
 
 def display_menu(version, project_path, ascii_art):
     clear_screen()
-    print(ascii_art)  # Print the ASCII art at the top of the menu
+    print(ascii_art)
     print(f"{BOLD_CYAN}========================================================")
     print(f"{BOLD_CYAN}                Current Version: v{version}")
     print(f"{BOLD_YELLOW}            https://github.com/jivy26/ept")
@@ -544,14 +543,11 @@ def main():
     #     sys.exit(1)
 
     # Inside your main function or wherever you need to print the ASCII art
-    ascii_art = get_ascii_art('logo.png', columns=80)
-    print(ascii_art)
+    ascii_art = get_ascii_art('logo.png', columns=200)
 
     # Check for last used project
     clear_screen()
     last_project_file = 'last_project.txt'
-    ascii_art = get_ascii_art("Infiltra")
-    print(ascii_art)  # Print the ASCII art at the top of the menu
     last_project = read_file_lines(last_project_file)
     if last_project:
         last_project = last_project[0].strip()

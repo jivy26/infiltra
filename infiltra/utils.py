@@ -1,7 +1,7 @@
+import os
 import re
-import subprocess
 import ipaddress
-import ascii_magic
+from ascii_magic import AsciiArt, to_ansi
 from importlib.metadata import version as get_distribution_version
 
 
@@ -35,8 +35,19 @@ def get_version():
 
 
 def get_ascii_art(image_path, columns=80):
+    # Ensure the correct path is used for the image file
+    script_directory = os.path.dirname(os.path.realpath(__file__))
+    full_image_path = os.path.join(script_directory, image_path)
+
+    # Check if the image exists
+    if not os.path.isfile(full_image_path):
+        return f"Image file not found: {full_image_path}"
+
     # Generate ASCII art from an image file
-    output = ascii_magic.from_image_file(image_path, mode=ascii_magic.Modes.HTML, columns=columns)
-    # Get the ASCII art with color
-    colored_art = ascii_magic.to_ansi(output)
-    return colored_art
+    try:
+        art = AsciiArt.from_image(full_image_path)
+        colored_art = art.to_terminal(columns=columns)
+        return colored_art
+    except Exception as e:
+        return f"Error generating ASCII art: {e}"
+
