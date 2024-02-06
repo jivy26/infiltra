@@ -543,7 +543,7 @@ def main():
     #     sys.exit(1)
 
     # Inside your main function or wherever you need to print the ASCII art
-    ascii_art = get_ascii_art('logo.png', columns=200)
+    ascii_art = get_ascii_art('logo.png', columns=80)
 
     # Check for last used project
     clear_screen()
