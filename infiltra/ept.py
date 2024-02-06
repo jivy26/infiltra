@@ -21,18 +21,20 @@ GitHub: https://github.com/jivy26/infiltra
 """
 
 import os
-import subprocess
+import platform
 import re
+import subprocess
 import sys
-from infiltra.project_handler import project_submenu
-from infiltra.bbot.bbot_parse import bbot_main
-from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
-from infiltra.updater import check_and_update
-from infiltra.icmpecho import run_fping
-from infiltra.nuclei import nuclei_main
-from .utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
+
 from colorama import init, Fore, Style
 
+from infiltra.bbot.bbot_parse import bbot_main
+from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
+from infiltra.icmpecho import run_fping
+from infiltra.nuclei import nuclei_main
+from infiltra.project_handler import project_submenu
+from infiltra.updater import check_and_update
+from infiltra.utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
 
 # Moved from ANSI to Colorama
 # Initialize Colorama
@@ -49,19 +51,6 @@ BOLD_RED = Fore.RED + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
 # Utility Functions
-
-
-def check_and_install_toilet():
-    try:
-        # Check if toilet is installed by trying to call it
-        subprocess.check_call(['toilet', '--version'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print("toilet is already installed.")
-    except subprocess.CalledProcessError:
-        # The command above would raise an error if toilet is not found
-        print("toilet not found. Installing...")
-        subprocess.check_call(['sudo', 'apt-get', 'update'])
-        subprocess.check_call(['sudo', 'apt-get', 'install', '-y', 'toilet'])
-
 
 def read_file_lines(filepath):
     try:
@@ -506,9 +495,8 @@ def osint_submenu(project_path):
 
 
 
-def display_menu(version, project_path):
+def display_menu(version, project_path, ascii_art):
     clear_screen()
-    ascii_art = get_ascii_art("Infiltra")
     print(ascii_art)  # Print the ASCII art at the top of the menu
     print(f"{BOLD_CYAN}========================================================")
     print(f"{BOLD_CYAN}                Current Version: v{version}")
@@ -546,7 +534,6 @@ def display_menu(version, project_path):
 
 # Main function
 def main():
-    check_and_install_toilet()
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
@@ -555,6 +542,10 @@ def main():
     # if not sys.stdin.isatty():
     #     print(f"{BOLD_RED}This script is not running in an interactive mode. Exiting...")
     #     sys.exit(1)
+
+    # Inside your main function or wherever you need to print the ASCII art
+    ascii_art = get_ascii_art('logo.png', columns=80)
+    print(ascii_art)
 
     # Check for last used project
     clear_screen()
@@ -573,7 +564,7 @@ def main():
 
     while True:
         try:
-            choice = display_menu(version, project_path)
+            choice = display_menu(version, project_path, ascii_art)
             if choice == '1':
                 new_project_path = project_submenu()
                 if new_project_path is not None:  # Check if a new project path was returned or if it's a deletion

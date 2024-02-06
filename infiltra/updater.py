@@ -1,6 +1,7 @@
-import pkg_resources
+from importlib.metadata import version, PackageNotFoundError
 import os
 import requests
+from packaging import version as pkg_version
 
 # Define color constants
 BOLD_BLUE = "\033[34;1m"
@@ -16,14 +17,13 @@ def clear_screen():
 
 def get_installed_version():
     try:
-        return pkg_resources.get_distribution(PACKAGE_NAME).version
-    except pkg_resources.DistributionNotFound:
+        return version(PACKAGE_NAME)
+    except PackageNotFoundError:
         return None
 
 def check_and_update():
     clear_screen()
     installed_version = get_installed_version()
-
     if installed_version is None:
         print(f"{BOLD_RED}The package {PACKAGE_NAME} is not installed.{COLOR_RESET}")
         return
@@ -33,7 +33,7 @@ def check_and_update():
         response = requests.get(pypi_url).json()
         available_version = response['info']['version']
 
-        if pkg_resources.parse_version(available_version) > pkg_resources.parse_version(installed_version):
+        if pkg_version.parse(available_version) > pkg_version.parse(installed_version):
             print(f"{BOLD_GREEN}New update available: {available_version}{COLOR_RESET}")
             print(f"{BOLD_RED}Your version: {installed_version}{COLOR_RESET}")
             print(f"{BOLD_YELLOW}Run 'pip install --upgrade {PACKAGE_NAME}' to update.{COLOR_RESET}")

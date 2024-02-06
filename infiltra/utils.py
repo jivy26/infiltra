@@ -1,7 +1,9 @@
 import re
 import subprocess
 import ipaddress
+import ascii_magic
 from importlib.metadata import version as get_distribution_version
+
 
 def is_valid_ip(ip):
     try:
@@ -18,7 +20,7 @@ def is_valid_hostname(hostname):
         return False
     if hostname[-1] == ".":
         hostname = hostname[:-1]  # strip exactly one dot from the right, if present
-    allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
+    allowed = re.compile(r"(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
     return all(allowed.match(x) for x in hostname.split("."))
 
 
@@ -32,11 +34,9 @@ def get_version():
         return "unknown"
 
 
-def get_ascii_art(text):
-    # Run the toilet command with subprocess and capture the output
-    try:
-        result = subprocess.run(['toilet', '-f', 'mono9', '-F', 'gay', text], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        # Decode the result from bytes to a string and return it
-        return result.stdout.decode()
-    except subprocess.CalledProcessError as e:
-        return f"Error generating ASCII art: {e}"
+def get_ascii_art(image_path, columns=80):
+    # Generate ASCII art from an image file
+    output = ascii_magic.from_image_file(image_path, mode=ascii_magic.Modes.HTML, columns=columns)
+    # Get the ASCII art with color
+    colored_art = ascii_magic.to_ansi(output)
+    return colored_art
