@@ -1,7 +1,7 @@
 import os
 import re
 import ipaddress
-from ascii_magic import AsciiArt, to_ansi
+from ascii_magic import AsciiArt
 from importlib.metadata import version as get_distribution_version
 
 
