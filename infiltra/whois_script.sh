@@ -9,28 +9,31 @@ NC='\033[0m'
 output_file="whois_output_$(date +%Y-%m-%d_%H-%M-%S).txt"
 not_found_messages=()
 
-# Function to perform whois query and extract OrgName
+# Function to perform whois query and extract OrgName or IRT name
 perform_whois() {
     local ip=$1
-    local org_name
+    local name_field
 
-    # Run whois and extract all occurrences of OrgName, using case-insensitive match and allowing for variable spaces
+    # Run whois and extract OrgName
     mapfile -t org_names < <(whois "$ip" | grep -i "OrgName:" | sed -e 's/OrgName:[[:space:]]*//I')
-
-    # Check if OrgName was found
+    # If OrgName not found, try IRT name
     if [ ${#org_names[@]} -eq 0 ]; then
-        not_found_messages+=("$ip - Org name not found, please verify manually.")
+        mapfile -t irt_names < <(whois "$ip" | grep -i "irt:" | sed -e 's/irt:[[:space:]]*//I')
+        if [ ${#irt_names[@]} -eq 0 ]; then
+            not_found_messages+=("$ip - Org name not found, please verify manually.")
+            return
+        else
+            name_field="${irt_names[0]}"
+        fi
     else
-        # Check for unique OrgNames
-        local unique_org_name="${org_names[0]}"
+        name_field="${org_names[0]}"
         for name in "${org_names[@]:1}"; do
-            if [ "$name" != "$unique_org_name" ]; then
-                # If a new unique name is found, append it to the output
-                unique_org_name+=", $name"
+            if [ "$name" != "$name_field" ]; then
+                name_field+=", $name"
             fi
         done
-        echo "$ip - $unique_org_name" | tee -a "$output_file"
     fi
+    echo "$ip - $name_field" | tee -a "$output_file"
 }
 
 # Function to validate IP address
