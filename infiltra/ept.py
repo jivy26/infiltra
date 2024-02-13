@@ -496,9 +496,11 @@ def osint_submenu(project_path):
 
 def display_menu(version, project_path, ascii_art):
     clear_screen()
+    update_available = check_and_update()
     print(ascii_art)
     print(f"{BOLD_CYAN}========================================================")
-    print(f"{BOLD_CYAN}                Current Version: v{version}")
+    update_msg = " (Update Available!)" if update_available else ""
+    print(f"{BOLD_CYAN}                Current Version: v{version}{BOLD_GREEN}{update_msg}")
     print(f"{BOLD_YELLOW}            https://github.com/jivy26/ept")
     print(f"{BOLD_YELLOW}            Author: @jivy26")
     print(f"{BOLD_CYAN}========================================================\n")
@@ -524,7 +526,7 @@ def display_menu(version, project_path, ascii_art):
         print(f"{BOLD_GREEN}{option.ljust(30)}{description}")
 
     print(f"\n{BOLD_CYAN}Utilities:")
-    print(f"{BOLD_YELLOW}U. Update Check".ljust(30) + f"{DEFAULT_COLOR} Check for the latest updates of this tool.")
+    #print(f"{BOLD_YELLOW}U. Update Check".ljust(30) + f"{DEFAULT_COLOR} Checks version, but update is broken. Close the application and run the following command to update: {BOLD_YELLOW}pip install --upgrade pip.")
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
 
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
@@ -536,7 +538,6 @@ def main():
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
-
     # # Check if the script is running in a terminal
     # if not sys.stdin.isatty():
     #     print(f"{BOLD_RED}This script is not running in an interactive mode. Exiting...")

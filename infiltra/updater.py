@@ -22,28 +22,18 @@ def get_installed_version():
         return None
 
 def check_and_update():
-    clear_screen()
     installed_version = get_installed_version()
     if installed_version is None:
-        print(f"{BOLD_RED}The package {PACKAGE_NAME} is not installed.{COLOR_RESET}")
-        return
+        return False
 
     pypi_url = f"https://pypi.org/pypi/{PACKAGE_NAME}/json"
     try:
         response = requests.get(pypi_url).json()
         available_version = response['info']['version']
 
-        if pkg_version.parse(available_version) > pkg_version.parse(installed_version):
-            print(f"{BOLD_GREEN}New update available: {available_version}{COLOR_RESET}")
-            print(f"{BOLD_RED}Your version: {installed_version}{COLOR_RESET}")
-            print(f"{BOLD_YELLOW}Run 'pip install --upgrade {PACKAGE_NAME}' to update.{COLOR_RESET}")
-        else:
-            print(f"{BOLD_GREEN}You are up-to-date with version {installed_version}.{COLOR_RESET}")
-
-    except requests.HTTPError as http_err:
-        print(f"{BOLD_RED}HTTP error occurred: {http_err}{COLOR_RESET}")
-    except Exception as err:
-        print(f"{BOLD_RED}An error occurred: {err}{COLOR_RESET}")
+        return pkg_version.parse(available_version) > pkg_version.parse(installed_version)
+    except Exception:
+        return False
 
 if __name__ == '__main__':
     check_and_update()
