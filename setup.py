@@ -2,10 +2,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='infiltra',
-    version='2.5',
+    version='2.6',
     packages=find_packages(),
     install_requires=[
         'colorama',
+        'pydig',
+        'ascii_magic'
     ],
     entry_points={
         'console_scripts': [
