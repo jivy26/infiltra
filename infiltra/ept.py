@@ -24,6 +24,7 @@ import os
 import re
 import subprocess
 import sys
+import pathlib
 
 from colorama import init, Fore, Style
 
@@ -31,7 +32,7 @@ from infiltra.bbot.bbot_parse import bbot_main
 from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
 from infiltra.icmpecho import run_fping
 from infiltra.nuclei import nuclei_main
-from infiltra.project_handler import project_submenu
+from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
 
@@ -548,12 +549,12 @@ def main():
 
     # Check for last used project
     clear_screen()
-    last_project_file = 'last_project.txt'
-    last_project = read_file_lines(last_project_file)
-    if last_project:
-        last_project = last_project[0].strip()
+    if last_project_file_path.exists():
+        with last_project_file_path.open() as file:
+            last_project = file.read().strip()
         if last_project:
-            use_last_project = input(f"{BOLD_GREEN}Do you want to load the last project used '{last_project}'? (Y/n): ").strip().lower()
+            use_last_project = input(
+                f"{BOLD_GREEN}Do you want to load the last project used '{last_project}'? (Y/n): ").strip().lower()
             if use_last_project in ['', 'y']:
                 project_path = os.path.join(projects_base_path, last_project)
                 os.chdir(project_path)

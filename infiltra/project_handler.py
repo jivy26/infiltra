@@ -4,12 +4,22 @@ project_handler.py
 
 import os
 import shutil
+import pathlib
 from colorama import init, Fore, Style
-
 
 
 # Initialize Colorama
 init(autoreset=True)
+
+
+# Define the base directory for storing application data
+app_data_directory = pathlib.Path.home().joinpath('.config', 'infiltra')
+
+# Ensure the directory exists
+app_data_directory.mkdir(parents=True, exist_ok=True)
+
+# Define the path for last_project.txt
+last_project_file_path = app_data_directory.joinpath('last_project.txt')
 
 
 def clear_screen():
@@ -41,8 +51,9 @@ def create_project_directory(org_name):
 
 
 def save_last_project(project_name):
-    with open('last_project.txt', 'w') as file:
+    with last_project_file_path.open('w') as file:
         file.write(project_name)
+
 
 
 def load_project():
