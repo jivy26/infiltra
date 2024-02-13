@@ -29,16 +29,44 @@ Automate and streamline the basic processes of external penetration testing whil
 
 - **Nuclei Vulnerability Scanning**: Integrate Nuclei scanning (limited functionality in the current version) to identify known vulnerabilities within network infrastructure.
 
+# Examples
+
+### WHOIS Parsing against multiple IP Addresses
+<p align="center">
+  <img src="https://i.postimg.cc/RZQYspkT/Virtual-Box-VM-e76-LMZLLd2.gif" alt="WHOIS Parsing">
+</p>
+
+
+### ICMP Echo Parsing against multiple IP Addresses
+<p align="center">
+  <img src="https://i.postimg.cc/zfGxdzSJ/Virtual-Box-VM-f-P6-T2-JM1t-O.gif" alt="ICMP Echo Parsing">
+</p>
+
+
+### DNS Enumeration
+<p align="center">
+  <img src="https://i.postimg.cc/rsxjdKc9/Virtual-Box-VM-kt-Sl9c1ls7.gif" alt="DNS Enumeration">
+</p>
+
+
+### SSLScan and Parse against multiple IP Addresses
+<p align="center">
+  <img src="https://i.postimg.cc/wxLQQR8X/Virtual-Box-VM-S48f9g-L6w-H.gif" alt="SSLScan Parser">
+</p>
+
 # Installation
 
 Depending on your environment you might need to run the one-liner with SUDO to avoid permission issues.
 
-- **One-liner Install**<br />
-Run the following command in Kali terminal:<br />
-`pip install infiltra`
-<br /><br />
+- **Installing Infiltra via PIP**<br />
+  - `pip install infiltra`
+  <br />or
+  <br />
+  - `sudo pip install infiltra`
+  <br /><br />
+- **Upgrading Infiltra via PIP**
+<br />
+  - `pip install --upgrade infiltra`
+  <br /><br />
 - Use `infiltra` from anywhere to load the tool
 
-<p align="center">
-  <img src="https://i.postimg.cc/LhdtrDTw/Virtual-Box-VM-V0x-Ym-EYobq.gif" alt="Install">
-</p>
