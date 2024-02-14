@@ -47,7 +47,9 @@ BOLD_BLUE = Fore.BLUE + Style.BRIGHT
 BOLD_CYAN = Fore.CYAN + Style.BRIGHT
 BOLD_GREEN = Fore.GREEN + Style.BRIGHT
 BOLD_RED = Fore.RED + Style.BRIGHT
+BOLD_MAG = Fore.MAGENTA + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
+BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 # Utility Functions, Need to integrate into utils.py
 
@@ -244,27 +246,43 @@ def run_nikto(targets):
 # Handle FPING
 def check_alive_hosts():
     clear_screen()
-    hosts_input = input(f"{BOLD_GREEN}Enter the file name containing a list of IPs or input a single IP address: ").strip()
 
-    # Check if input is a file or a valid IP
-    if os.path.isfile(hosts_input):
-        with open(hosts_input) as file:
-            hosts = file.read().splitlines()
-    elif is_valid_ip(hosts_input):
-        hosts = [hosts_input]
+    # List .txt files in the current directory
+    txt_files = list_txt_files(os.getcwd())
+    if txt_files:
+        print(f"{BOLD_GREEN}ICMP Echo and Parser\n")
+        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
+        for idx, file in enumerate(txt_files, start=1):
+            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
+
+    # Prompt the user for an IP address or a file number
+    selection = input(f"\n{BOLD_GREEN}Enter a number to select a file, or input a single IP address: {BOLD_WHITE}").strip()
+
+    # If user enters a digit within the range of listed files, select the file
+    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
+        file_selected = txt_files[int(selection) - 1]
+        hosts_input = os.path.join(os.getcwd(), file_selected)
+    elif is_valid_ip(selection):
+        hosts_input = selection
     else:
-        print(f"{BOLD_RED}Invalid input: {hosts_input} is neither a valid IP address nor a file path.")
+        print(f"{BOLD_RED}Invalid input. Please enter a valid IP address or selection number.")
         return
 
+    # If it's a file, read IPs from it; if it's a single IP, create a list with it
+    if os.path.isfile(hosts_input):
+        hosts = read_file_lines(hosts_input)
+    else:
+        hosts = [hosts_input]
+
+    # Run fping with the list of IPs
+    clear_screen()
+    print(f"\n{BOLD_CYAN}Running FPING\n")
     alive_hosts = run_fping(hosts)
-    print(f"\n{BOLD_CYAN}Alive Hosts:")
+    print(f"\n{BOLD_GREEN}Alive Hosts:")
     for host in alive_hosts:
-        print(f"\n{BOLD_YELLOW}{host}")
+        print(f"{BOLD_YELLOW}{host}")
 
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
-
-
-
 
 
 # Function to run EyeWitness
@@ -302,20 +320,34 @@ def run_eyewitness(domain):
 
 
 # Function to run sslscan and parse results
+# Function to run sslscan and parse results
 def run_sslscanparse():
     clear_screen()
     sslscan_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py')
-    default_file = 'tcp_parsed/https-hosts.txt'
 
-    print(f"\n{BOLD_RED}By default, this scans 'https-hosts.txt'.")
-    use_default = input(f"\n{BOLD_BLUE}Use the default https-hosts.txt file? (Y/n): ").strip().lower()
+    # List the available .txt files
+    txt_files = list_txt_files(os.getcwd())
+    if txt_files:
+        print(f"{BOLD_GREEN}SSLScanner and Parser\n")
+        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
+        for idx, file in enumerate(txt_files, start=1):
+            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
-    input_file = default_file if use_default in ('', 'y') else input(f"{BOLD_BLUE}Enter custom file path: ").strip()
+    # Prompt for input: either a file number or a custom file path
+    selection = input(f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path: {BOLD_WHITE}").strip()
 
+    # Check if the input is a digit and within the range of listed files
+    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
+        input_file = os.path.join(os.getcwd(), txt_files[int(selection) - 1])  # Use the selected file
+    else:
+        input_file = selection  # Assume the entered string is a custom file path
+
+    # Validate that the file exists
     if not os.path.isfile(input_file):
         print(f"{BOLD_RED}File does not exist: {input_file}")
         return
 
+    # Run the sslscanparse script
     print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}")
     with subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
         try:
@@ -340,11 +372,12 @@ def run_whois():
 
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
-        print(f"{BOLD_CYAN}Available .txt Files For This Project")
+        print(f"{BOLD_GREEN}WHOIS Scan and Parse\n")
+        print(f"\n{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
         for idx, file in enumerate(txt_files, start=1):
-            print(f"{BOLD_GREEN}{idx}. {file}")
+            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
-    ip_input = input(f"\n{BOLD_GREEN}Your choice/IP: ").strip()
+    ip_input = input(f"\n{BOLD_GREEN}Enter a number to select a file, or input a single IP address: {BOLD_WHITE}").strip()
 
     if ip_input.isdigit() and 1 <= int(ip_input) <= len(txt_files):
         ip_input = txt_files[int(ip_input) - 1]  # If user selects a file, use its name as input
@@ -353,7 +386,8 @@ def run_whois():
         return
 
     # Proceed with running the script using ip_input as either a filename or a single IP
-    print(f"\n{BOLD_GREEN}Running whois_script.sh on {ip_input}\n")
+    clear_screen()
+    print(f"\n{BOLD_GREEN}Running WHOIS and Parsing results on {ip_input}\n")
     stdout = run_subprocess(['bash', whois_script_path, ip_input])
     print(stdout)
     input(f"{BOLD_GREEN}Press any key to return to the menu...")
@@ -385,17 +419,34 @@ def run_ngrep(scan_type):
 # Function to run nmap scan
 def run_nmap():
     clear_screen()
-    ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: ")
 
-    # Check if ip_input is a valid IP address or a file path
-    if not (is_valid_ip(ip_input) or os.path.isfile(ip_input)):
-        print(f"{BOLD_RED}Invalid input: {ip_input} is neither a valid IP address nor a file path.")
+    # List the available .txt files
+    txt_files = list_txt_files(os.getcwd())
+    if txt_files:
+        print(f"{BOLD_GREEN}NMAP Scanner\n")
+        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
+        for idx, file in enumerate(txt_files, start=1):
+            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
+
+    # Prompt for input: either a file number, a single IP, or 'x' to cancel
+    selection = input(
+        f"{BOLD_GREEN}\nEnter a number to select a file, input a single IP address: {BOLD_WHITE}").strip()
+
+    # Check if the input is a digit and within the range of listed files
+    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
+        ip_input = txt_files[int(selection) - 1]  # Use the selected file
+    elif is_valid_ip(selection) or is_valid_domain(selection):
+        ip_input = selection  # Use the entered IP or domain
+    else:
+        print(f"{BOLD_RED}Invalid input. Please enter a valid IP address, domain, or selection number.")
         return
 
-    print(f"\n{BOLD_CYAN}NMAP Scans will run the following commands for TCP and UDP: ")
-    print(f"\n{BOLD_CYAN} TCP: nmap -sSV --top-ports 4000 -Pn ")
-    print(f"{BOLD_CYAN} UDP: nmap -sU --top-ports 400 -Pn ")
-
+    # Ask for the type of scan
+    clear_screen()
+    print(f"{BOLD_GREEN}NMAP Scanner\n")
+    print(f"{BOLD_MAG}NMAP Scans will launch in a separate terminal")
+    print(f"{BOLD_CYAN}TCP: {BOLD_WHITE}nmap -sSV --top-ports 4000 -Pn ")
+    print(f"{BOLD_CYAN}UDP: {BOLD_WHITE}nmap -sU --top-ports 400 -Pn ")
     scan_type = input(f"\n{BOLD_GREEN}Enter scan type (tcp/udp/both): ").lower()
 
     # Validate scan_type
@@ -403,24 +454,17 @@ def run_nmap():
         print(f"{BOLD_RED}Invalid scan type: {scan_type}. Please enter 'tcp', 'udp', or 'both'.")
         return
 
-    script_directory = os.path.dirname(os.path.realpath(__file__))
-    nmap_script_path = os.path.join(script_directory, 'nmap_scan.py')
+    # Run the nmap scan using the selected file or entered IP/domain
+    nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
+    if scan_type in ['tcp', 'both']:
+        tcp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} tcp']
+        subprocess.Popen(tcp_command)
+    if scan_type in ['udp', 'both']:
+        udp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} udp']
+        subprocess.Popen(udp_command)
 
-    # Make sure the input is not empty
-    if ip_input and scan_type in ['tcp', 'udp', 'both']:
-        print(f"\n{BOLD_GREEN}Running nmap_scan.py from {nmap_script_path}")
-        if scan_type in ['tcp', 'both']:
-            tcp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} tcp']
-            subprocess.Popen(tcp_command)
-        if scan_type in ['udp', 'both']:
-            udp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} udp']
-            subprocess.Popen(udp_command)
-        print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched in separate windows.")
-    else:
-        print(f"{BOLD_YELLOW}Invalid input. Make sure you enter a valid IP, file path, and scan type.")
-
-    input(
-        f"\n{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
+    print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched.")
+    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
 
 # OSINT Sub menu
@@ -498,7 +542,7 @@ def display_menu(version, project_path, ascii_art):
     print(f"{BOLD_CYAN}========================================================")
     update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" if update_available else ""
     print(f"{BOLD_CYAN}                Current Version: v{version}")
-    print(f"{BOLD_YELLOW}{update_msg}")
+    print(f"{BOLD_MAG}{update_msg}")
     print(f"{BOLD_YELLOW}            https://github.com/jivy26/infiltra")
     print(f"{BOLD_YELLOW}            Author: @jivy26")
     print(f"{BOLD_CYAN}========================================================\n")
@@ -580,7 +624,9 @@ def main():
             elif choice == '5':
                 run_nmap()
             elif choice == '6':
-                scan_type = input(f"{BOLD_GREEN}Enter the scan type that was run (TCP/UDP): ").upper()
+                clear_screen()
+                print(f"{BOLD_CYAN}NMAP Results Parser\n")
+                scan_type = input(f"{BOLD_GREEN}Enter the scan type that you want to parse (TCP/UDP): ").upper()
                 run_ngrep(scan_type)
             elif choice == '7':
                 run_sslscanparse()
