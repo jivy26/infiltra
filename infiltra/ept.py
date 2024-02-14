@@ -342,9 +342,9 @@ def run_whois():
 
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
-        print(f"\n{BOLD_CYAN}Available .txt Files For This Project")
+        print(f"\n{BOLD_CYAN}Available .txt Files For In This Project's Folder")
         for idx, file in enumerate(txt_files, start=1):
-            print(f"{BOLD_WHITE}{idx}. {file}")
+            print(f"\n{BOLD_WHITE}{idx}. {file}")
 
     ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or select a .txt file from above: ").strip()
 
@@ -355,6 +355,7 @@ def run_whois():
         return
 
     # Proceed with running the script using ip_input as either a filename or a single IP
+    clear_screen()
     print(f"\n{BOLD_GREEN}Running whois_script.sh on {ip_input}\n")
     stdout = run_subprocess(['bash', whois_script_path, ip_input])
     print(stdout)
