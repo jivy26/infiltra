@@ -250,10 +250,10 @@ def check_alive_hosts():
     # List .txt files in the current directory
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
-        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder")
+        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
-        print(f"{BOLD_CYAN}Enter a number to select a file, or input a single IP address:")
+        print(f"\n{BOLD_CYAN}Enter a number to select a file, or input a single IP address:")
 
     # Prompt the user for an IP address or a file number
     selection = input(f"{BOLD_GREEN}Your choice/IP: ").strip()
@@ -275,8 +275,10 @@ def check_alive_hosts():
         hosts = [hosts_input]
 
     # Run fping with the list of IPs
+    clear_screen()
+    print(f"\n{BOLD_CYAN}Running FPING\n")
     alive_hosts = run_fping(hosts)
-    print(f"\n{BOLD_CYAN}Alive Hosts:")
+    print(f"\n{BOLD_GREEN}Alive Hosts:")
     for host in alive_hosts:
         print(f"{BOLD_YELLOW}{host}")
 
@@ -360,7 +362,7 @@ def run_whois():
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
-    ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or select a .txt file from above: ").strip()
+    ip_input = input(f"\n{BOLD_GREEN}Enter a number to select a file, or input a single IP address: ").strip()
 
     if ip_input.isdigit() and 1 <= int(ip_input) <= len(txt_files):
         ip_input = txt_files[int(ip_input) - 1]  # If user selects a file, use its name as input
