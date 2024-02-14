@@ -246,27 +246,41 @@ def run_nikto(targets):
 # Handle FPING
 def check_alive_hosts():
     clear_screen()
-    hosts_input = input(f"{BOLD_GREEN}Enter the file name containing a list of IPs or input a single IP address: ").strip()
 
-    # Check if input is a file or a valid IP
-    if os.path.isfile(hosts_input):
-        with open(hosts_input) as file:
-            hosts = file.read().splitlines()
-    elif is_valid_ip(hosts_input):
-        hosts = [hosts_input]
+    # List .txt files in the current directory
+    txt_files = list_txt_files(os.getcwd())
+    if txt_files:
+        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder")
+        for idx, file in enumerate(txt_files, start=1):
+            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
+        print(f"{BOLD_CYAN}Enter a number to select a file, or input a single IP address:")
+
+    # Prompt the user for an IP address or a file number
+    selection = input(f"{BOLD_GREEN}Your choice/IP: ").strip()
+
+    # If user enters a digit within the range of listed files, select the file
+    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
+        file_selected = txt_files[int(selection) - 1]
+        hosts_input = os.path.join(os.getcwd(), file_selected)
+    elif is_valid_ip(selection):
+        hosts_input = selection
     else:
-        print(f"{BOLD_RED}Invalid input: {hosts_input} is neither a valid IP address nor a file path.")
+        print(f"{BOLD_RED}Invalid input. Please enter a valid IP address or selection number.")
         return
 
+    # If it's a file, read IPs from it; if it's a single IP, create a list with it
+    if os.path.isfile(hosts_input):
+        hosts = read_file_lines(hosts_input)
+    else:
+        hosts = [hosts_input]
+
+    # Run fping with the list of IPs
     alive_hosts = run_fping(hosts)
     print(f"\n{BOLD_CYAN}Alive Hosts:")
     for host in alive_hosts:
-        print(f"\n{BOLD_YELLOW}{host}")
+        print(f"{BOLD_YELLOW}{host}")
 
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
-
-
-
 
 
 # Function to run EyeWitness
@@ -342,9 +356,9 @@ def run_whois():
 
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
-        print(f"\n{BOLD_CYAN}Available .txt Files For In This Project's Folder\n")
+        print(f"\n{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
         for idx, file in enumerate(txt_files, start=1):
-            print(f"{BOLD_WHITE}{idx}. {file}")
+            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
     ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or select a .txt file from above: ").strip()
 
