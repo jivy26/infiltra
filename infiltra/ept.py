@@ -253,10 +253,9 @@ def check_alive_hosts():
         print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
-        print(f"\n{BOLD_CYAN}Enter a number to select a file, or input a single IP address:")
 
     # Prompt the user for an IP address or a file number
-    selection = input(f"{BOLD_GREEN}Your choice/IP: ").strip()
+    selection = input(f"\n{BOLD_GREEN}Enter a number to select a file, or input a single IP address: ").strip()
 
     # If user enters a digit within the range of listed files, select the file
     if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
