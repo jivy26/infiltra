@@ -38,7 +38,7 @@ BOLD = '\033[1m'
 END = '\033[0m'
 
 
-# Command to open a new terminal window and run sslscan
+# Function to open a new terminal window and run sslscan
 def open_new_terminal_and_run_sslscan(target):
     # Split the target into IP and port
     if ':' in target:
@@ -47,8 +47,12 @@ def open_new_terminal_and_run_sslscan(target):
         ip, port = target, '443'
 
     # Command to open a new terminal window and run sslscan
-    command = f"""qterminal -e bash -c 'sslscan --port={port} {ip}; echo "Press enter to close..."; read'"""
-    subprocess.Popen(command, shell=True)
+    command = f"sslscan --port={port} {ip}"
+    print(f"Launching sslscan for {ip} in a new window...")
+    subprocess.Popen(['x-terminal-emulator', '-e', f"bash -c '{command}; echo Press enter to close...; read'"])
+
+    # Instead of waiting for user input, just log the action
+    print(f"Scan launched for {ip}. Check the new window for results.")
 
 
 # Function to remove ANSI escape codes
@@ -262,4 +266,3 @@ with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
                 print(f"\n{YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.{END}", flush=True)
                 open_new_terminal_and_run_sslscan(ip)
                 # Pause the script to allow the user to take a screenshot
-                input(f"{GREEN}A new window has been opened. Press Enter after taking a screenshot to continue...{END}")
