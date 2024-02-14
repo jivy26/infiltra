@@ -250,6 +250,7 @@ def check_alive_hosts():
     # List .txt files in the current directory
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
+        print(f"{BOLD_GREEN}ICMP Echo and Parser\n")
         print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
@@ -319,20 +320,34 @@ def run_eyewitness(domain):
 
 
 # Function to run sslscan and parse results
+# Function to run sslscan and parse results
 def run_sslscanparse():
     clear_screen()
     sslscan_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py')
-    default_file = 'tcp_parsed/https-hosts.txt'
 
-    print(f"\n{BOLD_RED}By default, this scans 'https-hosts.txt'.")
-    use_default = input(f"\n{BOLD_BLUE}Use the default https-hosts.txt file? (Y/n): ").strip().lower()
+    # List the available .txt files
+    txt_files = list_txt_files(os.getcwd())
+    if txt_files:
+        print(f"{BOLD_GREEN}SSLScanner and Parser\n")
+        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
+        for idx, file in enumerate(txt_files, start=1):
+            print(f"{BOLD_GREEN}{idx}. {file}")
 
-    input_file = default_file if use_default in ('', 'y') else input(f"{BOLD_BLUE}Enter custom file path: ").strip()
+    # Prompt for input: either a file number or a custom file path
+    selection = input(f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path: ").strip()
 
+    # Check if the input is a digit and within the range of listed files
+    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
+        input_file = os.path.join(os.getcwd(), txt_files[int(selection) - 1])  # Use the selected file
+    else:
+        input_file = selection  # Assume the entered string is a custom file path
+
+    # Validate that the file exists
     if not os.path.isfile(input_file):
         print(f"{BOLD_RED}File does not exist: {input_file}")
         return
 
+    # Run the sslscanparse script
     print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}")
     with subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
         try:
@@ -357,6 +372,7 @@ def run_whois():
 
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
+        print(f"{BOLD_GREEN}WHOIS Scan and Parse\n")
         print(f"\n{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
