@@ -522,7 +522,7 @@ def display_menu(version, project_path, ascii_art):
     print(f"{BOLD_CYAN}========================================================")
     update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" if update_available else ""
     print(f"{BOLD_CYAN}                Current Version: v{version}")
-    print(f"{BOLD_YELLOW}{update_msg}")
+    print(f"{BOLD_MAG}{update_msg}")
     print(f"{BOLD_YELLOW}            https://github.com/jivy26/infiltra")
     print(f"{BOLD_YELLOW}            Author: @jivy26")
     print(f"{BOLD_CYAN}========================================================\n")
@@ -604,7 +604,9 @@ def main():
             elif choice == '5':
                 run_nmap()
             elif choice == '6':
-                scan_type = input(f"{BOLD_GREEN}Enter the scan type that was run (TCP/UDP): ").upper()
+                clear_screen()
+                print(f"{BOLD_CYAN}NMAP Results Parser\n")
+                scan_type = input(f"{BOLD_GREEN}Enter the scan type that you want to parse (TCP/UDP): ").upper()
                 run_ngrep(scan_type)
             elif choice == '7':
                 run_sslscanparse()
