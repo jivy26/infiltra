@@ -255,7 +255,7 @@ def check_alive_hosts():
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
     # Prompt the user for an IP address or a file number
-    selection = input(f"\n{BOLD_GREEN}Enter a number to select a file, or input a single IP address: ").strip()
+    selection = input(f"\n{BOLD_GREEN}Enter a number to select a file, or input a single IP address: {BOLD_WHITE}").strip()
 
     # If user enters a digit within the range of listed files, select the file
     if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
@@ -361,7 +361,7 @@ def run_whois():
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
-    ip_input = input(f"\n{BOLD_GREEN}Enter a number to select a file, or input a single IP address: ").strip()
+    ip_input = input(f"\n{BOLD_GREEN}Enter a number to select a file, or input a single IP address: {BOLD_WHITE}").strip()
 
     if ip_input.isdigit() and 1 <= int(ip_input) <= len(txt_files):
         ip_input = txt_files[int(ip_input) - 1]  # If user selects a file, use its name as input
@@ -403,17 +403,35 @@ def run_ngrep(scan_type):
 # Function to run nmap scan
 def run_nmap():
     clear_screen()
-    ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: ")
 
-    # Check if ip_input is a valid IP address or a file path
-    if not (is_valid_ip(ip_input) or os.path.isfile(ip_input)):
-        print(f"{BOLD_RED}Invalid input: {ip_input} is neither a valid IP address nor a file path.")
+    # List the available .txt files
+    txt_files = list_txt_files(os.getcwd())
+    if txt_files:
+        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
+        for idx, file in enumerate(txt_files, start=1):
+            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
+
+    # Prompt for input: either a file number, a single IP, or 'x' to cancel
+    selection = input(
+        f"{BOLD_GREEN}\nEnter a number to select a file, input a single IP address, or 'x' to cancel: {BOLD_WHITE}").strip()
+
+    # Check if the input is 'x', if so, cancel the operation
+    if selection.lower() == 'x':
+        print("Operation cancelled by user. Exiting...")
         return
 
-    print(f"\n{BOLD_CYAN}NMAP Scans will run the following commands for TCP and UDP: ")
-    print(f"\n{BOLD_CYAN} TCP: nmap -sSV --top-ports 4000 -Pn ")
-    print(f"{BOLD_CYAN} UDP: nmap -sU --top-ports 400 -Pn ")
+    # Check if the input is a digit and within the range of listed files
+    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
+        ip_input = txt_files[int(selection) - 1]  # Use the selected file
+    elif is_valid_ip(selection) or is_valid_domain(selection):
+        ip_input = selection  # Use the entered IP or domain
+    else:
+        print(f"{BOLD_RED}Invalid input. Please enter a valid IP address, domain, or selection number.")
+        return
 
+    # Ask for the type of scan
+    print(f"\n{BOLD_CYAN}TCP: nmap -sSV --top-ports 4000 -Pn ")
+    print(f"{BOLD_CYAN}UDP: nmap -sU --top-ports 400 -Pn ")
     scan_type = input(f"\n{BOLD_GREEN}Enter scan type (tcp/udp/both): ").lower()
 
     # Validate scan_type
@@ -421,24 +439,17 @@ def run_nmap():
         print(f"{BOLD_RED}Invalid scan type: {scan_type}. Please enter 'tcp', 'udp', or 'both'.")
         return
 
-    script_directory = os.path.dirname(os.path.realpath(__file__))
-    nmap_script_path = os.path.join(script_directory, 'nmap_scan.py')
+    # Run the nmap scan using the selected file or entered IP/domain
+    nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
+    if scan_type in ['tcp', 'both']:
+        tcp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} tcp']
+        subprocess.Popen(tcp_command)
+    if scan_type in ['udp', 'both']:
+        udp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} udp']
+        subprocess.Popen(udp_command)
 
-    # Make sure the input is not empty
-    if ip_input and scan_type in ['tcp', 'udp', 'both']:
-        print(f"\n{BOLD_GREEN}Running nmap_scan.py from {nmap_script_path}")
-        if scan_type in ['tcp', 'both']:
-            tcp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} tcp']
-            subprocess.Popen(tcp_command)
-        if scan_type in ['udp', 'both']:
-            udp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} udp']
-            subprocess.Popen(udp_command)
-        print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched in separate windows.")
-    else:
-        print(f"{BOLD_YELLOW}Invalid input. Make sure you enter a valid IP, file path, and scan type.")
-
-    input(
-        f"\n{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
+    print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched.")
+    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
 
 # OSINT Sub menu
