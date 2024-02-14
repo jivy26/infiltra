@@ -183,7 +183,7 @@ def run_bbot(domain, display_menu, project_path):
 
     # Wait for the user to acknowledge before returning to the menu
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
-    display_menu(get_version(), project_path)
+    display_menu(get_version(), project_path, ascii_art=None)
 
 
 # DNSRecon Integration
