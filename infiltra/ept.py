@@ -97,7 +97,7 @@ def run_aort(domain):
     # Module Info Box
     message_lines = [
         "This module will look use AORT and DNSRecon",
-        "to enumerate DNS information."
+        "to enumerate DNS information"
     ]
 
     # Determine the width of the box based on the longest message line
