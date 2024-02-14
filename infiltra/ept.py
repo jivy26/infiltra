@@ -47,7 +47,9 @@ BOLD_BLUE = Fore.BLUE + Style.BRIGHT
 BOLD_CYAN = Fore.CYAN + Style.BRIGHT
 BOLD_GREEN = Fore.GREEN + Style.BRIGHT
 BOLD_RED = Fore.RED + Style.BRIGHT
+BOLD_MAG = Fore.MAGENTA + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
+BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 # Utility Functions, Need to integrate into utils.py
 
@@ -340,11 +342,11 @@ def run_whois():
 
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
-        print(f"{BOLD_CYAN}Available .txt Files For This Project")
+        print(f"\n{BOLD_CYAN}Available .txt Files For This Project")
         for idx, file in enumerate(txt_files, start=1):
-            print(f"{BOLD_GREEN}{idx}. {file}")
+            print(f"{BOLD_WHITE}{idx}. {file}")
 
-    ip_input = input(f"\n{BOLD_GREEN}Your choice/IP: ").strip()
+    ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or select a .txt file from above: ").strip()
 
     if ip_input.isdigit() and 1 <= int(ip_input) <= len(txt_files):
         ip_input = txt_files[int(ip_input) - 1]  # If user selects a file, use its name as input
