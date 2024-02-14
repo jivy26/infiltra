@@ -2,14 +2,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='infiltra',
-    version='3.03',
+    version='2.9',
     packages=find_packages(),
     install_requires=[
         'colorama',
         'pydig',
-        'ascii_magic',
-        'ascii_art',
-        'pipx'
+        'ascii_magic'
     ],
     entry_points={
         'console_scripts': [
@@ -30,8 +28,6 @@ setup(
             'eyewitness/*',
             'bbot/*',
             'aort/*',
-            'website_enum/*'
-            'submenus/*'
             'nuclei-templates/**/*',
         ],
     },
