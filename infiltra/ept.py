@@ -348,6 +348,7 @@ def run_sslscanparse():
         return
 
     # Run the sslscanparse script
+    clear_screen()
     print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}")
     with subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
         try:
