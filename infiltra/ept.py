@@ -500,9 +500,10 @@ def display_menu(version, project_path, ascii_art):
     update_available = check_and_update()
     print(ascii_art)
     print(f"{BOLD_CYAN}========================================================")
-    update_msg = " (Update Available!)" if update_available else ""
-    print(f"{BOLD_CYAN}                Current Version: v{version}{BOLD_GREEN}{update_msg}")
-    print(f"{BOLD_YELLOW}            https://github.com/jivy26/ept")
+    update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" if update_available else ""
+    print(f"{BOLD_CYAN}                Current Version: v{version}")
+    print(f"{BOLD_YELLOW}{update_msg}")
+    print(f"{BOLD_YELLOW}            https://github.com/jivy26/infiltra")
     print(f"{BOLD_YELLOW}            Author: @jivy26")
     print(f"{BOLD_CYAN}========================================================\n")
 
