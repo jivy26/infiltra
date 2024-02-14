@@ -413,12 +413,7 @@ def run_nmap():
 
     # Prompt for input: either a file number, a single IP, or 'x' to cancel
     selection = input(
-        f"{BOLD_GREEN}\nEnter a number to select a file, input a single IP address, or 'x' to cancel: {BOLD_WHITE}").strip()
-
-    # Check if the input is 'x', if so, cancel the operation
-    if selection.lower() == 'x':
-        print("Operation cancelled by user. Exiting...")
-        return
+        f"{BOLD_GREEN}\nEnter a number to select a file, input a single IP address: {BOLD_WHITE}").strip()
 
     # Check if the input is a digit and within the range of listed files
     if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
