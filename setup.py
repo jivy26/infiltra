@@ -2,19 +2,16 @@ from setuptools import setup, find_packages
 
 setup(
     name='infiltra',
-    version='3.4',
+    version='2.9',
     packages=find_packages(),
     install_requires=[
         'colorama',
         'pydig',
-        'ascii_magic',
-        'ascii_art',
-        'pipx',
-        'requests'
+        'ascii_magic'
     ],
     entry_points={
         'console_scripts': [
-            'infiltra=infiltra.infiltra:main',
+            'infiltra=infiltra.ept:main',
         ],
     },
     # Include additional files into the package
@@ -22,6 +19,7 @@ setup(
     package_data={
         'infiltra': [
             'aort/utils/*.json',
+            'version.txt',
             '*.json',
             '*.sh',
             '*.yaml',
@@ -30,8 +28,6 @@ setup(
             'eyewitness/*',
             'bbot/*',
             'aort/*',
-            'website_enum/*'
-            'submenus/*'
             'nuclei-templates/**/*',
         ],
     },
