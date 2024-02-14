@@ -24,7 +24,6 @@ import os
 import re
 import subprocess
 import sys
-import pathlib
 
 from colorama import init, Fore, Style
 
@@ -50,7 +49,14 @@ BOLD_GREEN = Fore.GREEN + Style.BRIGHT
 BOLD_RED = Fore.RED + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
-# Utility Functions
+# Utility Functions, Need to integrate into utils.py
+
+def list_txt_files(directory):
+    txt_files = [f for f in os.listdir(directory) if f.endswith('.txt')]
+    if not txt_files:
+        print(f"{BOLD_RED}No .txt files found in the current directory.")
+        return None
+    return txt_files
 
 def read_file_lines(filepath):
     try:
@@ -79,6 +85,8 @@ def run_subprocess(command, working_directory=None, shell=False):
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+# End utils
 
 # AORT Integration
 def run_aort(domain):
@@ -330,37 +338,25 @@ def run_whois():
     clear_screen()
     whois_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'whois_script.sh')
 
-    # Module Info Box
-    message_lines = [
-        "This module will look for OrgName in all whois requests",
-        "and parse the names 1 per line."
-    ]
+    txt_files = list_txt_files(os.getcwd())
+    if txt_files:
+        print(f"{BOLD_CYAN}Available .txt Files For This Project")
+        for idx, file in enumerate(txt_files, start=1):
+            print(f"{BOLD_GREEN}{idx}. {file}")
 
-    # Determine the width of the box based on the longest message line
-    width = max(len(line) for line in message_lines) + 4  # padding for the sides of the box
+    ip_input = input(f"\n{BOLD_GREEN}Your choice/IP: ").strip()
 
-    # Print the top border of the box
-    print(f"{BOLD_GREEN}+" + "-" * (width - 2) + f"+")
+    if ip_input.isdigit() and 1 <= int(ip_input) <= len(txt_files):
+        ip_input = txt_files[int(ip_input) - 1]  # If user selects a file, use its name as input
+    elif not (is_valid_ip(ip_input) or ip_input.isdigit()):
+        print(f"{BOLD_RED}Invalid input. Please enter a valid IP address or selection number.")
+        return
 
-    # Print each line of the message, centered within the box
-    for line in message_lines:
-        print(f"{BOLD_GREEN}| " + line.center(width - 4) + f"{BOLD_GREEN} |")
-
-    # Print the bottom border of the box
-    print(f"{BOLD_GREEN}+" + "-" * (width - 2) + f"+")
-    # End Module Info Box
-
-    ip_input = input(f"\n{BOLD_GREEN}Enter a single IP or path to a file with IPs: ").strip()
-
-    # Run the whois script
+    # Proceed with running the script using ip_input as either a filename or a single IP
     print(f"\n{BOLD_GREEN}Running whois_script.sh on {ip_input}\n")
     stdout = run_subprocess(['bash', whois_script_path, ip_input])
-
-    # Display the output
-    print(stdout)  # Removed .decode() here
-
-    input(
-        f"{BOLD_GREEN}Press any key to return to the menu...")  # Allow users to see the message before returning to the menu
+    print(stdout)
+    input(f"{BOLD_GREEN}Press any key to return to the menu...")
 
 
 def run_ngrep(scan_type):
