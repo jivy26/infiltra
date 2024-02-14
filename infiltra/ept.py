@@ -407,6 +407,7 @@ def run_nmap():
     # List the available .txt files
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
+        print(f"{BOLD_GREEN}NMAP Scanner\n")
         print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
@@ -425,6 +426,8 @@ def run_nmap():
         return
 
     # Ask for the type of scan
+    clear_screen()
+    print(f"{BOLD_GREEN}NMAP Scanner\n")
     print(f"\n{BOLD_CYAN}TCP: nmap -sSV --top-ports 4000 -Pn ")
     print(f"{BOLD_CYAN}UDP: nmap -sU --top-ports 400 -Pn ")
     scan_type = input(f"\n{BOLD_GREEN}Enter scan type (tcp/udp/both): ").lower()
