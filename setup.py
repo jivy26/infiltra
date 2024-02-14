@@ -8,7 +8,8 @@ setup(
         'colorama',
         'pydig',
         'ascii_magic',
-        'ascii_art'
+        'ascii_art',
+        'pipx'
     ],
     entry_points={
         'console_scripts': [
