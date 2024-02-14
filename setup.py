@@ -7,7 +7,8 @@ setup(
     install_requires=[
         'colorama',
         'pydig',
-        'ascii_magic'
+        'ascii_magic',
+        'ascii_art'
     ],
     entry_points={
         'console_scripts': [
