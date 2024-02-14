@@ -48,11 +48,11 @@ def open_new_terminal_and_run_sslscan(target):
 
     # Command to open a new terminal window and run sslscan
     command = f"sslscan --port={port} {ip}"
-    print(f"{YELLOW}Launching sslscan for {ip} in a new window...{END}")
+    print(f"Launching sslscan for {ip} in a new window...")
     subprocess.Popen(['x-terminal-emulator', '-e', f"bash -c '{command}; echo Press enter to close...; read'"])
 
     # Instead of waiting for user input, just log the action
-    print(f"{YELLOW}Scan launched for {ip}. Check the new window for results.{END}")
+    print(f"Scan launched for {ip}. Check the new window for results.")
 
 
 # Function to remove ANSI escape codes
@@ -262,7 +262,7 @@ with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
                         print(line)
             else:
                 # No findings, so automatically open sslscan in a new window
-                output_file.write(f"\nNo findings for {ip}, automatically loading a window to run scans for a screenshot\n")
+                output_file.write(f"\nNo findings for {ip}, automatically loading a window to run scans for a screenshot.\n")
                 print(f"\n{YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.{END}", flush=True)
                 open_new_terminal_and_run_sslscan(ip)
                 # Pause the script to allow the user to take a screenshot
