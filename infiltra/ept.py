@@ -577,26 +577,46 @@ def website_enumeration_submenu():
     domain = ''
     osint_domain_file = 'osint_domain.txt'
     website_enum_domain_file = 'website_enum_domain.txt'
+    domain_files = {
+        '1': osint_domain_file,
+        '2': website_enum_domain_file,
+    }
+    choices = []
 
-    # Check if osint_domain.txt exists and read the domain from it
-    if os.path.exists(osint_domain_file):
-        with open(osint_domain_file, 'r') as file:
+    # Check for existing domain files
+    for key, filename in domain_files.items():
+        if os.path.exists(filename):
+            with open(filename, 'r') as file:
+                domain = file.read().strip()
+            print(f"{key}. Use domain from {filename}: {domain}")
+            choices.append(key)
+
+    # Option to enter a new domain
+    new_choice_key = str(len(choices) + 1)
+    print(f"{new_choice_key}. Enter a new domain for website enumeration")
+    choices.append(new_choice_key)
+
+    choice = input("\nEnter your choice: ").strip()
+
+    # Validate choice
+    if choice not in choices:
+        print(f"{BOLD_RED}Invalid choice, please try again.")
+        return
+
+    # Use domain from selected file
+    if choice in domain_files:
+        with open(domain_files[choice], 'r') as file:
             domain = file.read().strip()
-        use_osint_domain = input(f"{BOLD_CYAN}Use OSINT domain '{domain}' for website enumeration? (Y/n): ").strip().lower()
-        if use_osint_domain not in ['y', 'yes', '']:
-            domain = input(f"{BOLD_CYAN}Please input the domain for website enumeration: ").strip()
-            with open(website_enum_domain_file, 'w') as file:
-                file.write(domain)
-    else:
-        print(f"{BOLD_YELLOW}No OSINT domain has been set. Please set the domain.")
-        domain_input = input(f"{BOLD_CYAN}Please input the domain for website enumeration: ").strip()
-        if is_valid_domain(domain_input):
-            domain = domain_input
-            with open(website_enum_domain_file, 'w') as file:
-                file.write(domain)
-        else:
+
+    # Enter a new domain
+    elif choice == new_choice_key:
+        domain = input(f"{BOLD_CYAN}Please input the domain for website enumeration: ").strip()
+        if not domain:  # Validate domain input
             print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
             return
+        # Save the new domain
+        with open(website_enum_domain_file, 'w') as file:
+            file.write(domain)
 
     while True:
         clear_screen()
