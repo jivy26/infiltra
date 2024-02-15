@@ -164,7 +164,8 @@ def run_bbot(domain, display_menu, project_path):
 
     if choice in commands:
         command = commands[choice]
-        full_command = 'qterminal', '-e', f'bbot -t {domain} {command} -o . --name bbot'
+        bbot_command = f"echo -ne \"\\033]0;BBOT\\007\"; exec bbot -t {domain} {command} -o . --name bbot"
+        full_command = ['gnome-terminal', '--', 'bash', '-c', bbot_command]
 
         # Change directory to the project path
         os.chdir(project_path)
@@ -459,10 +460,12 @@ def run_nmap():
     # Run the nmap scan using the selected file or entered IP/domain
     nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
     if scan_type in ['tcp', 'both']:
-        tcp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} tcp']
+        tcp_command_string = f"echo -ne \"\\033]0;NMAP TCP\\007\"; exec sudo python3 {nmap_script_path} {ip_input} tcp"
+        tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
         subprocess.Popen(tcp_command)
     if scan_type in ['udp', 'both']:
-        udp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} udp']
+        udp_command_string = f"echo -ne \"\\033]0;NMAP UDP\\007\"; exec sudo python3 {nmap_script_path} {ip_input} udp"
+        udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
         subprocess.Popen(udp_command)
 
     print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched.")

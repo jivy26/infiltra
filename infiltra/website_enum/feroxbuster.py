@@ -52,14 +52,9 @@ def run_feroxbuster(domain):
     os.makedirs(output_dir, exist_ok=True)
     output_file = os.path.join(output_dir, 'ferox.txt')
 
-    title_command = "echo -ne \"\\033]0;Feroxbuster\\007\"; "  # Note the semicolon and space at the end
-    feroxbuster_command = f"feroxbuster -u {domain} -s 200,301,302 -k -o {output_file}"
-
-    # Combine the title command and the feroxbuster command
-    combined_command = title_command + feroxbuster_command
-
-    # Execute the command using gnome-terminal
-    full_command = ['gnome-terminal', '--', 'bash', '-c', combined_command]
+    # Construct the command to run feroxbuster within gnome-terminal
+    feroxbuster_command = f"echo -ne \"\\033]0;Feroxbuster\\007\"; exec feroxbuster -u {domain} -s 200,301,302 -k -o {output_file}"
+    full_command = ['gnome-terminal', '--', 'bash', '-c', feroxbuster_command]
 
     # Execute the command
     try:
