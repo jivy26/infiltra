@@ -244,7 +244,7 @@ def is_dnsrecon_installed():
 
 def run_nikto(targets):
     clear_screen()
-    nikto_dir = 'nikto'
+    nikto_dir = 'website_enum'
     os.makedirs(nikto_dir, exist_ok=True)  # Create the nikto directory if it doesn't exist
     hosts = targets
     # Check if the input is a file or a single host
