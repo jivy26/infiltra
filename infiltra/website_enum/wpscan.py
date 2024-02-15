@@ -56,7 +56,7 @@ def run_wpscan(domain, api_key):
     output_dir = 'website_enum'
     os.makedirs(output_dir, exist_ok=True)
     output_file = os.path.join(output_dir, 'wpscan.txt')
-    wpscan_command = f"wpscan --url {domain} --api-token {api_key} --rua --output | tee {output_file}"
+    wpscan_command = f"wpscan --url {domain} --api-token {api_key} --rua"
     try:
         subprocess.run(['gnome-terminal', '--', 'bash', '-c', wpscan_command], check=True)
         print(f"WPScan is executing against {domain}. Results will be saved to {output_file}.")
