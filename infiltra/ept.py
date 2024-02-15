@@ -574,26 +574,26 @@ def osint_submenu(project_path):
 
 def website_enumeration_submenu():
     clear_screen()
-    domain = ''
-    osint_domain_file = 'osint_domain.txt'
-    website_enum_domain_file = 'website_enum_domain.txt'
     domain_files = {
-        '1': osint_domain_file,
-        '2': website_enum_domain_file,
+        '1': 'osint_domain.txt',
+        '2': 'website_enum_domain.txt',
     }
     choices = []
+    domain_choices = {}
 
-    # Check for existing domain files
+    # Check for existing domain files and list them
     for key, filename in domain_files.items():
         if os.path.exists(filename):
             with open(filename, 'r') as file:
-                domain_content = file.read().strip()
-            print(f"{key}. Use domain from {filename}: {domain_content}")
+                domain = file.read().strip()
+            print(f"{key}. Use domain from {filename}: {domain}")
             choices.append(key)
+            domain_choices[key] = domain
 
-    next_index = len(choices) + 1
-    print(f"{next_index}. Enter a new domain for website enumeration")
-    choices.append(str(next_index))
+    # Determine the new choice index
+    new_choice_index = str(len(choices) + 1)
+    print(f"{new_choice_index}. Enter a new domain for website enumeration")
+    choices.append(new_choice_index)
 
     choice = input("\nEnter your choice: ").strip()
 
@@ -603,18 +603,17 @@ def website_enumeration_submenu():
         return
 
     # Use domain from selected file
-    if choice in domain_files:
-        with open(domain_files[choice], 'r') as file:
-            domain = file.read().strip()
+    if choice in domain_choices:
+        domain = domain_choices[choice]
 
     # Enter a new domain
-    elif choice == str(next_index):
+    elif choice == new_choice_index:
         domain = input(f"{BOLD_CYAN}Please input the domain for website enumeration: ").strip()
         if not domain:  # Validate domain input
             print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
             return
         # Save the new domain
-        with open(website_enum_domain_file, 'w') as file:
+        with open('website_enum_domain.txt', 'w') as file:
             file.write(domain)
 
     while True:
