@@ -35,6 +35,17 @@ def install_feroxbuster():
         print(f"An error occurred while installing feroxbuster: {e}")
 
 
+def get_domain_to_use():
+    domain_to_use = ''
+    if os.path.exists(website_enum_domain_file):
+        with open(website_enum_domain_file, 'r') as file:
+            domain_to_use = file.read().strip()
+    elif os.path.exists(osint_domain_file):
+        with open(osint_domain_file, 'r') as file:
+            domain_to_use = file.read().strip()
+    return domain_to_use
+
+
 # Function to run feroxbuster with a given domain
 def run_feroxbuster(domain):
     output_dir = 'website_enum'
@@ -53,25 +64,22 @@ def run_feroxbuster(domain):
 
 # Main function
 def main(domain=None):
-    # Check if feroxbuster is installed
-    if not is_feroxbuster_installed():
+    feroxbuster_installed = is_feroxbuster_installed()
+    if not feroxbuster_installed:
         print("Feroxbuster is not installed. Installing now...")
         install_feroxbuster()
+        feroxbuster_installed = is_feroxbuster_installed()  # Check again after attempting to install
 
-    # Use the domain argument if it was passed, otherwise determine the domain to use
-    domain_to_use = domain
-    if not domain_to_use:
-        if os.path.exists(website_enum_domain_file):
-            with open(website_enum_domain_file, 'r') as file:
-                domain_to_use = file.read().strip()
-        elif os.path.exists(osint_domain_file):
-            with open(osint_domain_file, 'r') as file:
-                domain_to_use = file.read().strip()
+    if feroxbuster_installed:
+        if not domain:
+            domain = get_domain_to_use()
 
-    if domain_to_use:
-        run_feroxbuster(domain_to_use)
+        if domain:
+            run_feroxbuster(domain)
+        else:
+            print("No domain is set for enumeration. Please set a domain first.")
     else:
-        print("No domain is set for enumeration. Please set a domain first.")
+        print("Failed to install Feroxbuster. Please install it manually.")
 
 
 if __name__ == "__main__":
