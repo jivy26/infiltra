@@ -28,17 +28,19 @@ def run_nmap_scan(ip_list, scan_type):
     # Ensure libnotify-bin is installed for notify-send to work
     subprocess.run(["sudo", "apt-get", "install", "-y", "libnotify-bin"], check=True)
 
-    notification_message = f"'Nmap {scan_type.upper()} Scan' 'Scan completed.'"
+    # Notification message setup
+    notification_title = "Nmap Scan Complete"
+    notification_body = f"Scan type {scan_type.upper()} completed."
 
     if scan_type == "tcp" or scan_type == "both":
         title_command = "echo -ne \"\\033]0;NMAP TCP Scan\\007\"; "
-        tcp_scan_command = f"sudo nmap -sSV --top-ports 4000 -Pn -oG tcp.txt {' '.join(ip_list)}; notify-send {notification_message}"
+        tcp_scan_command = f"sudo nmap -sSV --top-ports 4000 -Pn -oG tcp.txt {' '.join(ip_list)}; notify-send \"{notification_title}\" \"{notification_body}\""
         full_tcp_command = ['gnome-terminal', '--', 'bash', '-c', title_command + tcp_scan_command]
         subprocess.Popen(full_tcp_command)
 
     if scan_type == "udp" or scan_type == "both":
         title_command = "echo -ne \"\\033]0;NMAP UDP Scan\\007\"; "
-        udp_scan_command = f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}; notify-send {notification_message}"
+        udp_scan_command = f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}; notify-send \"{notification_title}\" \"{notification_body}\""
         full_udp_command = ['gnome-terminal', '--', 'bash', '-c', title_command + udp_scan_command]
         subprocess.Popen(full_udp_command)
 
