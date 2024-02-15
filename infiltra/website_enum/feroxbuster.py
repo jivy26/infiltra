@@ -54,7 +54,7 @@ def run_feroxbuster(domain):
 
     # Construct the feroxbuster command to be executed within qterminal
     feroxbuster_command = f"feroxbuster -u {domain} -s 200,301,302 -k -o {output_file}"
-    full_command = ['qterminal', '-e', feroxbuster_command]
+    full_command = ['qterminal', '-e', feroxbuster_command, '-T', 'Feroxbuster']
 
     # Print the command being executed for the user's reference
     print(f"Executing Feroxbuster with command: {full_command}")
