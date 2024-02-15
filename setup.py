@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='infiltra',
-    version='3.10',
+    version='3.02',
     packages=find_packages(),
     install_requires=[
         'colorama',
