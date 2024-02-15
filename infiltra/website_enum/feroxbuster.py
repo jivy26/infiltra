@@ -49,17 +49,21 @@ def get_domain_to_use():
 # Function to run feroxbuster with a given domain
 def run_feroxbuster(domain):
     output_dir = 'website_enum'
-    os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)  # Ensure the output directory exists
     output_file = os.path.join(output_dir, 'ferox.txt')
 
-    # Construct the feroxbuster command
+    # Construct the feroxbuster command to be executed within qterminal
     feroxbuster_command = f"feroxbuster -u {domain} -s 200,301,302 -k -o {output_file}"
+    full_command = ['qterminal', '-e', feroxbuster_command]
 
-    # Open a new terminal window to run Feroxbuster, naming the window if possible
+    # Print the command being executed for the user's reference
+    print(f"Executing Feroxbuster with command: {full_command}")
+
+    # Execute the feroxbuster command using qterminal
     try:
-        subprocess.run(f"gnome-terminal --title=Feroxbuster -e '{feroxbuster_command}'", shell=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred while running feroxbuster: {e}")
+        subprocess.Popen(full_command)
+    except Exception as e:
+        print(f"An error occurred while attempting to run Feroxbuster: {e}")
 
 
 # Main function
