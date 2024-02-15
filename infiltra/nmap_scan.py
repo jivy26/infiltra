@@ -25,9 +25,6 @@ def run_nmap_scan(ip_list, scan_type):
         print("Nmap is not installed or not found in PATH.")
         sys.exit(1)
 
-    # Ensure libnotify-bin is installed for notify-send to work
-    subprocess.run(["sudo", "apt-get", "install", "-y", "libnotify-bin"], check=True)
-
     # Notification message setup
     notification_title = "Nmap Scan Complete"
     notification_body = f"Scan type {scan_type.upper()} completed."
