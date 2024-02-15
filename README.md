@@ -56,7 +56,7 @@ Automate and streamline the basic processes of external penetration testing whil
 
 # Installation
 
-Depending on your environment you might need to run the one-liner with SUDO to avoid permission issues.
+Depending on your environment, you might need to run the one-liner with SUDO to avoid permission issues.
 
 - **Installing Infiltra via PIP**<br />
   - `pip install infiltra`
@@ -70,3 +70,10 @@ Depending on your environment you might need to run the one-liner with SUDO to a
   <br /><br />
 - Use `infiltra` from anywhere to load the tool
 
+# Troubleshooting
+
+**/.local/bin PATH is not defined when installing**
+<p align="center">
+  <img src="https://i.postimg.cc/G3qrG8y7/Warning.png" alt="Error">
+</p>
+- Solution: add `export PATH="$HOME/.local/bin:$PATH"` to .zshrc or .bashrc depending on your environment

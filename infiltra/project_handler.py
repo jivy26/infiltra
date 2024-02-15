@@ -39,12 +39,32 @@ BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 projects_base_path = os.path.expanduser('~/projects')
 
 
+def create_ips_file(project_path):
+    create_file = input(f"{BOLD_YELLOW}Would you like to create an ips.txt file in this project? (Y/n): ").strip().lower()
+    if create_file in ['', 'y', 'yes']:
+        ips_file_path = os.path.join(project_path, 'ips.txt')
+        print(f"{BOLD_GREEN}Please enter the IPs (one per line). Press CTRL+D when done:")
+        try:
+            with open(ips_file_path, 'w') as ips_file:
+                while True:
+                    try:
+                        ip = input()
+                        ips_file.write(ip + '\n')
+                    except EOFError:  # This is triggered by pressing CTRL+D or CTRL+Z
+                        break
+            print(f"{BOLD_GREEN}ips.txt file has been created in {ips_file_path}")
+        except Exception as e:
+            print(f"{BOLD_RED}An error occurred while creating ips.txt: {e}")
+    else:
+        print(f"{BOLD_YELLOW}Skipping ips.txt file creation.")
+
 def create_project_directory(org_name):
     clear_screen()
     project_path = os.path.join(projects_base_path, org_name)
     if not os.path.exists(project_path):
         os.makedirs(project_path)
         print(f"{BOLD_GREEN}Created project directory for '{org_name}' at {project_path}")
+        create_ips_file(project_path)
     else:
         print(f"{BOLD_YELLOW}Project directory for '{org_name}' already exists at {project_path}")
     return project_path
