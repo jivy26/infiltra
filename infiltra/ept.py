@@ -574,6 +574,7 @@ def osint_submenu(project_path):
 
 def website_enumeration_submenu():
     clear_screen()
+    website_enum_domain_file = 'website_enum_domain.txt'
     domain_files = {
         'osint_domain.txt': None,
         'website_enum_domain.txt': None,
