@@ -7,7 +7,6 @@ def is_bbot_installed():
         result = subprocess.run(["pip", "list"], capture_output=True, text=True)
         return 'bbot' in result.stdout
     except subprocess.CalledProcessError:
-        # pipx is not installed or not working correctly
         return False
 
 def install_bbot():

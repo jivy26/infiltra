@@ -599,7 +599,7 @@ def website_enumeration_submenu():
                 print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
             input(f"{BOLD_CYAN}Press Enter to continue...")
         elif choice == '2':
-            run_feroxbuster()
+            run_feroxbuster(domain)
         elif choice == '3':
             # Placeholder for Wappalyzer integration
             print(f"{BOLD_YELLOW}Wappalyzer integration is in progress...")
