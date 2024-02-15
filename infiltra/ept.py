@@ -577,24 +577,21 @@ def website_enumeration_submenu():
     domain = ''
     osint_domain_file = 'osint_domain.txt'
     website_enum_domain_file = 'website_enum_domain.txt'
-    domain_files = {
-        '1': osint_domain_file,
-        '2': website_enum_domain_file,
-    }
-    choices = []
+    domain_files = [osint_domain_file, website_enum_domain_file]
+    choices = {}
 
-    # Check for existing domain files
-    for key, filename in domain_files.items():
+    # Check for existing domain files and list them
+    for idx, filename in enumerate(domain_files, start=1):
         if os.path.exists(filename):
             with open(filename, 'r') as file:
                 domain = file.read().strip()
-            print(f"{key}. Use domain from {filename}: {domain}")
-            choices.append(key)
+            print(f"{idx}. Use domain from {filename}: {domain}")
+            choices[str(idx)] = filename
 
     # Option to enter a new domain
     new_choice_key = str(len(choices) + 1)
     print(f"{new_choice_key}. Enter a new domain for website enumeration")
-    choices.append(new_choice_key)
+    choices[new_choice_key] = "new_domain"
 
     choice = input("\nEnter your choice: ").strip()
 
@@ -604,12 +601,13 @@ def website_enumeration_submenu():
         return
 
     # Use domain from selected file
-    if choice in domain_files:
-        with open(domain_files[choice], 'r') as file:
+    if choice != new_choice_key:
+        filename = choices[choice]
+        with open(filename, 'r') as file:
             domain = file.read().strip()
 
     # Enter a new domain
-    elif choice == new_choice_key:
+    if choice == new_choice_key:
         domain = input(f"{BOLD_CYAN}Please input the domain for website enumeration: ").strip()
         if not domain:  # Validate domain input
             print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
