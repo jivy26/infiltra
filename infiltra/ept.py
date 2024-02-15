@@ -577,7 +577,7 @@ def website_enumeration_submenu():
         domain_status_menu = f"{BOLD_CYAN}1. Domain Is Set" if domain else f"{BOLD_RED}1. Set Domain"
         print(f"{BOLD_CYAN}Website Enumeration Menu: {domain_set_status}\n")
         menu_options = [
-            (f"{domain_status_menu}", f"          {DEFAULT_COLOR}xxxxxx."),
+            (f"{domain_status_menu}", f"         {DEFAULT_COLOR}Checks if domain is set or not. Yellow means a domain needs to be set."),
             ("2. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files."),
             ("2. Identify Technologies with Wappalyzer", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Uncover technologies used on websites."),
             ("3. Perform OWASP ZAP Scan", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Find vulnerabilities in web applications."),
