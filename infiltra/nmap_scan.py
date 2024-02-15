@@ -26,14 +26,16 @@ def run_nmap_scan(ip_list, scan_type):
         sys.exit(1)
 
     if scan_type == "tcp" or scan_type == "both":
-        set_title = f"echo -ne \"\\033]0;NMAP TCP\\007\""
-        tcp_scan_command = ['gnome-terminal', '--', 'bash', '-c', set_title, f"sudo nmap -sSV --top-ports 4000 -Pn -oG tcp.txt {' '.join(ip_list)}"]
-        subprocess.Popen(tcp_scan_command)
+        title_command = "echo -ne \"\\033]0;NMAP TCP Scan\\007\"; "
+        tcp_scan_command = f"sudo nmap -sSV --top-ports 4000 -Pn -oG tcp.txt {' '.join(ip_list)}"
+        full_tcp_command = ['gnome-terminal', '--', 'bash', '-c', title_command + tcp_scan_command]
+        subprocess.Popen(full_tcp_command)
 
     if scan_type == "udp" or scan_type == "both":
-        set_title = f"echo -ne \"\\033]0;NMAP UDP\\007\""
-        udp_scan_command = ['gnome-terminal', '--', 'bash', '-c', set_title, f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}"]
-        subprocess.Popen(udp_scan_command)
+        title_command = "echo -ne \"\\033]0;NMAP UDP Scan\\007\"; "
+        udp_scan_command = f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}"
+        full_udp_command = ['gnome-terminal', '--', 'bash', '-c', title_command + udp_scan_command]
+        subprocess.Popen(full_udp_command)
 
 
 def main():
