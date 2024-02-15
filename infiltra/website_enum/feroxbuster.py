@@ -14,10 +14,15 @@ website_enum_domain_file = 'website_enum_domain.txt'
 
 # Function to check if feroxbuster is installed
 def is_feroxbuster_installed():
+    check_command = "feroxbuster --version"
     try:
         subprocess.run(check_command.split(), check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return True
     except subprocess.CalledProcessError:
+        print("Feroxbuster is installed but returned a non-zero exit status when checking version.")
+        return False
+    except FileNotFoundError:
+        print("Feroxbuster is not installed or not found in the PATH.")
         return False
 
 
