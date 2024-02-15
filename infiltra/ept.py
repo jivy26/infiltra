@@ -88,6 +88,24 @@ def run_subprocess(command, working_directory=None, shell=False):
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
+def check_and_install_gnome_terminal():
+    try:
+        # Check if gnome-terminal is installed
+        subprocess.run(["which", "gnome-terminal"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(f"{BOLD_GREEN}gnome-terminal is installed.")
+    except subprocess.CalledProcessError:
+        # gnome-terminal is not installed; proceed with installation
+        print(f"{BOLD_YELLOW}gnome-terminal is not installed. Installing now...")
+        install_command = "sudo apt install gnome-terminal -y"
+        try:
+            subprocess.run(install_command.split(), check=True)
+            print(f"{BOLD_GREEN}gnome-terminal installed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"{BOLD_RED}Failed to install gnome-terminal: {e}")
+            sys.exit(1)
+
+
 # End utils
 
 # AORT Integration
@@ -578,6 +596,7 @@ def display_menu(version, project_path, ascii_art):
 
 # Main function
 def main():
+    check_and_install_gnome_terminal()
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
