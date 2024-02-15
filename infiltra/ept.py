@@ -34,6 +34,8 @@ from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
+from infiltra.website_enum.feroxbuster import main as run_feroxbuster
+from infiltra.website_enum.wpscan import main as run_wpscan
 
 # Moved from ANSI to Colorama
 # Initialize Colorama
@@ -52,6 +54,9 @@ BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 # Utility Functions, Need to integrate into utils.py
+
+# Ensure libnotify-bin is installed for notify-send to work
+subprocess.run(["sudo", "apt-get", "install", "-y", "libnotify-bin"], check=True)
 
 def list_txt_files(directory):
     txt_files = [f for f in os.listdir(directory) if f.endswith('.txt')]
@@ -88,6 +93,24 @@ def run_subprocess(command, working_directory=None, shell=False):
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
+def check_and_install_gnome_terminal():
+    try:
+        # Check if gnome-terminal is installed
+        subprocess.run(["which", "gnome-terminal"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(f"{BOLD_GREEN}gnome-terminal is installed.")
+    except subprocess.CalledProcessError:
+        # gnome-terminal is not installed; proceed with installation
+        print(f"{BOLD_YELLOW}gnome-terminal is not installed. Installing now...")
+        install_command = "sudo apt install gnome-terminal -y"
+        try:
+            subprocess.run(install_command.split(), check=True)
+            print(f"{BOLD_GREEN}gnome-terminal installed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"{BOLD_RED}Failed to install gnome-terminal: {e}")
+            sys.exit(1)
+
+
 # End utils
 
 # AORT Integration
@@ -97,7 +120,7 @@ def run_aort(domain):
     # Module Info Box
     message_lines = [
         "This module will look use AORT and DNSRecon",
-        "to enumerate DNS information."
+        "to enumerate DNS information"
     ]
 
     # Determine the width of the box based on the longest message line
@@ -161,9 +184,14 @@ def run_bbot(domain, display_menu, project_path):
 
     choice = input(f"{BOLD_GREEN}Enter your choice (1-4): ").strip()
 
+    # Notification message setup
+    notification_title = "BBOT scan completed."
+    notification_body = "BBOT scan completed."
+
     if choice in commands:
         command = commands[choice]
-        full_command = 'qterminal', '-e', f'bbot -t {domain} {command} -o . --name bbot'
+        bbot_command = f"echo -ne \"\\033]0;BBOT\\007\"; exec bbot -t {domain} {command} -o . --name bbot; notify-send \"{notification_title}\" \"{notification_body}\""
+        full_command = ['gnome-terminal', '--', 'bash', '-c', bbot_command]
 
         # Change directory to the project path
         os.chdir(project_path)
@@ -183,7 +211,7 @@ def run_bbot(domain, display_menu, project_path):
 
     # Wait for the user to acknowledge before returning to the menu
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
-    display_menu(get_version(), project_path)
+    display_menu(get_version(), project_path, ascii_art=None)
 
 
 # DNSRecon Integration
@@ -363,7 +391,7 @@ def run_sslscanparse():
         except Exception as e:
             print(f"{BOLD_RED}An error occurred: {e}")
 
-    input(f"\n\n{BOLD_BLUE}Press Enter to return to the menu...")
+    input(f"\n\n{BOLD_BLUE}Press Enter to return to the menu....")
 
 
 # Function to run whois script
@@ -431,7 +459,7 @@ def run_nmap():
 
     # Prompt for input: either a file number, a single IP, or 'x' to cancel
     selection = input(
-        f"{BOLD_GREEN}\nEnter a number to select a file, input a single IP address: {BOLD_WHITE}").strip()
+        f"{BOLD_GREEN}\nEnter a number to select a file or input a single IP address: {BOLD_WHITE}").strip()
 
     # Check if the input is a digit and within the range of listed files
     if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
@@ -458,10 +486,12 @@ def run_nmap():
     # Run the nmap scan using the selected file or entered IP/domain
     nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
     if scan_type in ['tcp', 'both']:
-        tcp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} tcp']
+        tcp_command_string = f"echo -ne \"\\033]0;NMAP TCP\\007\"; exec sudo python3 {nmap_script_path} {ip_input} tcp"
+        tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
         subprocess.Popen(tcp_command)
     if scan_type in ['udp', 'both']:
-        udp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} udp']
+        udp_command_string = f"echo -ne \"\\033]0;NMAP UDP\\007\"; exec sudo python3 {nmap_script_path} {ip_input} udp"
+        udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
         subprocess.Popen(udp_command)
 
     print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched.")
@@ -486,18 +516,20 @@ def osint_submenu(project_path):
 
     while True:
         clear_screen()
-        print(f"{BOLD_CYAN}OSINT Submenu for {domain}:")
-        if not domain:
-            print(f"{BOLD_YELLOW}No domain has been set!\n")
-        if not domain:
-            print(f"\n{BOLD_YELLOW}1. Set Domain")
-        else:
-            print(f"{BOLD_GREEN}1. Domain Is Set")
-        print("2. Run AORT and DNSRecon")
-        print("3. Run bbot (useful for black-box pen testing)")
-        print("4. Parse bbot results")
-        print("5. Run EyeWitness")
-        print(f"\n{BOLD_RED}X. Return to main menu")
+        print(f"{BOLD_CYAN}OSINT Menu: {domain}:\n")
+        menu_options = [
+            ("1. Set Domain", f"{DEFAULT_COLOR}Define the domain to be used for OSINT."),
+            ("2. Run AORT and DNSRecon", f"{DEFAULT_COLOR}Enumerate DNS information."),
+            ("3. Run BBOT", f"{DEFAULT_COLOR}Black-box testing for domain and network analysis."),
+            ("4. Parse BBOT Results", f"{DEFAULT_COLOR}Interpret the output from BBOT."),
+            ("5. Run EyeWitness", f"{DEFAULT_COLOR}Visual inspection tool for web domains.")
+        ]
+
+        for option, description in menu_options:
+            print(f"{BOLD_GREEN}{option.ljust(50)}{description}")
+
+        print(f"\n{BOLD_CYAN}Utilities:")
+        print(f"{BOLD_RED}X. Return to Main Menu".ljust(50) + f"\n")
 
         choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
 
@@ -506,34 +538,115 @@ def osint_submenu(project_path):
             if is_valid_domain(domain_input):
                 domain = domain_input
                 print(f"{BOLD_GREEN}Domain set to: {domain}")
-                # Save the domain to osint_domain.txt
                 write_to_file(osint_domain_file, domain)
             else:
                 print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
-                continue
             input(f"{BOLD_CYAN}Press Enter to continue...")
-            clear_screen()
         elif choice == '2':
-            run_aort(domain)
-            if is_dnsrecon_installed():
-                run_dnsrecon(domain)
+            if domain:
+                run_aort(domain)
+                if is_dnsrecon_installed():
+                    run_dnsrecon(domain)
+                else:
+                    print(f"{BOLD_RED}DNSRecon is not installed. Please install it to use this feature.")
             else:
-                print(f"{BOLD_RED}DNSRecon is not installed. Please install it to use this feature.")
-                input(f"\n{BOLD_GREEN}Press Enter to return to the submenu...")
+                print(f"{BOLD_RED}Please set a domain first using option 1.")
+            input(f"{BOLD_GREEN}Press Enter to return to the submenu...")
         elif choice == '3':
-            run_bbot(domain, display_menu, project_path)
+            if domain:
+                run_bbot(domain, display_menu, project_path)
+            else:
+                print(f"{BOLD_RED}Please set a domain first using option 1.")
         elif choice == '4':
             bbot_main()
         elif choice == '5':
             if domain:
-                run_eyewitness(domain)  # Make sure domain is set before calling the function
+                run_eyewitness(domain)
             else:
                 print(f"{BOLD_RED}Please set a domain first using option 1.")
         elif choice == 'x':
-            break
+            return
         else:
             print(f"{BOLD_YELLOW}Invalid choice, please try again.")
+            input(f"{BOLD_GREEN}Press Enter to continue...")
 
+
+def website_enumeration_submenu():
+    clear_screen()
+    domain = ''
+    osint_domain_file = 'osint_domain.txt'
+    website_enum_domain_file = 'website_enum_domain.txt'
+
+    # Check if osint_domain.txt exists and read the domain from it
+    if os.path.exists(osint_domain_file):
+        with open(osint_domain_file, 'r') as file:
+            domain = file.read().strip()
+        use_osint_domain = input(f"{BOLD_CYAN}Use OSINT domain '{domain}' for website enumeration? (Y/n): ").strip().lower()
+        if use_osint_domain not in ['y', 'yes', '']:
+            domain = input(f"{BOLD_CYAN}Please input the domain for website enumeration: ").strip()
+            with open(website_enum_domain_file, 'w') as file:
+                file.write(domain)
+    else:
+        print(f"{BOLD_YELLOW}No OSINT domain has been set. Please set the domain.")
+        domain_input = input(f"{BOLD_CYAN}Please input the domain for website enumeration: ").strip()
+        if is_valid_domain(domain_input):
+            domain = domain_input
+            with open(website_enum_domain_file, 'w') as file:
+                file.write(domain)
+        else:
+            print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
+            return
+
+    while True:
+        clear_screen()
+        domain_set_status = f"{BOLD_GREEN}Domain is set to: {domain}" if domain else f"{BOLD_YELLOW}Domain is not set."
+        domain_status_menu = f"{BOLD_CYAN}1. Domain Is Set" if domain else f"{BOLD_RED}1. Set Domain"
+        print(f"{BOLD_CYAN}Website Enumeration Menu: {domain_set_status}\n")
+        menu_options = [
+            (f"{domain_status_menu}", f"         {DEFAULT_COLOR}Checks if domain is set or not. Yellow means a domain needs to be set."),
+            ("2. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files."),
+            ("3. Identify Technologies with Wappalyzer", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Uncover technologies used on websites."),
+            ("4. Perform OWASP ZAP Scan", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Find vulnerabilities in web applications."),
+            ("5. Run WPScan for WordPress Sites", f"{DEFAULT_COLOR}Check for vulnerabilities in WordPress sites.")
+        ]
+
+        for option, description in menu_options:
+            print(f"{BOLD_GREEN}{option.ljust(50)}{description}")
+
+        print(f"\n{BOLD_CYAN}Utilities:")
+        print(f"{BOLD_RED}X. Return to Main Menu".ljust(30) + f"\n")
+
+        choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
+
+        if choice == '1':
+            domain_input = input(f"{BOLD_CYAN}Please input the domain for website enumeration: ").strip()
+            if is_valid_domain(domain_input):
+                domain = domain_input
+                with open(website_enum_domain_file, 'w') as file:
+                    file.write(domain)
+                print(f"{BOLD_GREEN}Domain set to: {domain}")
+            else:
+                print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
+            input(f"{BOLD_CYAN}Press Enter to continue...")
+        elif choice == '2':
+            run_feroxbuster(domain)
+        elif choice == '3':
+            # Placeholder for Wappalyzer integration
+            print(f"{BOLD_YELLOW}Wappalyzer integration is in progress...")
+            # run_wappalyzer()
+        elif choice == '4':
+            # Placeholder for OWASP ZAP integration
+            print(f"{BOLD_YELLOW}OWASP ZAP integration is in progress...")
+            # run_owasp_zap()
+        elif choice == '5':
+            run_wpscan(domain)
+        elif choice == 'x':
+            # Return to the main menu
+            return
+        else:
+            print(f"{BOLD_RED}Invalid choice, please try again.")
+            input(f"{BOLD_GREEN}Press Enter to continue...")
+            website_enumeration_submenu()
 
 
 def display_menu(version, project_path, ascii_art):
@@ -562,14 +675,14 @@ def display_menu(version, project_path, ascii_art):
         ("6. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
         ("7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
         ("8. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues."),
-        (f"9. Vulnerability Scanner {BOLD_YELLOW}(In-Progress)","")
+        ("9. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
+        ("10. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
     ]
 
     for option, description in menu_options:
         print(f"{BOLD_GREEN}{option.ljust(30)}{description}")
 
     print(f"\n{BOLD_CYAN}Utilities:")
-    #print(f"{BOLD_YELLOW}U. Update Check".ljust(30) + f"{DEFAULT_COLOR} Checks version, but update is broken. Close the application and run the following command to update: {BOLD_YELLOW}pip install --upgrade pip.")
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
 
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
@@ -578,13 +691,10 @@ def display_menu(version, project_path, ascii_art):
 
 # Main function
 def main():
+    check_and_install_gnome_terminal()
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
-    # # Check if the script is running in a terminal
-    # if not sys.stdin.isatty():
-    #     print(f"{BOLD_RED}This script is not running in an interactive mode. Exiting...")
-    #     sys.exit(1)
 
     # Inside your main function or wherever you need to print the ASCII art
     ascii_art = get_ascii_art('logo.png', columns=80)
@@ -636,6 +746,8 @@ def main():
                     f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: ")
                 run_nikto(target_input)
             elif choice == '9':
+                website_enumeration_submenu()
+            elif choice == '10':
                 nuclei_main()
             elif choice == 'u':
                 print("Checking for updates...")

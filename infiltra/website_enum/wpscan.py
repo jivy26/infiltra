@@ -2,7 +2,6 @@ import subprocess
 import os
 import getpass
 import json
-from infiltra.utils import is_valid_domain
 
 # File to store WPScan API key securely
 api_key_file = 'wpscan_api_key.json'
@@ -71,19 +70,12 @@ def main(domain=None):
 
     api_key = get_wpscan_api_key()
     if not domain:
-        domain_input = input("Please enter the domain(s) to scan (comma-separated if multiple): ")
-        domains = [d.strip() for d in domain_input.split(',')]
-    else:
-        domains = [domain.strip()]
+        domain = input("Please enter the domain to scan: ")
 
-    if api_key:
-        for domain in domains:
-            if is_valid_domain(domain):
-                run_wpscan(domain, api_key)
-            else:
-                print(f"Invalid domain: {domain}")
+    if domain and api_key:
+        run_wpscan(domain, api_key)
     else:
-        print("WPScan API key is missing.")
+        print("Domain or WPScan API key is missing.")
 
 if __name__ == "__main__":
     import sys
