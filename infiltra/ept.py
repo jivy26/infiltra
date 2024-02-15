@@ -34,6 +34,7 @@ from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
+from infiltra.website_enum.feroxbuster import ferox_main
 
 # Moved from ANSI to Colorama
 # Initialize Colorama
@@ -486,7 +487,7 @@ def osint_submenu(project_path):
 
     while True:
         clear_screen()
-        print(f"{BOLD_CYAN}OSINT Submenu for {domain}:\n")
+        print(f"{BOLD_CYAN}OSINT Menu: {domain}:\n")
         menu_options = [
             ("1. Set Domain", f"{DEFAULT_COLOR}Define the domain to be used for OSINT."),
             ("2. Run AORT and DNSRecon", f"{DEFAULT_COLOR}Enumerate DNS information."),
@@ -597,9 +598,7 @@ def website_enumeration_submenu():
                 print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
             input(f"{BOLD_CYAN}Press Enter to continue...")
         elif choice == '2':
-            # Placeholder for Feroxbuster integration
-            print(f"{BOLD_YELLOW}Feroxbuster integration is in progress...")
-            # run_feroxbuster()
+            ferox_main()
         elif choice == '3':
             # Placeholder for Wappalyzer integration
             print(f"{BOLD_YELLOW}Wappalyzer integration is in progress...")
