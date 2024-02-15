@@ -26,12 +26,12 @@ def run_nmap_scan(ip_list, scan_type):
         sys.exit(1)
 
     if scan_type == "tcp" or scan_type == "both":
-        set_title = f"echo -ne \"\\033]0;NMAP TCP\\007\"
+        set_title = f"echo -ne \"\\033]0;NMAP TCP\\007\""
         tcp_scan_command = ['gnome-terminal', '--', 'bash', '-c', set_title, f"sudo nmap -sSV --top-ports 4000 -Pn -oG tcp.txt {' '.join(ip_list)}"]
         subprocess.Popen(tcp_scan_command)
 
     if scan_type == "udp" or scan_type == "both":
-        set_title = f"echo -ne \"\\033]0;NMAP UDP\\007\"
+        set_title = f"echo -ne \"\\033]0;NMAP UDP\\007\""
         udp_scan_command = ['gnome-terminal', '--', 'bash', '-c', set_title, f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}"]
         subprocess.Popen(udp_scan_command)
 
