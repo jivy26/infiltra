@@ -264,7 +264,7 @@ def run_nikto(targets):
         nikto_command = f"nikto -h {host} -C all -Tuning 13 -o {output_path} -Format txt"
 
         # Open a new terminal window to run Nikto
-        terminal_command = ['x-terminal-emulator', '-e', f'sudo {nikto_command}']
+        terminal_command = ['gnome-terminal', '--', 'bash', '-c', f'sudo {nikto_command}']
         subprocess.Popen(terminal_command)
 
     print(f"{BOLD_GREEN}Nikto scans launched in separate windows.")
