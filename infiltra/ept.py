@@ -573,7 +573,8 @@ def website_enumeration_submenu():
         domain_set_status = f"{BOLD_GREEN}Domain is set to: {domain}" if domain else f"{BOLD_YELLOW}Domain is not set."
         print(f"{BOLD_CYAN}Website Enumeration Menu: {domain_set_status}\n")
         menu_options = [
-            ("1. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files."),
+            ("1. Set Domain", f"{DEFAULT_COLOR}xxxxxx."),
+            ("2. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files."),
             ("2. Identify Technologies with Wappalyzer", f"{DEFAULT_COLOR}Uncover technologies used on websites."),
             ("3. Perform OWASP ZAP Scan", f"{DEFAULT_COLOR}Find vulnerabilities in web applications."),
             ("4. Run WPScan for WordPress Sites", f"{DEFAULT_COLOR}Check for vulnerabilities in WordPress sites.")
