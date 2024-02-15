@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='infiltra',
-    version='2.10',
+    version='3.10',
     packages=find_packages(),
     install_requires=[
         'colorama',
@@ -30,6 +30,7 @@ setup(
             'eyewitness/*',
             'bbot/*',
             'aort/*',
+            'website_enum/*'
             'nuclei-templates/**/*',
         ],
     },
