@@ -34,7 +34,7 @@ from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
-from infiltra.website_enum.feroxbuster import ferox_main
+from infiltra.website_enum.feroxbuster import main as run_feroxbuster
 
 # Moved from ANSI to Colorama
 # Initialize Colorama
@@ -598,7 +598,7 @@ def website_enumeration_submenu():
                 print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
             input(f"{BOLD_CYAN}Press Enter to continue...")
         elif choice == '2':
-            ferox_main()
+            run_feroxbuster()
         elif choice == '3':
             # Placeholder for Wappalyzer integration
             print(f"{BOLD_YELLOW}Wappalyzer integration is in progress...")

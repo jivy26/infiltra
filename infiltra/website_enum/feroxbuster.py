@@ -47,7 +47,7 @@ def run_feroxbuster(domain):
 
 
 # Main function
-def ferox_main():
+def main():
     # Check if feroxbuster is installed
     if not is_feroxbuster_installed():
         print("Feroxbuster is not installed. Installing now...")
@@ -69,4 +69,4 @@ def ferox_main():
 
 
 if __name__ == "__main__":
-    ferox_main()
+    main()
