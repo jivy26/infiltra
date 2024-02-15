@@ -574,6 +574,7 @@ def website_enumeration_submenu():
     while True:
         clear_screen()
         domain_set_status = f"{BOLD_GREEN}Domain is set to: {domain}" if domain else f"{BOLD_YELLOW}Domain is not set."
+        doomain_status_menu = f"{BOLD_GREEN}1. Domain Is Set", f"{DEFAULT_COLOR}xxxxxx." if domain else f"{BOLD_RED}1. Set Domain", f"{DEFAULT_COLOR}xxxxxx."
         print(f"{BOLD_CYAN}Website Enumeration Menu: {domain_set_status}\n")
         menu_options = [
             ("1. Set Domain", f"{DEFAULT_COLOR}xxxxxx."),
