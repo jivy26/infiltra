@@ -52,20 +52,21 @@ def run_feroxbuster(domain):
 
 
 # Main function
-def main():
+def main(domain=None):
     # Check if feroxbuster is installed
     if not is_feroxbuster_installed():
         print("Feroxbuster is not installed. Installing now...")
         install_feroxbuster()
 
-    # Determine the domain to use
-    domain_to_use = ''
-    if os.path.exists(website_enum_domain_file):
-        with open(website_enum_domain_file, 'r') as file:
-            domain_to_use = file.read().strip()
-    elif os.path.exists(osint_domain_file):
-        with open(osint_domain_file, 'r') as file:
-            domain_to_use = file.read().strip()
+    # Use the domain argument if it was passed, otherwise determine the domain to use
+    domain_to_use = domain
+    if not domain_to_use:
+        if os.path.exists(website_enum_domain_file):
+            with open(website_enum_domain_file, 'r') as file:
+                domain_to_use = file.read().strip()
+        elif os.path.exists(osint_domain_file):
+            with open(osint_domain_file, 'r') as file:
+                domain_to_use = file.read().strip()
 
     if domain_to_use:
         run_feroxbuster(domain_to_use)
