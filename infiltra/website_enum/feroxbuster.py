@@ -75,4 +75,7 @@ def main(domain=None):
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    # Pass the domain from the command line argument if provided, else None
+    domain_arg = sys.argv[1] if len(sys.argv) > 1 else None
+    main(domain_arg)
