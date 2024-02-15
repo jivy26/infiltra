@@ -257,6 +257,7 @@ def run_nikto(targets):
         return
 
     for host in hosts:
+        title_command = f"echo -ne \"\\033]0;Nikto Scan for {host}\\007\"; "
         output_filename = f"nikto_{host.replace(':', '_').replace('/', '_')}.txt"  # Replace special characters
         output_path = os.path.join(nikto_dir, output_filename)
 
@@ -264,7 +265,7 @@ def run_nikto(targets):
         nikto_command = f"nikto -h {host} -C all -Tuning 13 -o {output_path} -Format txt"
 
         # Open a new terminal window to run Nikto
-        terminal_command = ['gnome-terminal', '--', 'bash', '-c', f'sudo {nikto_command}']
+        terminal_command = ['gnome-terminal', '--', 'bash', '-c', title_command + f'sudo {nikto_command}']
         subprocess.Popen(terminal_command)
 
     print(f"{BOLD_GREEN}Nikto scans launched in separate windows.")
@@ -607,7 +608,8 @@ def website_enumeration_submenu():
             ("2. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files."),
             ("3. Identify Technologies with Wappalyzer", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Uncover technologies used on websites."),
             ("4. Perform OWASP ZAP Scan", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Find vulnerabilities in web applications."),
-            ("5. Run WPScan for WordPress Sites", f"{DEFAULT_COLOR}Check for vulnerabilities in WordPress sites.")
+            ("5. Run WPScan for WordPress Sites", f"{DEFAULT_COLOR}Check for vulnerabilities in WordPress sites."),
+            ("6. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues.")
         ]
 
         for option, description in menu_options:
@@ -640,6 +642,12 @@ def website_enumeration_submenu():
             # run_owasp_zap()
         elif choice == '5':
             run_wpscan(domain)
+        elif choice == '6':
+            print(f"{BOLD_CYAN}Nikto Scanner")
+            clear_screen()
+            target_input = input(
+                f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: ")
+            run_nikto(target_input)
         elif choice == 'x':
             # Return to the main menu
             return
@@ -674,9 +682,8 @@ def display_menu(version, project_path, ascii_art):
         ("5. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network."),
         ("6. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
         ("7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
-        ("8. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues."),
-        ("9. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
-        ("10. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
+        ("8. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
+        ("9. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
     ]
 
     for option, description in menu_options:
@@ -742,12 +749,8 @@ def main():
             elif choice == '7':
                 run_sslscanparse()
             elif choice == '8':
-                target_input = input(
-                    f"{BOLD_GREEN}Enter a single IP/domain or path to a file with IPs/domains: ")
-                run_nikto(target_input)
-            elif choice == '9':
                 website_enumeration_submenu()
-            elif choice == '10':
+            elif choice == '9':
                 nuclei_main()
             elif choice == 'u':
                 print("Checking for updates...")
