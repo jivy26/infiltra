@@ -578,9 +578,9 @@ def website_enumeration_submenu():
         menu_options = [
             ("1. Set Domain", f"{DEFAULT_COLOR}xxxxxx."),
             ("2. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files."),
-            ("2. Identify Technologies with Wappalyzer", f"{DEFAULT_COLOR}Uncover technologies used on websites."),
-            ("3. Perform OWASP ZAP Scan", f"{DEFAULT_COLOR}Find vulnerabilities in web applications."),
-            ("4. Run WPScan for WordPress Sites", f"{DEFAULT_COLOR}Check for vulnerabilities in WordPress sites.")
+            ("2. Identify Technologies with Wappalyzer", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Uncover technologies used on websites."),
+            ("3. Perform OWASP ZAP Scan", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Find vulnerabilities in web applications."),
+            ("4. Run WPScan for WordPress Sites", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Check for vulnerabilities in WordPress sites.")
         ]
 
         for option, description in menu_options:
