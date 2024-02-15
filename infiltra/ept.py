@@ -35,6 +35,7 @@ from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import is_valid_ip, is_valid_hostname, get_version, get_ascii_art
 from infiltra.website_enum.feroxbuster import main as run_feroxbuster
+from infiltra.website_enum.wpscan import main as run_wpscan
 
 # Moved from ANSI to Colorama
 # Initialize Colorama
@@ -53,6 +54,9 @@ BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 # Utility Functions, Need to integrate into utils.py
+
+# Ensure libnotify-bin is installed for notify-send to work
+subprocess.run(["sudo", "apt-get", "install", "-y", "libnotify-bin"], check=True)
 
 def list_txt_files(directory):
     txt_files = [f for f in os.listdir(directory) if f.endswith('.txt')]
@@ -180,9 +184,13 @@ def run_bbot(domain, display_menu, project_path):
 
     choice = input(f"{BOLD_GREEN}Enter your choice (1-4): ").strip()
 
+    # Notification message setup
+    notification_title = "BBOT scan completed."
+    notification_body = "BBOT scan completed."
+
     if choice in commands:
         command = commands[choice]
-        bbot_command = f"echo -ne \"\\033]0;BBOT\\007\"; exec bbot -t {domain} {command} -o . --name bbot"
+        bbot_command = f"echo -ne \"\\033]0;BBOT\\007\"; exec bbot -t {domain} {command} -o . --name bbot; notify-send \"{notification_title}\" \"{notification_body}\""
         full_command = ['gnome-terminal', '--', 'bash', '-c', bbot_command]
 
         # Change directory to the project path
@@ -597,9 +605,9 @@ def website_enumeration_submenu():
         menu_options = [
             (f"{domain_status_menu}", f"         {DEFAULT_COLOR}Checks if domain is set or not. Yellow means a domain needs to be set."),
             ("2. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files."),
-            ("2. Identify Technologies with Wappalyzer", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Uncover technologies used on websites."),
-            ("3. Perform OWASP ZAP Scan", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Find vulnerabilities in web applications."),
-            ("4. Run WPScan for WordPress Sites", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Check for vulnerabilities in WordPress sites.")
+            ("3. Identify Technologies with Wappalyzer", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Uncover technologies used on websites."),
+            ("4. Perform OWASP ZAP Scan", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Find vulnerabilities in web applications."),
+            ("5. Run WPScan for WordPress Sites", f"{DEFAULT_COLOR}Check for vulnerabilities in WordPress sites.")
         ]
 
         for option, description in menu_options:
@@ -631,9 +639,7 @@ def website_enumeration_submenu():
             print(f"{BOLD_YELLOW}OWASP ZAP integration is in progress...")
             # run_owasp_zap()
         elif choice == '5':
-            # Placeholder for WPScan integration
-            print(f"{BOLD_YELLOW}WPScan integration is in progress...")
-            # run_wpscan()
+            run_wpscan(domain)
         elif choice == 'x':
             # Return to the main menu
             return
