@@ -575,36 +575,36 @@ def osint_submenu(project_path):
 def website_enumeration_submenu():
     clear_screen()
     domain_files = {
-        '1': 'osint_domain.txt',
-        '2': 'website_enum_domain.txt',
+        'osint_domain.txt': None,
+        'website_enum_domain.txt': None,
     }
     choices = []
-    domain_choices = {}
 
     # Check for existing domain files and list them
-    for key, filename in domain_files.items():
+    for idx, (filename, _) in enumerate(domain_files.items(), start=1):
         if os.path.exists(filename):
             with open(filename, 'r') as file:
                 domain = file.read().strip()
-            print(f"{key}. Use domain from {filename}: {domain}")
-            choices.append(key)
-            domain_choices[key] = domain
+            print(f"{idx}. Use domain from {filename}: {domain}")
+            choices.append((str(idx), filename))
+            domain_files[filename] = domain
 
-    # Determine the new choice index
+    # Determine the new choice index based on existing files
     new_choice_index = str(len(choices) + 1)
     print(f"{new_choice_index}. Enter a new domain for website enumeration")
-    choices.append(new_choice_index)
+    choices.append((new_choice_index, "new_domain"))
 
     choice = input("\nEnter your choice: ").strip()
 
     # Validate choice
-    if choice not in choices:
+    if choice not in [idx for idx, _ in choices]:
         print(f"{BOLD_RED}Invalid choice, please try again.")
         return
 
     # Use domain from selected file
-    if choice in domain_choices:
-        domain = domain_choices[choice]
+    domain = ""
+    if choice in [idx for idx, _ in choices if idx != new_choice_index]:
+        domain = domain_files[choices[int(choice)-1][1]]
 
     # Enter a new domain
     elif choice == new_choice_index:
