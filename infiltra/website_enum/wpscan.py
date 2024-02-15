@@ -1,18 +1,10 @@
-import pathlib
 import subprocess
 import os
 import getpass
 import json
-from infiltra.utils import is_valid_domain
 
-# Define the base directory for storing application data
-app_data_directory = pathlib.Path.home().joinpath('.config', 'infiltra')
-
-# Ensure the directory exists
-app_data_directory.mkdir(parents=True, exist_ok=True)
-
-# Define the path for WPScan API Storage
-api_key_file = app_data_directory.joinpath('wpscan_api_key.json')
+# File to store WPScan API key securely
+api_key_file = 'wpscan_api_key.json'
 
 # Define the command to check if WPScan is installed
 check_command = "wpscan --version"
@@ -59,7 +51,6 @@ def get_wpscan_api_key():
             json.dump({'api_key': api_key}, file)
         return api_key
 
-
 # Run WPScan with API Key
 def run_wpscan(domain, api_key):
     output_dir = 'website_enum'
@@ -79,19 +70,12 @@ def main(domain=None):
 
     api_key = get_wpscan_api_key()
     if not domain:
-        domain_input = input("Please enter the domain(s) to scan (comma-separated if multiple): ")
-        domains = [d.strip() for d in domain_input.split(',')]
-    else:
-        domains = [domain.strip()]
+        domain = input("Please enter the domain to scan: ")
 
-    if api_key:
-        for domain in domains:
-            if is_valid_domain(domain):
-                run_wpscan(domain, api_key)
-            else:
-                print(f"Invalid domain: {domain}")
+    if domain and api_key:
+        run_wpscan(domain, api_key)
     else:
-        print("WPScan API key is missing.")
+        print("Domain or WPScan API key is missing.")
 
 if __name__ == "__main__":
     import sys
