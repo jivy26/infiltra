@@ -7,10 +7,8 @@ import shutil
 import pathlib
 from colorama import init, Fore, Style
 
-
 # Initialize Colorama
 init(autoreset=True)
-
 
 # Define the base directory for storing application data
 app_data_directory = pathlib.Path.home().joinpath('.config', 'infiltra')
@@ -40,7 +38,8 @@ projects_base_path = os.path.expanduser('~/projects')
 
 
 def create_ips_file(project_path):
-    create_file = input(f"{BOLD_YELLOW}Would you like to create an ips.txt file in this project? (Y/n): ").strip().lower()
+    create_file = input(
+        f"{BOLD_YELLOW}Would you like to create an ips.txt file in this project? (Y/n): ").strip().lower()
     if create_file in ['', 'y', 'yes']:
         ips_file_path = os.path.join(project_path, 'ips.txt')
         print(f"{BOLD_GREEN}Please enter the IPs (one per line). Press CTRL+D when done:")
@@ -58,6 +57,7 @@ def create_ips_file(project_path):
     else:
         print(f"{BOLD_YELLOW}Skipping ips.txt file creation.")
 
+
 def create_project_directory(org_name):
     clear_screen()
     project_path = os.path.join(projects_base_path, org_name)
@@ -73,7 +73,6 @@ def create_project_directory(org_name):
 def save_last_project(project_name):
     with last_project_file_path.open('w') as file:
         file.write(project_name)
-
 
 
 def load_project():
@@ -118,7 +117,8 @@ def delete_project():
         choice_idx = int(choice) - 1
         if 0 <= choice_idx < len(projects):
             org_name = projects[choice_idx]
-            confirm = input(f"{BOLD_RED}Are you sure you want to delete the project '{org_name}'? (y/N): ").strip().lower()
+            confirm = input(
+                f"{BOLD_RED}Are you sure you want to delete the project '{org_name}'? (y/N): ").strip().lower()
             if confirm == 'y':
                 project_path = os.path.join(projects_base_path, org_name)
                 shutil.rmtree(project_path)
@@ -179,3 +179,6 @@ def project_submenu():
 
     return project_path or projects_base_path
 
+
+if __name__ == "__main__":
+    project_submenu()

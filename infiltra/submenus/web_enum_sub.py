@@ -6,10 +6,8 @@ from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, is_va
 from infiltra.website_enum.feroxbuster import main as run_feroxbuster
 from infiltra.website_enum.wpscan import main as run_wpscan
 
-
 # Initialize Colorama
 init(autoreset=True)
-
 
 # Define colors using Colorama
 DEFAULT_COLOR = Fore.WHITE
@@ -21,9 +19,6 @@ BOLD_RED = Fore.RED + Style.BRIGHT
 BOLD_MAG = Fore.MAGENTA + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 BOLD_WHITE = Fore.WHITE + Style.BRIGHT
-
-
-
 
 
 def get_domains_string(file_path):
@@ -118,7 +113,7 @@ def website_enumeration_submenu():
     # Use domain from selected file
     domain = ""
     if choice in [idx for idx, _ in choices if idx != new_choice_index]:
-        domain = domain_files[choices[int(choice)-1][1]]
+        domain = domain_files[choices[int(choice) - 1][1]]
 
     # Enter a new domain
     elif choice == new_choice_index:
@@ -130,10 +125,14 @@ def website_enumeration_submenu():
         domain_status_menu = f"{BOLD_CYAN}1. Domain Is Set" if domain_string else f"{BOLD_RED}1. Set Domain"
         print(f"{BOLD_CYAN}Website Enumeration Menu: {domain_set_status}\n")
         menu_options = [
-            (f"{domain_status_menu}", f"         {DEFAULT_COLOR}Checks if domain is set or not. Yellow means a domain needs to be set."),
-            ("2. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files."),
-            ("3. Identify Technologies with Wappalyzer", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Uncover technologies used on websites."),
-            ("4. Perform OWASP ZAP Scan", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Find vulnerabilities in web applications."),
+            (f"{domain_status_menu}",
+             f"         {DEFAULT_COLOR}Checks if domain is set or not. Yellow means a domain needs to be set."),
+            (
+            "2. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files."),
+            ("3. Identify Technologies with Wappalyzer",
+             f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Uncover technologies used on websites."),
+            ("4. Perform OWASP ZAP Scan",
+             f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Find vulnerabilities in web applications."),
             ("5. Run WPScan for WordPress Sites", f"{DEFAULT_COLOR}Check for vulnerabilities in WordPress sites."),
             ("6. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues.")
         ]
@@ -181,6 +180,7 @@ def website_enumeration_submenu():
             print(f"{BOLD_RED}Invalid choice, please try again.")
             input(f"{BOLD_GREEN}Press Enter to continue...")
             website_enumeration_submenu()
+
 
 if __name__ == "__main__":
     website_enumeration_submenu()

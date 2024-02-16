@@ -109,4 +109,3 @@ def get_ascii_art(image_path, columns=80):
         return colored_art
     except Exception as e:
         return f"Error generating ASCII art: {e}"
-
