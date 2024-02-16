@@ -32,8 +32,9 @@ from infiltra.icmpecho import run_fping
 from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
-from infiltra.utils import is_valid_ip,  get_version, get_ascii_art
+from infiltra.utils import is_valid_ip,  get_version, get_ascii_art, list_txt_files, read_file_lines
 from infiltra.submenus.web_enum_sub import website_enumeration_submenu
+from infiltra.submenus.osint_sub import osint_submenu
 
 
 # Moved from ANSI to Colorama
