@@ -348,7 +348,7 @@ def main():
             last_project = file.read().strip()
         if last_project:
             use_last_project = input(
-                f"{BOLD_GREEN}Do you want to load the last project used '{last_project}'? (Y/n): ").strip().lower()
+                f"\n\n\n{BOLD_GREEN}Do you want to load the last project used '{last_project}'? (Y/n): ").strip().lower()
             if use_last_project in ['', 'y']:
                 project_path = os.path.join(projects_base_path, last_project)
                 os.chdir(project_path)
