@@ -31,6 +31,7 @@ setup(
             'bbot/*',
             'aort/*',
             'website_enum/*'
+            'submenus/*'
             'nuclei-templates/**/*',
         ],
     },
