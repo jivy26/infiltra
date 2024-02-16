@@ -2,7 +2,7 @@ import subprocess
 import re
 import sys
 
-from infiltra.utils import clear_screen, BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_WHITE, IT_MAG, DEFAULT_COLOR
+from infiltra.utils import clear_screen, BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_CYAN, DEFAULT_COLOR
 
 def is_ssh_audit_installed():
     try:
@@ -25,10 +25,10 @@ def run_ssh_audit(ip, port=22):
         output = result.stdout
         if '[fail]' in output:
             fail_lines = [line for line in output.split('\n') if '[fail]' in line]
-            print('\n'.join(fail_lines))
+            print(f'{BOLD_GREEN}\n'.join(fail_lines))
         else:
-            print("No [fail] findings.")
-            print("Rerunning ssh-audit for you to take a screenshot...")
+            print(f"{BOLD_GREEN}No [fail] findings.\n")
+            print(f"{BOLD_GREEN}Rerunning ssh-audit for you to take a screenshot...")
             subprocess.run(["ssh-audit", f"{ip}:{port}"])  # This will output directly to the terminal
     except subprocess.CalledProcessError as e:
         print(f"ssh-audit failed: {e}")
@@ -41,7 +41,8 @@ def main():
         install_ssh_audit()
 
     clear_screen()
-    ip_input = input("Enter the IP address (optionally with port, format IP:port): ").strip()
+    print(f'{BOLD_BLUE} SSH-Audit and Parser\n')
+    ip_input = input(f"{BOLD_GREEN}Enter the IP address (optionally with port, format IP:port):{DEFAULT_COLOR} ").strip()
     match = re.match(r"(\d{1,3}(?:\.\d{1,3}){3})(?::(\d+))?", ip_input)
     if match:
         ip = match.group(1)
