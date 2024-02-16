@@ -5,12 +5,31 @@ from ascii_magic import AsciiArt
 from importlib.metadata import version as get_distribution_version
 
 
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 def is_valid_ip(ip):
     try:
         ipaddress.ip_address(ip)
         return True
     except ValueError:
         return False
+
+
+def is_valid_domain(domain):
+    # Basic pattern for validating a standard domain name
+    pattern = r"^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$"
+    return re.match(pattern, domain) is not None
+
+
+def read_file_lines(filepath):
+    try:
+        with open(filepath, 'r') as file:
+            return file.read().splitlines()
+    except FileNotFoundError:
+        print(f"{BOLD_RED}File not found: {filepath}")
+        return None
 
 
 def is_valid_hostname(hostname):
