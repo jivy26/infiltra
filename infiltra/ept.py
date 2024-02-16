@@ -24,34 +24,17 @@ import os
 import subprocess
 import sys
 
-from colorama import init, Fore, Style
-
 from infiltra.icmpecho import run_fping
 from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import (is_valid_ip,  get_version, get_ascii_art, list_txt_files, read_file_lines,
-                            is_valid_domain, clear_screen, run_subprocess, check_run_indicator)
+                            is_valid_domain, clear_screen, run_subprocess, check_run_indicator, BOLD_RED,
+                            BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_WHITE, BOLD_CYAN, BOLD_MAG, DEFAULT_COLOR)
 from infiltra.submenus.web_enum_sub import website_enumeration_submenu
 from infiltra.submenus.osint_sub import osint_submenu
 from infiltra.sshaudit import main as run_sshaudit
 
-
-# Moved from ANSI to Colorama
-# Initialize Colorama
-init(autoreset=True)
-
-
-# Define colors using Colorama
-DEFAULT_COLOR = Fore.WHITE
-IT_MAG = Fore.MAGENTA + Style.BRIGHT
-BOLD_BLUE = Fore.BLUE + Style.BRIGHT
-BOLD_CYAN = Fore.CYAN + Style.BRIGHT
-BOLD_GREEN = Fore.GREEN + Style.BRIGHT
-BOLD_RED = Fore.RED + Style.BRIGHT
-BOLD_MAG = Fore.MAGENTA + Style.BRIGHT
-BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
-BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 # Utility Functions, Need to integrate into utils.py
 

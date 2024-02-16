@@ -1,24 +1,10 @@
 import os
 import subprocess
 
-from colorama import init, Fore, Style
-from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, is_valid_ip, is_valid_hostname, check_run_indicator
+from infiltra.utils import (read_file_lines, is_valid_domain, clear_screen, is_valid_ip, is_valid_hostname,
+                            check_run_indicator, BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_CYAN, DEFAULT_COLOR)
 from infiltra.website_enum.feroxbuster import main as run_feroxbuster
 from infiltra.website_enum.wpscan import main as run_wpscan
-
-# Initialize Colorama
-init(autoreset=True)
-
-# Define colors using Colorama
-DEFAULT_COLOR = Fore.WHITE
-IT_MAG = Fore.MAGENTA + Style.BRIGHT
-BOLD_BLUE = Fore.BLUE + Style.BRIGHT
-BOLD_CYAN = Fore.CYAN + Style.BRIGHT
-BOLD_GREEN = Fore.GREEN + Style.BRIGHT
-BOLD_RED = Fore.RED + Style.BRIGHT
-BOLD_MAG = Fore.MAGENTA + Style.BRIGHT
-BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
-BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 
 def get_domains_string(file_path):

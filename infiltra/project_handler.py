@@ -5,10 +5,9 @@ project_handler.py
 import os
 import shutil
 import pathlib
-from colorama import init, Fore, Style
 
-# Initialize Colorama
-init(autoreset=True)
+from infiltra.utils import BOLD_RED,BOLD_GREEN, BOLD_YELLOW, BOLD_CYAN
+
 
 # Define the base directory for storing application data
 app_data_directory = pathlib.Path.home().joinpath('.config', 'infiltra')
@@ -23,15 +22,6 @@ last_project_file_path = app_data_directory.joinpath('last_project.txt')
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-
-# Define colors using Colorama
-DEFAULT_COLOR = Fore.WHITE
-IT_MAG = Fore.MAGENTA + Style.BRIGHT
-BOLD_BLUE = Fore.BLUE + Style.BRIGHT
-BOLD_CYAN = Fore.CYAN + Style.BRIGHT
-BOLD_GREEN = Fore.GREEN + Style.BRIGHT
-BOLD_RED = Fore.RED + Style.BRIGHT
-BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
 # Base projects directory path
 projects_base_path = os.path.expanduser('~/projects')
