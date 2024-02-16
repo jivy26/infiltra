@@ -295,12 +295,12 @@ def display_menu(version, project_path, ascii_art):
     print(f"{BOLD_GREEN}========================================================\n")
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
-        (f"2. Whois {whois_ran}", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
-        (f"3. ICMP Echo {icmp_echo_ran}", f"{DEFAULT_COLOR}Ping requests and parse live hosts."),
+        (f"2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results. {whois_ran}"),
+        (f"3. ICMP Echo", f"{DEFAULT_COLOR}Ping requests and parse live hosts.  {icmp_echo_ran}"),
         ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
-        (f"5. NMAP Scans TCP {tcpscan_ran} | UDP {udpscan_ran}", f"{DEFAULT_COLOR}Discover open ports and services on the network."),
+        (f"5. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network.  TCP {tcpscan_ran} | UDP {udpscan_ran}"),
         ("6. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
-        (f"7. SSLScan and Parse {sslscan_ran}", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
+        (f"7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {sslscan_ran}"),
         ("8. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
         ("9. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
     ]
