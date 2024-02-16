@@ -2,6 +2,8 @@ import subprocess
 import re
 import sys
 
+from infiltra.utils import clear_screen, BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_WHITE, IT_MAG, DEFAULT_COLOR
+
 def is_ssh_audit_installed():
     try:
         subprocess.run(["ssh-audit", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -32,6 +34,8 @@ def run_ssh_audit(ip, port=22):
         print(f"ssh-audit failed: {e}")
 
 def main():
+    clear_screen()
+    print(f'{BOLD_GREEN} Checking if ssh-audit installed.\n')
     if not is_ssh_audit_installed():
         print("ssh-audit is not installed. Installing now...")
         install_ssh_audit()
