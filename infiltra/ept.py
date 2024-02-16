@@ -21,18 +21,17 @@ GitHub: https://github.com/jivy26/infiltra
 """
 
 import os
-import re
 import subprocess
 import sys
 
 from colorama import init, Fore, Style
 
-
 from infiltra.icmpecho import run_fping
 from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
-from infiltra.utils import is_valid_ip,  get_version, get_ascii_art, list_txt_files, read_file_lines
+from infiltra.utils import (is_valid_ip,  get_version, get_ascii_art, list_txt_files, read_file_lines,
+                            is_valid_domain, clear_screen, run_subprocess)
 from infiltra.submenus.web_enum_sub import website_enumeration_submenu
 from infiltra.submenus.osint_sub import osint_submenu
 
@@ -59,20 +58,6 @@ BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 subprocess.run(["sudo", "apt-get", "install", "-y", "libnotify-bin"], check=True)
 
 
-def run_subprocess(command, working_directory=None, shell=False):
-    try:
-        result = subprocess.run(command, cwd=working_directory, shell=shell,
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                text=True, check=True)
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        print(f"{BOLD_RED}Subprocess error: {e.stderr}")
-        return None
-
-def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
 def check_and_install_gnome_terminal():
     try:
         # Check if gnome-terminal is installed
@@ -88,9 +73,6 @@ def check_and_install_gnome_terminal():
         except subprocess.CalledProcessError as e:
             print(f"{BOLD_RED}Failed to install gnome-terminal: {e}")
             sys.exit(1)
-
-
-# End utils
 
 
 # Handle FPING
@@ -231,7 +213,7 @@ def run_ngrep(scan_type):
     input(
         f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
 
-### Start Menu
+
 # Function to run nmap scan
 def run_nmap():
     clear_screen()
@@ -285,19 +267,13 @@ def run_nmap():
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
 
-# OSINT Sub menu
-def is_valid_domain(domain):
-    # Basic pattern for validating a standard domain name
-    pattern = r"^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$"
-    return re.match(pattern, domain) is not None
-
-
 def display_menu(version, project_path, ascii_art):
     clear_screen()
     update_available = check_and_update()
     print(ascii_art)
     print(f"{BOLD_CYAN}========================================================")
-    update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" if update_available else ""
+    update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" \
+        if update_available else ""
     print(f"{BOLD_CYAN}                Current Version: v{version}")
     print(f"{BOLD_MAG}{update_msg}")
     print(f"{BOLD_YELLOW}            https://github.com/jivy26/infiltra")
