@@ -572,6 +572,25 @@ def osint_submenu(project_path):
             input(f"{BOLD_GREEN}Press Enter to continue...")
 
 
+def create_domains_file():
+    website_enum_domain_file = 'website_enum_domain.txt'
+    print(f"{BOLD_GREEN}Please enter the domains (one per line). Press CTRL+D when done:")
+    try:
+        with open(website_enum_domain_file, 'w') as file:
+            while True:
+                try:
+                    domain = input()
+                    if not is_valid_domain(domain):
+                        print(f"{BOLD_RED}Invalid domain format. Please try again.")
+                    else:
+                        file.write(domain + '\n')
+                except EOFError:  # This is triggered by pressing CTRL+D or CTRL+Z
+                    break
+        print(f"{BOLD_GREEN}Domains have been saved to {website_enum_domain_file}")
+    except Exception as e:
+        print(f"{BOLD_RED}An error occurred while saving domains: {e}")
+
+
 def website_enumeration_submenu():
     clear_screen()
     website_enum_domain_file = 'website_enum_domain.txt'
@@ -609,13 +628,7 @@ def website_enumeration_submenu():
 
     # Enter a new domain
     elif choice == new_choice_index:
-        domain = input(f"{BOLD_CYAN}Please input the domain for website enumeration: ").strip()
-        if not domain:  # Validate domain input
-            print(f"{BOLD_RED}Invalid domain name. Please enter a valid domain.")
-            return
-        # Save the new domain
-        with open('website_enum_domain.txt', 'w') as file:
-            file.write(domain)
+        create_domains_file()
 
     while True:
         clear_screen()
