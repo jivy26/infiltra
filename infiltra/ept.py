@@ -31,7 +31,7 @@ from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import (is_valid_ip,  get_version, get_ascii_art, list_txt_files, read_file_lines,
-                            is_valid_domain, clear_screen, run_subprocess)
+                            is_valid_domain, clear_screen, run_subprocess, check_run_indicator)
 from infiltra.submenus.web_enum_sub import website_enumeration_submenu
 from infiltra.submenus.osint_sub import osint_submenu
 
@@ -270,6 +270,14 @@ def run_nmap():
 def display_menu(version, project_path, ascii_art):
     clear_screen()
     update_available = check_and_update()
+
+    # Check if menu item has been run
+    icmp_echo_ran = check_run_indicator(os.path.join(project_path, 'icmpecho_*.txt'))
+    whois_ran = check_run_indicator(os.path.join(project_path, 'whois_*.txt'))
+    tcpscan_ran = check_run_indicator(os.path.join(project_path, 'tcp.txt'))
+    udpscan_ran = check_run_indicator(os.path.join(project_path, 'udp.txt'))
+    sslscan_ran = check_run_indicator(os.path.join(project_path, 'sslscan.txt'))
+
     print(ascii_art)
     print(f"{BOLD_CYAN}========================================================")
     update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" \
@@ -287,12 +295,12 @@ def display_menu(version, project_path, ascii_art):
     print(f"{BOLD_GREEN}========================================================\n")
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
-        ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
-        ("3. ICMP Echo ", f"{DEFAULT_COLOR}Ping requests and parse live hosts."),
+        (f"2. Whois {whois_ran}", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
+        (f"3. ICMP Echo {icmp_echo_ran}", f"{DEFAULT_COLOR}Ping requests and parse live hosts."),
         ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
-        ("5. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network."),
+        (f"5. NMAP Scans TCP {tcpscan_ran} | UDP {udpscan_ran}", f"{DEFAULT_COLOR}Discover open ports and services on the network."),
         ("6. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
-        ("7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
+        (f"7. SSLScan and Parse {sslscan_ran}", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
         ("8. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
         ("9. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
     ]

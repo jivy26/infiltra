@@ -2,6 +2,8 @@ import os
 import re
 import ipaddress
 import subprocess
+import glob
+
 from ascii_magic import AsciiArt
 from colorama import init, Fore, Style
 from importlib.metadata import version as get_distribution_version
@@ -35,6 +37,15 @@ def run_subprocess(command, working_directory=None, shell=False):
     except subprocess.CalledProcessError as e:
         print(f"{BOLD_RED}Subprocess error: {e.stderr}")
         return None
+
+
+# Menu status functionality
+def check_run_indicator(pattern):
+    files = glob.glob(pattern)
+    if files:
+        return f"{BOLD_GREEN}✓{DEFAULT_COLOR}"
+    else:
+        return ""
 
 
 def is_valid_ip(ip):
