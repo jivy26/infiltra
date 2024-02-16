@@ -2,7 +2,7 @@ import subprocess
 import re
 import sys
 
-from infiltra.utils import clear_screen, BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_CYAN, DEFAULT_COLOR
+from infiltra.utils import clear_screen, BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_WHITE, IT_MAG, DEFAULT_COLOR
 
 def is_ssh_audit_installed():
     try:
@@ -14,23 +14,21 @@ def is_ssh_audit_installed():
 def install_ssh_audit():
     try:
         subprocess.run(["sudo", "apt", "install", "ssh-audit", "-y"], check=True)
-        print(f"{BOLD_GREEN}ssh-audit installed successfully.")
+        print("ssh-audit installed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"Failed to install ssh-audit: {e}")
         sys.exit(1)
 
 def run_ssh_audit(ip, port=22):
     try:
-        clear_screen()
-        print(f"\n{BOLD_GREEN}Running SSH-Audit on {ip}:{port}\n")
         result = subprocess.run(["ssh-audit", f"{ip}:{port}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         output = result.stdout
         if '[fail]' in output:
             fail_lines = [line for line in output.split('\n') if '[fail]' in line]
             print('\n'.join(fail_lines))
         else:
-            print(f"{BOLD_GREEN}No [fail] findings.\n")
-            print(f"{BOLD_GREEN}Rerunning ssh-audit for you to take a screenshot...")
+            print("No [fail] findings.")
+            print("Rerunning ssh-audit for you to take a screenshot...")
             subprocess.run(["ssh-audit", f"{ip}:{port}"])  # This will output directly to the terminal
     except subprocess.CalledProcessError as e:
         print(f"ssh-audit failed: {e}")
@@ -42,9 +40,7 @@ def main():
         print("ssh-audit is not installed. Installing now...")
         install_ssh_audit()
 
-    clear_screen()
-    print(f'{BOLD_BLUE} SSH-Audit and Parser\n')
-    ip_input = input(f"{BOLD_GREEN}Enter the IP address (optionally with port, format IP:port):{DEFAULT_COLOR} ").strip()
+    ip_input = input("Enter the IP address (optionally with port, format IP:port): ").strip()
     match = re.match(r"(\d{1,3}(?:\.\d{1,3}){3})(?::(\d+))?", ip_input)
     if match:
         ip = match.group(1)
@@ -53,7 +49,7 @@ def main():
     else:
         print("Invalid IP address format.")
 
-    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
+    input("Press Enter to return to the menu...")
 
 if __name__ == "__main__":
     main()
