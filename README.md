@@ -4,30 +4,44 @@
 
 # Goal
 
-Automate and streamline the basic processes of external penetration testing while incorporating advanced Open Source Intelligence (OSINT) techniques to enhance the discovery and analysis phase of security assessments.
+To automate and enhance the processes of external penetration testing by integrating advanced Open Source Intelligence (OSINT) and other security tools, streamlining the discovery and analysis phases of security assessments.
 
 # Features
 
-- **Project Management**: Organize and manage penetration testing projects with ease.
+- **Project Management**: Create, load, and manage penetration testing projects with a structured approach.
 
-- **Tool Status Monitoring**: Visually identify which tools have been executed in the current project.
+- **Tool Status Monitoring**: Visual indicators for tool execution status within the current project's context.
 
-- **Whois Analysis**: Perform comprehensive Whois lookups and extract organization names for targeted IP ranges.
+- **Whois Analysis**: Comprehensive Whois lookups with parsed organization names for IP range targeting.
 
-- **ICMP Echo Checking**: Probe and list alive hosts across an IP range using ICMP echo requests.
+- **ICMP Echo Checking**: Identification of live hosts using ICMP echo requests.
 
 - **Open Source Intelligence (OSINT) Gathering**:
-  - **AORT & DNSRecon**: Leverage these tools for in-depth subdomain discovery.
-  - **BBOT**: Implement black-box penetration testing methods for a robust security posture analysis. [More about BBOT](https://github.com/blacklanternsecurity/bbot).
-  - **Subdomain Enumeration**: Automatically enumerate subdomains and snapshot live websites for a visual inventory.
+  - **AORT & DNSRecon**: In-depth subdomain discovery and DNS analysis.
+  - **BBOT**: Black-box penetration testing for detailed security analysis. [Learn about BBOT](https://github.com/blacklanternsecurity/bbot).
+  - **Subdomain Enumeration**: Automated enumeration with visual snapshots of live websites.
 
-- **Network Mapping**: Conduct thorough NMAP scans (TCP/UDP) and parse the results for a detailed network structure overview.
+- **Network Mapping**: Detailed NMAP scans (TCP/UDP) with parsed results to outline network structures.
 
-- **SSL Vulnerability Assessment**: Execute SSLScans across IP ranges and succinctly parse only the significant findings.
+- **SSL Vulnerability Assessment**: SSLScan execution across IP ranges with parsed output highlighting significant vulnerabilities.
 
-- **Web Server Scanning**: Utilize Nikto for scanning single or multiple IPs to uncover potential web server vulnerabilities.
+- **Web Server Scanning**: Nikto scans on single or multiple IPs to detect potential web server vulnerabilities.
 
-- **Nuclei Vulnerability Scanning**: Integrate Nuclei scanning (limited functionality in the current version) to identify known vulnerabilities within network infrastructure.
+- **Nuclei Vulnerability Scanning**: Integration of Nuclei scans to identify known vulnerabilities in network infrastructures.
+
+- **Website Enumeration**: A suite of tools including Feroxbuster, Wappalyzer, OWASP ZAP, and WPScan to discover, analyze, and report on web application vulnerabilities.
+
+# New in This Release
+
+- **Feroxbuster Integration**: Automated installation and execution of Feroxbuster for directory brute-forcing, with results stored in project-specific directories.
+
+- **DNSRecon Output Filtering**: Enhanced DNSRecon output to highlight misconfigurations and rerun functionality for thorough examination.
+
+- **WPScan Improvements**: Single domain processing for WPScan to avoid errors and better handle multiple domains.
+
+- **App Data Directory**: Introduction of an application data directory for storing user-specific configurations and API keys.
+
+- **Error Handling and Notifications**: Improved error messages and notifications for background processes and completed scans.
 
 # Examples
 
