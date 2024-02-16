@@ -24,33 +24,17 @@ import os
 import subprocess
 import sys
 
-from colorama import init, Fore, Style
-
 from infiltra.icmpecho import run_fping
 from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import (is_valid_ip,  get_version, get_ascii_art, list_txt_files, read_file_lines,
-                            is_valid_domain, clear_screen, run_subprocess)
+                            is_valid_domain, clear_screen, run_subprocess, check_run_indicator, BOLD_RED,
+                            BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_WHITE, BOLD_CYAN, BOLD_MAG, DEFAULT_COLOR)
 from infiltra.submenus.web_enum_sub import website_enumeration_submenu
 from infiltra.submenus.osint_sub import osint_submenu
+from infiltra.sshaudit import main as run_sshaudit
 
-
-# Moved from ANSI to Colorama
-# Initialize Colorama
-init(autoreset=True)
-
-
-# Define colors using Colorama
-DEFAULT_COLOR = Fore.WHITE
-IT_MAG = Fore.MAGENTA + Style.BRIGHT
-BOLD_BLUE = Fore.BLUE + Style.BRIGHT
-BOLD_CYAN = Fore.CYAN + Style.BRIGHT
-BOLD_GREEN = Fore.GREEN + Style.BRIGHT
-BOLD_RED = Fore.RED + Style.BRIGHT
-BOLD_MAG = Fore.MAGENTA + Style.BRIGHT
-BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
-BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 # Utility Functions, Need to integrate into utils.py
 
@@ -270,6 +254,14 @@ def run_nmap():
 def display_menu(version, project_path, ascii_art):
     clear_screen()
     update_available = check_and_update()
+
+    # Check if menu item has been run
+    icmp_echo_ran = check_run_indicator(os.path.join(project_path, 'icmpecho_*.txt'))
+    whois_ran = check_run_indicator(os.path.join(project_path, 'whois_*.txt'))
+    tcpscan_ran = check_run_indicator(os.path.join(project_path, 'tcp.txt'))
+    udpscan_ran = check_run_indicator(os.path.join(project_path, 'udp.txt'))
+    sslscan_ran = check_run_indicator(os.path.join(project_path, 'sslscan.txt'))
+
     print(ascii_art)
     print(f"{BOLD_CYAN}========================================================")
     update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" \
@@ -287,14 +279,15 @@ def display_menu(version, project_path, ascii_art):
     print(f"{BOLD_GREEN}========================================================\n")
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
-        ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results."),
-        ("3. ICMP Echo ", f"{DEFAULT_COLOR}Ping requests and parse live hosts."),
+        ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results. {whois_ran}"),
+        ("3. ICMP Echo", f"{DEFAULT_COLOR}Ping requests and parse live hosts.  {icmp_echo_ran}"),
         ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
-        ("5. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network."),
+        ("5. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network.  TCP {tcpscan_ran} | UDP {udpscan_ran}"),
         ("6. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
-        ("7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings."),
-        ("8. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
-        ("9. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
+        ("7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {sslscan_ran}"),
+        ("8. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings.  {sslscan_ran}"),
+        ("9. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
+        ("10. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
     ]
 
     for option, description in menu_options:
@@ -361,8 +354,10 @@ def main():
             elif choice == '7':
                 run_sslscanparse()
             elif choice == '8':
-                website_enumeration_submenu()
+                run_sshaudit()
             elif choice == '9':
+                website_enumeration_submenu()
+            elif choice == '10':
                 nuclei_main()
             elif choice == 'u':
                 print("Checking for updates...")

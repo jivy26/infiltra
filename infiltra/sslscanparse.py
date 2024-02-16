@@ -9,6 +9,8 @@ import re
 import datetime
 import sys
 
+from infiltra.utils import BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE
+
 
 # Default path to the file containing IP addresses if no command-line argument is provided
 default_ip_file_path = 'tcp_parsed/https-hosts.txt'  # Define this before using it in the conditional statement below
@@ -29,14 +31,6 @@ vulnerabilities = {
     'Insecure Hashing Algorithm': ['MD5', 'SHA-1', 'RC4']
 }
 
-# ANSI Escape Code for Bold Text
-GREEN = '\033[92m'
-BLUE = '\033[34;1m'
-YELLOW = '\033[33;1m'
-MAGENTA = '\033[35;1m'
-BOLD = '\033[1m'
-END = '\033[0m'
-
 
 # Function to open a new terminal window and run sslscan
 def open_new_terminal_and_run_sslscan(target):
@@ -48,11 +42,11 @@ def open_new_terminal_and_run_sslscan(target):
 
     # Command to open a new terminal window and run sslscan
     command = f"sslscan --port={port} {ip}"
-    print(f"Launching sslscan for {ip} in a new window...")
+    print(f"{BOLD_YELLOW}Launching sslscan for {ip} in a new window...")
     subprocess.Popen(['x-terminal-emulator', '-e', f"bash -c '{command}; echo Press enter to close...; read'"])
 
     # Instead of waiting for user input, just log the action
-    print(f"Scan launched for {ip}. Check the new window for results.")
+    print(f"{BOLD_YELLOW}Scan launched for {ip}. Check the new window for results.")
 
 
 # Function to remove ANSI escape codes
@@ -251,18 +245,18 @@ with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
             tls_fallback_scsv_found = False
 
             output_file.write(f"\n\n=============[Scanning {ip}]=============\n")
-            print(f"\n\n{BLUE}=============[{END}{GREEN}Scanning {ip}{END}{BLUE}]============={END}", flush=True)
+            print(f"\n\n{BOLD_BLUE}=============[{BOLD_GREEN}Scanning {ip}{BOLD_BLUE}]=============", flush=True)
             scan_results = ssl_scan(ip)
             if scan_results:
                 for vuln, lines in scan_results.items():
                     output_file.write(f"\n- {vuln} Found on {ip}\n\n")
                     output_file.writelines('\n'.join(lines) + '\n')
-                    print(f"\n{GREEN}{BOLD}- {vuln} Found on {ip}{END}\n", flush=True)
+                    print(f"\n{BOLD_GREEN}- {vuln} Found on {ip}\n", flush=True)
                     for line in lines:
                         print(line)
             else:
                 # No findings, so automatically open sslscan in a new window
                 output_file.write(f"\nNo findings for {ip}, automatically loading a window to run scans for a screenshot.\n")
-                print(f"\n{YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.{END}", flush=True)
+                print(f"\n{BOLD_YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.", flush=True)
                 open_new_terminal_and_run_sslscan(ip)
                 # Pause the script to allow the user to take a screenshot
