@@ -2,10 +2,9 @@ import os
 import subprocess
 
 from colorama import init, Fore, Style
-from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, write_to_file, get_version
+from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, write_to_file
 from infiltra.bbot.bbot_parse import bbot_main
 from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
-#from infiltra.ept import display_menu
 
 # Initialize Colorama
 init(autoreset=True)
@@ -142,7 +141,8 @@ def run_bbot(domain, project_path):
     print(f"1. Enumerate Subdomains")
     print(f"2. Subdomains, Port Scans, and Web Screenshots")
     print(f"3. Subdomains and Basic Web Scan")
-    print(f"4. Full Enumeration {BOLD_YELLOW}--- Enumerates subdomains, emails, cloud buckets, port scan with nmap, basic web scan, nuclei scan, and web screenshots")
+    print(f"4. Full Enumeration {BOLD_YELLOW}--- Enumerates subdomains, emails, cloud buckets, port scan with nmap, "
+          f"basic web scan, nuclei scan, and web screenshots")
 
     # Define bbot commands
     commands = {
@@ -160,7 +160,8 @@ def run_bbot(domain, project_path):
 
     if choice in commands:
         command = commands[choice]
-        bbot_command = f"echo -ne \"\\033]0;BBOT\\007\"; exec bbot -t {domain} {command} -o . --name bbot; notify-send \"{notification_title}\" \"{notification_body}\""
+        bbot_command = (f"echo -ne \"\\033]0;BBOT\\007\"; exec bbot -t {domain} {command} -o . --name bbot; "
+                        f"notify-send \"{notification_title}\" \"{notification_body}\"")
         full_command = ['gnome-terminal', '--', 'bash', '-c', bbot_command]
 
         # Change directory to the project path
