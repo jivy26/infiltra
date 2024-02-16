@@ -122,7 +122,7 @@ def website_enumeration_submenu():
     while True:
         clear_screen()
         domain_set_status = f"{BOLD_GREEN}Domain is set for: {domain_string}" if domain_string else f"{BOLD_YELLOW}Domain is not set."
-        domain_status_menu = f"{BOLD_CYAN}1. Domain Is Set" if domain_string else f"{BOLD_RED}1. Set Domain"
+        domain_status_menu = f"{BOLD_CYAN}1. Change Domain" if domain_string else f"{BOLD_RED}1. Set Domain"
         print(f"{BOLD_CYAN}Website Enumeration Menu: {domain_set_status}\n")
         menu_options = [
             (f"{domain_status_menu}",
@@ -133,7 +133,8 @@ def website_enumeration_submenu():
              f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Uncover technologies used on websites."),
             ("4. Perform OWASP ZAP Scan",
              f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Find vulnerabilities in web applications."),
-            ("5. Run WPScan for WordPress Sites", f"{DEFAULT_COLOR}Check for vulnerabilities in WordPress sites."),
+            ("5. Run WPScan for WordPress Sites", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Check for vulnerabilities "
+                                                  f"in WordPress sites."),
             ("6. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues.")
         ]
 
