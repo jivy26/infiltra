@@ -571,6 +571,17 @@ def osint_submenu(project_path):
             print(f"{BOLD_YELLOW}Invalid choice, please try again.")
             input(f"{BOLD_GREEN}Press Enter to continue...")
 
+# Website Enum Sub-Menu and Dependencies
+
+
+def get_domains_string(file_path):
+    domains = read_file_lines(file_path)
+    if domains:
+        # Join the list of domains into a string, separated by comma and space
+        return ', '.join(domains)
+    else:
+        return None
+
 
 def create_domains_file():
     website_enum_domain_file = 'website_enum_domain.txt'
@@ -594,6 +605,7 @@ def create_domains_file():
 def website_enumeration_submenu():
     clear_screen()
     website_enum_domain_file = 'website_enum_domain.txt'
+    domain_string = get_domains_string(website_enum_domain_file)
     domain_files = {
         'osint_domain.txt': None,
         'website_enum_domain.txt': None,
@@ -632,8 +644,8 @@ def website_enumeration_submenu():
 
     while True:
         clear_screen()
-        domain_set_status = f"{BOLD_GREEN}Domain is set to: {domain}" if domain else f"{BOLD_YELLOW}Domain is not set."
-        domain_status_menu = f"{BOLD_CYAN}1. Domain Is Set" if domain else f"{BOLD_RED}1. Set Domain"
+        domain_set_status = f"{BOLD_GREEN}Domain is set for: {domain_string}" if domain_string else f"{BOLD_YELLOW}Domain is not set."
+        domain_status_menu = f"{BOLD_CYAN}1. Domain Is Set" if domain_string else f"{BOLD_RED}1. Set Domain"
         print(f"{BOLD_CYAN}Website Enumeration Menu: {domain_set_status}\n")
         menu_options = [
             (f"{domain_status_menu}", f"         {DEFAULT_COLOR}Checks if domain is set or not. Yellow means a domain needs to be set."),
