@@ -14,7 +14,7 @@ def is_ssh_audit_installed():
 def install_ssh_audit():
     try:
         subprocess.run(["sudo", "apt", "install", "ssh-audit", "-y"], check=True)
-        print("ssh-audit installed successfully.")
+        print(f"{BOLD_GREEN}ssh-audit installed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"Failed to install ssh-audit: {e}")
         sys.exit(1)
@@ -40,6 +40,7 @@ def main():
         print("ssh-audit is not installed. Installing now...")
         install_ssh_audit()
 
+    clear_screen()
     ip_input = input("Enter the IP address (optionally with port, format IP:port): ").strip()
     match = re.match(r"(\d{1,3}(?:\.\d{1,3}){3})(?::(\d+))?", ip_input)
     if match:
