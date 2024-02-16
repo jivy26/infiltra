@@ -21,7 +21,6 @@ setup(
     package_data={
         'infiltra': [
             'aort/utils/*.json',
-            'version.txt',
             '*.json',
             '*.sh',
             '*.yaml',
