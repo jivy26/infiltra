@@ -61,8 +61,9 @@ def run_aort(domain):
 
     print(f"{BOLD_CYAN}Running AORT for domain: {BOLD_GREEN}{domain}\n")
 
-    script_directory = os.path.dirname(__file__)
-    aort_script_path = os.path.join(script_directory, 'aort/AORT.py')
+    script_directory = os.path.dirname(os.path.realpath(__file__))
+    aort_directory = os.path.join(script_directory, '..', 'aort')
+    aort_script_path = os.path.join(aort_directory, 'AORT.py')
     aort_command = f"python3 {aort_script_path} -d {domain} -a -w -n --output aort_dns.txt"
 
     print(f"{BOLD_BLUE}AORT is starting, subdomains will be saved to aort_dns.txt.\n")
