@@ -5,7 +5,7 @@ from colorama import init, Fore, Style
 from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, write_to_file, get_version
 from infiltra.bbot.bbot_parse import bbot_main
 from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
-from infiltra.ept import display_menu
+#from infiltra.ept import display_menu
 
 # Initialize Colorama
 init(autoreset=True)
@@ -124,7 +124,7 @@ def run_dnsrecon(domain):
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
 
-def run_bbot(domain, display_menu, project_path):
+def run_bbot(domain, project_path):
     # Make sure the domain is valid before proceeding
     if not is_valid_domain(domain):
         print(f"{BOLD_RED}Invalid domain provided: {domain}")
@@ -181,7 +181,6 @@ def run_bbot(domain, display_menu, project_path):
 
     # Wait for the user to acknowledge before returning to the menu
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
-    display_menu(get_version(), project_path, ascii_art=None)
 
 
 def osint_submenu(project_path):
@@ -234,7 +233,7 @@ def osint_submenu(project_path):
             input(f"{BOLD_GREEN}Press Enter to return to the submenu...")
         elif choice == '3':
             if domain:
-                run_bbot(domain, display_menu, project_path)
+                run_bbot(domain, project_path)
             else:
                 print(f"{BOLD_RED}Please set a domain first using option 1.")
         elif choice == '4':
