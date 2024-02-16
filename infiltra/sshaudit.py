@@ -21,11 +21,12 @@ def install_ssh_audit():
 
 def run_ssh_audit(ip, port=22):
     try:
+        print(f"{BOLD_GREEN}Running SSH-Audit on {ip}:{port}\n")
         result = subprocess.run(["ssh-audit", f"{ip}:{port}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         output = result.stdout
         if '[fail]' in output:
             fail_lines = [line for line in output.split('\n') if '[fail]' in line]
-            print(f'{BOLD_GREEN}\n'.join(fail_lines))
+            print('\n'.join(fail_lines))
         else:
             print(f"{BOLD_GREEN}No [fail] findings.\n")
             print(f"{BOLD_GREEN}Rerunning ssh-audit for you to take a screenshot...")
@@ -51,7 +52,7 @@ def main():
     else:
         print("Invalid IP address format.")
 
-    input("Press Enter to return to the menu...")
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
 if __name__ == "__main__":
     main()
