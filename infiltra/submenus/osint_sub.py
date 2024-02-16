@@ -59,29 +59,9 @@ def run_eyewitness(domain):
 def run_aort(domain):
     clear_screen()
 
-    # Module Info Box
-    message_lines = [
-        "This module will look use AORT and DNSRecon",
-        "to enumerate DNS information"
-    ]
-
-    # Determine the width of the box based on the longest message line
-    width = max(len(line) for line in message_lines) + 4  # padding for the sides of the box
-
-    # Print the top border of the box
-    print("+" + "-" * (width - 2) + "+")
-
-    # Print each line of the message, centered within the box
-    for line in message_lines:
-        print("| " + line.center(width - 4) + " |")
-
-    # Print the bottom border of the box
-    print("+" + "-" * (width - 2) + "+")
-    # End Module Info Box
-
     print(f"{BOLD_CYAN}Running AORT for domain: {BOLD_GREEN}{domain}\n")
 
-    script_directory = os.path.dirname(os.path.realpath(__file__))
+    script_directory = os.path.dirname(__file__)
     aort_script_path = os.path.join(script_directory, 'aort/AORT.py')
     aort_command = f"python3 {aort_script_path} -d {domain} -a -w -n --output aort_dns.txt"
 
