@@ -249,3 +249,6 @@ def osint_submenu(project_path):
         else:
             print(f"{BOLD_YELLOW}Invalid choice, please try again.")
             input(f"{BOLD_GREEN}Press Enter to continue...")
+
+if __name__ == '__main__':
+    osint_submenu()
