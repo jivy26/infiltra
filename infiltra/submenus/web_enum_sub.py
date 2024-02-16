@@ -2,7 +2,7 @@ import os
 import subprocess
 
 from colorama import init, Fore, Style
-from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, is_valid_ip, is_valid_hostname
+from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, is_valid_ip, is_valid_hostname, check_run_indicator
 from infiltra.website_enum.feroxbuster import main as run_feroxbuster
 from infiltra.website_enum.wpscan import main as run_wpscan
 
@@ -81,6 +81,8 @@ def run_nikto(targets):
 
 def website_enumeration_submenu():
     clear_screen()
+    projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
+    project_path = projects_base_path  # Initialize project_path
     website_enum_domain_file = 'website_enum_domain.txt'
     domain_string = get_domains_string(website_enum_domain_file)
     domain_files = {
@@ -121,21 +123,28 @@ def website_enumeration_submenu():
 
     while True:
         clear_screen()
+
+        # Check if menu item has been run
+        ferox_ran = check_run_indicator(os.path.join('website_enum', 'ferox.txt'))
+        #wpscan_ran = check_run_indicator(os.path.join(project_path, 'whois_*.txt'))
+        #tcpscan_ran = check_run_indicator(os.path.join(project_path, 'tcp.txt'))
+        #udpscan_ran = check_run_indicator(os.path.join(project_path, 'udp.txt'))
+        nikto_ran = check_run_indicator(os.path.join(project_path, 'nikto_*.txt'))
+
         domain_set_status = f"{BOLD_GREEN}Domain is set for: {domain_string}" if domain_string else f"{BOLD_YELLOW}Domain is not set."
         domain_status_menu = f"{BOLD_CYAN}1. Change Domain" if domain_string else f"{BOLD_RED}1. Set Domain"
         print(f"{BOLD_CYAN}Website Enumeration Menu: {domain_set_status}\n")
         menu_options = [
             (f"{domain_status_menu}",
              f"         {DEFAULT_COLOR}Checks if domain is set or not. Yellow means a domain needs to be set."),
-            (
-            "2. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files."),
+            ("2. Run Feroxbuster for Directory Brute Forcing", f"{DEFAULT_COLOR}Discover hidden directories and files. {ferox_ran}"),
             ("3. Identify Technologies with Wappalyzer",
              f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Uncover technologies used on websites."),
             ("4. Perform OWASP ZAP Scan",
              f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Find vulnerabilities in web applications."),
             ("5. Run WPScan for WordPress Sites", f"{BOLD_YELLOW}Not working {DEFAULT_COLOR}Check for vulnerabilities "
                                                   f"in WordPress sites."),
-            ("6. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues.")
+            ("6. Nikto Web Scans", f"{DEFAULT_COLOR}Scan web servers to identify potential security issues. {nikto_ran}")
         ]
 
         for option, description in menu_options:
