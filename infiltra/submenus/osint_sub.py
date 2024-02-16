@@ -177,7 +177,7 @@ def osint_submenu(project_path):
 
     while True:
         clear_screen()
-        print(f"{BOLD_CYAN}OSINT Menu: {domain}:\n")
+        print(f"{BOLD_CYAN}OSINT Menu: {BOLD_GREEN}Domain: {domain}\n")
         menu_options = [
             ("1. Set Domain", f"{DEFAULT_COLOR}Define the domain to be used for OSINT."),
             ("2. Run AORT and DNSRecon", f"{DEFAULT_COLOR}Enumerate DNS information."),
