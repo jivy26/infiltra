@@ -1,10 +1,17 @@
+import pathlib
 import subprocess
 import os
 import getpass
 import json
 
-# File to store WPScan API key securely
-api_key_file = 'wpscan_api_key.json'
+# Define the base directory for storing application data
+app_data_directory = pathlib.Path.home().joinpath('.config', 'infiltra')
+
+# Ensure the directory exists
+app_data_directory.mkdir(parents=True, exist_ok=True)
+
+# Define the path for WPScan API Storage
+api_key_file = app_data_directory.joinpath('wpscan_api_key.json')
 
 # Define the command to check if WPScan is installed
 check_command = "wpscan --version"
@@ -50,6 +57,7 @@ def get_wpscan_api_key():
         with open(api_key_file, 'w') as file:
             json.dump({'api_key': api_key}, file)
         return api_key
+
 
 # Run WPScan with API Key
 def run_wpscan(domain, api_key):
