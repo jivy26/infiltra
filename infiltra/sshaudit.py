@@ -21,7 +21,8 @@ def install_ssh_audit():
 
 def run_ssh_audit(ip, port=22):
     try:
-        print(f"{BOLD_GREEN}Running SSH-Audit on {ip}:{port}\n")
+        clear_screen()
+        print(f"\n{BOLD_GREEN}Running SSH-Audit on {ip}:{port}\n")
         result = subprocess.run(["ssh-audit", f"{ip}:{port}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         output = result.stdout
         if '[fail]' in output:
