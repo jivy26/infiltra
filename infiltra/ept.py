@@ -347,6 +347,7 @@ def main():
         with last_project_file_path.open() as file:
             last_project = file.read().strip()
         if last_project:
+            print()
             use_last_project = input(
                 f"\n\n\n{BOLD_GREEN}Do you want to load the last project used '{last_project}'? (Y/n): ").strip().lower()
             if use_last_project in ['', 'y']:
