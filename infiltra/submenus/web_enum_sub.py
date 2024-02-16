@@ -129,7 +129,7 @@ def website_enumeration_submenu():
         #wpscan_ran = check_run_indicator(os.path.join(project_path, 'whois_*.txt'))
         #tcpscan_ran = check_run_indicator(os.path.join(project_path, 'tcp.txt'))
         #udpscan_ran = check_run_indicator(os.path.join(project_path, 'udp.txt'))
-        nikto_ran = check_run_indicator(os.path.join(project_path, 'nikto_*.txt'))
+        nikto_ran = check_run_indicator(os.path.join('website_enum', 'nikto_*.txt'))
 
         domain_set_status = f"{BOLD_GREEN}Domain is set for: {domain_string}" if domain_string else f"{BOLD_YELLOW}Domain is not set."
         domain_status_menu = f"{BOLD_CYAN}1. Change Domain" if domain_string else f"{BOLD_RED}1. Set Domain"

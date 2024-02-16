@@ -34,6 +34,7 @@ from infiltra.utils import (is_valid_ip,  get_version, get_ascii_art, list_txt_f
                             is_valid_domain, clear_screen, run_subprocess, check_run_indicator)
 from infiltra.submenus.web_enum_sub import website_enumeration_submenu
 from infiltra.submenus.osint_sub import osint_submenu
+from infiltra.sshaudit import main as run_sshaudit
 
 
 # Moved from ANSI to Colorama
@@ -295,14 +296,15 @@ def display_menu(version, project_path, ascii_art):
     print(f"{BOLD_GREEN}========================================================\n")
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
-        (f"2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results. {whois_ran}"),
-        (f"3. ICMP Echo", f"{DEFAULT_COLOR}Ping requests and parse live hosts.  {icmp_echo_ran}"),
+        ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results. {whois_ran}"),
+        ("3. ICMP Echo", f"{DEFAULT_COLOR}Ping requests and parse live hosts.  {icmp_echo_ran}"),
         ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
-        (f"5. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network.  TCP {tcpscan_ran} | UDP {udpscan_ran}"),
+        ("5. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network.  TCP {tcpscan_ran} | UDP {udpscan_ran}"),
         ("6. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
-        (f"7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {sslscan_ran}"),
-        ("8. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
-        ("9. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
+        ("7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {sslscan_ran}"),
+        ("8. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings.  {sslscan_ran}"),
+        ("9. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
+        ("10. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
     ]
 
     for option, description in menu_options:
@@ -369,8 +371,10 @@ def main():
             elif choice == '7':
                 run_sslscanparse()
             elif choice == '8':
-                website_enumeration_submenu()
+                run_sshaudit()
             elif choice == '9':
+                website_enumeration_submenu()
+            elif choice == '10':
                 nuclei_main()
             elif choice == 'u':
                 print("Checking for updates...")
