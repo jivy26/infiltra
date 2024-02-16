@@ -1,6 +1,7 @@
 import os
 import re
 import ipaddress
+import subprocess
 from ascii_magic import AsciiArt
 from colorama import init, Fore, Style
 from importlib.metadata import version as get_distribution_version
@@ -23,6 +24,17 @@ BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def run_subprocess(command, working_directory=None, shell=False):
+    try:
+        result = subprocess.run(command, cwd=working_directory, shell=shell,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                text=True, check=True)
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"{BOLD_RED}Subprocess error: {e.stderr}")
+        return None
 
 
 def is_valid_ip(ip):
