@@ -2,7 +2,23 @@ import os
 import re
 import ipaddress
 from ascii_magic import AsciiArt
+from colorama import init, Fore, Style
 from importlib.metadata import version as get_distribution_version
+
+
+# Initialize Colorama
+init(autoreset=True)
+
+# Define colors using Colorama
+DEFAULT_COLOR = Fore.WHITE
+IT_MAG = Fore.MAGENTA + Style.BRIGHT
+BOLD_BLUE = Fore.BLUE + Style.BRIGHT
+BOLD_CYAN = Fore.CYAN + Style.BRIGHT
+BOLD_GREEN = Fore.GREEN + Style.BRIGHT
+BOLD_RED = Fore.RED + Style.BRIGHT
+BOLD_MAG = Fore.MAGENTA + Style.BRIGHT
+BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
+BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 
 def clear_screen():
@@ -30,6 +46,30 @@ def read_file_lines(filepath):
     except FileNotFoundError:
         print(f"{BOLD_RED}File not found: {filepath}")
         return None
+
+
+def list_txt_files(directory):
+    txt_files = [f for f in os.listdir(directory) if f.endswith('.txt')]
+    if not txt_files:
+        print(f"{BOLD_RED}No .txt files found in the current directory.")
+        return None
+    return txt_files
+
+def read_file_lines(filepath):
+    try:
+        with open(filepath, 'r') as file:
+            return file.read().splitlines()
+    except FileNotFoundError:
+        print(f"{BOLD_RED}File not found: {filepath}")
+        return None
+
+
+def write_to_file(filepath, content, mode='w'):
+    try:
+        with open(filepath, mode) as file:
+            file.write(content)
+    except IOError as e:
+        print(f"{BOLD_RED}IO error occurred: {e}")
 
 
 def is_valid_hostname(hostname):
