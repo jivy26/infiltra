@@ -96,7 +96,7 @@ def run_dnsrecon(domain):
     misconfiguration_found = False
 
     while not misconfiguration_found:
-        print(f"{BOLD_BLUE}DNSRecon is starting, only findings will be displayed. If no findings are found recon will "
+        print(f"{BOLD_GREEN}DNSRecon is starting, only findings will be displayed. If no findings are found recon will "
               f"rerun for screenshotting.\n")
 
         try:
@@ -107,7 +107,7 @@ def run_dnsrecon(domain):
                 if output == '' and process.poll() is not None:
                     break
                 if "[-]" in output.strip():
-                    print (f"{BOLD_RED}output.strip()")
+                    print(output.strip())
                     misconfiguration_found = True
 
             process.wait()  # Wait for DNSRecon to finish if still running
