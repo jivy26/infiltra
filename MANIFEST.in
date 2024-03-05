@@ -1,2 +1,3 @@
 recursive-include infiltra/nuclei-templates *
 recursive-include infiltra/aort/utils *.json
+recursive-include infiltra/eyewitness *
