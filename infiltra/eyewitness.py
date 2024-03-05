@@ -1,67 +1,32 @@
-import subprocess
-import sys
 import os
-import random
-import re
+import subprocess
 
-def check_install_dependencies():
-    # Check for httprobe
-    result = subprocess.run(['which', 'httprobe'], capture_output=True, text=True)
-    if result.returncode != 0:
-        print("Error: 'httprobe' is not installed. Please install it before running this script.")
-        sys.exit(1)
+from infiltra.utils import clear_screen, BOLD_GREEN, BOLD_CYAN
 
-    # Check for pup
-    result = subprocess.run(['which', 'pup'], capture_output=True, text=True)
-    if result.returncode != 0:
-        print("Error: 'pup' is not installed. Please install it before running this script.")
-        sys.exit(1)
+def main():
+    clear_screen()
 
-def is_valid_domain(domain):
-    # Regex for validating a domain (simple version, consider using a more complex regex for production use)
-    domain_regex = re.compile(
-        r'^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$'
+    # Set default file path
+    default_file = 'aort_dns.txt'
+
+    # Prompt user for input
+    print(
+        f"\n{BOLD_CYAN}If you provide a domain, it will enumerate subdomains and attempt to screenshot them after enumeration."
     )
-    return re.match(domain_regex, domain) is not None
+    user_input = input(
+        f"\n{BOLD_GREEN}Enter a single IP, domain, or path to a file with domains (leave blank to use default aort_dns.txt from nmap_grep): "
+    ).strip()
 
-def run_eyewitness(input_file):
-    script_directory = os.path.dirname(os.path.realpath(__file__))
-    eyewitness_dir = os.path.join(script_directory, 'eyewitness')
-    eyewitness_path = os.path.join(eyewitness_dir, 'Python/EyeWitness.py')
+    # Determine which file or IP to use
+    input_file = user_input if user_input else default_file
 
-    # Check if EyeWitness.py is present
-    if not os.path.exists(eyewitness_path):
-        print(f"Error: EyeWitness.py not found in {eyewitness_dir}")
-        sys.exit(1)
+    # Inform the user which input will be used
+    print(f"Using file: {input_file}" if os.path.isfile(input_file) else f"Using IP/domain: {input_file}")
 
-    # Determine if input is a domain, single IP, or file
-    if is_valid_domain(input_file):
-        # Handle domain input
-        temp_output_file = f"/tmp/enum_tmp_{str(random.randint(10000, 99999))}.txt"
-        command = f'curl -fsSL "https://crt.sh/?q={input_file}" | pup "td text{{}}" | grep "{input_file}" | sort -n | uniq | httprobe > {temp_output_file}'
-        subprocess.run(command, shell=True, check=True)
-    elif os.path.isfile(input_file):
-        # Handle file input
-        temp_output_file = input_file
-    else:
-        # Handle single IP input
-        temp_output_file = f"/tmp/enum_tmp_{str(random.randint(10000, 99999))}.txt"
-        with open(temp_output_file, 'w') as file:
-            file.write(input_file + '\n')
+    # Run the EyeWitness system command
+    subprocess.run(['eyewitness', '-f', input_file, '--web'])  # Modify the arguments as needed for EyeWitness
 
-    # Run EyeWitness
-    print(f"Running EyeWitness on {input_file}")
-    subprocess.run(["python3", eyewitness_path, "-f", temp_output_file, "--web"], check=True)
+    input(f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
 
-    # Cleanup the temporary file if it was created for a domain or single IP
-    if temp_output_file != input_file:
-        os.remove(temp_output_file)
-
-if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("Usage: python3 eyewitness.py <domain or file>")
-        sys.exit(1)
-
-    input_file = sys.argv[1]
-    check_install_dependencies()
-    run_eyewitness(input_file)
+if __name__ == "__main__":
+    main()
