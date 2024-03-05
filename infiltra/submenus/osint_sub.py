@@ -5,6 +5,7 @@ from colorama import init, Fore, Style
 from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, write_to_file
 from infiltra.bbot.bbot_parse import bbot_main
 from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
+from infiltra.eyewitness import main as run_eyewitness
 
 # Initialize Colorama
 init(autoreset=True)
@@ -19,40 +20,6 @@ BOLD_RED = Fore.RED + Style.BRIGHT
 BOLD_MAG = Fore.MAGENTA + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 BOLD_WHITE = Fore.WHITE + Style.BRIGHT
-
-
-# Function to run EyeWitness
-def run_eyewitness(domain):
-    clear_screen()
-    script_directory = os.path.dirname(os.path.realpath(__file__))
-    eyewitness_script_path = os.path.join(script_directory, 'eyewitness.py')
-
-    # Set default file path
-    default_file = 'aort_dns.txt'
-
-    # Prompt user for input
-    print(
-        f"\n{BOLD_CYAN}If you provide a domain, it will enumerate subdomains and attempt to screenshot them after enumeration.")
-    user_input = input(
-        f"\n{BOLD_GREEN}Enter a single IP, domain, or path to a file with domains (leave blank to use default aort_dns.txt from nmap_grep): ").strip()
-
-    # Determine which file or IP to use
-    if user_input:
-        input_file = user_input  # Use the user-provided file or IP
-    else:
-        input_file = default_file
-
-    # Inform the user which input will be used
-    if os.path.isfile(input_file):
-        print(f"Using file: {input_file}")
-    else:
-        print(f"Using IP/domain: {input_file}")
-
-    # Run the EyeWitness Python script
-    subprocess.run(['python3', eyewitness_script_path, input_file])
-
-    input(
-        f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
 
 
 # AORT Integration
@@ -242,10 +209,7 @@ def osint_submenu(project_path):
         elif choice == '4':
             bbot_main()
         elif choice == '5':
-            if domain:
-                run_eyewitness(domain)
-            else:
-                print(f"{BOLD_RED}Please set a domain first using option 1.")
+            run_eyewitness(project_path)
         elif choice == 'x':
             return
         else:
