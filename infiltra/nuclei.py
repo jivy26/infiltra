@@ -35,34 +35,38 @@ BOLD_RED = Fore.RED + Style.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
 
 
-def is_go_installed():
+def check_and_install_go():
     try:
+        # Check if Go is installed
         subprocess.run(["go", "version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return True
+        print(f"{BOLD_GREEN}Go is installed.")
     except (subprocess.CalledProcessError, FileNotFoundError):
-        return False
+        # Go is not installed; proceed with installation
+        print(f"{BOLD_YELLOW}Go is not installed. Updating package list and installing Go... Please wait.")
+        subprocess.run(["sudo", "apt", "update"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(["sudo", "apt", "install", "-y", "golang-go"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"{BOLD_GREEN}Go installed successfully.")
 
+        print(f"{BOLD_CYAN}Setting up Go environment...")
+        gopath = subprocess.check_output("go env GOPATH", shell=True).decode().strip()
+        bashrc_update = f"\nexport GOPATH={gopath}\nexport PATH=$PATH:$GOPATH/bin\n"
+        with open(os.path.expanduser("~/.bashrc"), "a") as bashrc:
+            bashrc.write(bashrc_update)
+        if os.path.exists(os.path.expanduser("~/.zshrc")):
+            with open(os.path.expanduser("~/.zshrc"), "a") as zshrc:
+                zshrc.write(bashrc_update)
+        print(f"{BOLD_GREEN}Go environment setup complete.")
 
-def install_go():
-    print(f"{BOLD_YELLOW}Updating package list and installing Go...")
-    os.system("sudo apt update && sudo apt install -y golang-go")
-
-
-def setup_go_environment():
-    print(f"{BOLD_CYAN}Setting up Go environment...")
-    gopath = subprocess.check_output("go env GOPATH", shell=True).decode().strip()
-    bashrc_update = f"\nexport GOPATH={gopath}\nexport PATH=$PATH:$GOPATH/bin\n"
-    with open(os.path.expanduser("~/.bashrc"), "a") as bashrc:
-        bashrc.write(bashrc_update)
-    if os.path.exists(os.path.expanduser("~/.zshrc")):
-        with open(os.path.expanduser("~/.zshrc"), "a") as zshrc:
-            zshrc.write(bashrc_update)
-    os.system("source ~/.bashrc")
-
-
-def install_nuclei():
-    print(f"{BOLD_GREEN}Installing Nuclei...")
-    os.system("sudo apt install nuclei")
+def check_and_install_nuclei():
+    try:
+        # Check if Nuclei is installed
+        subprocess.run(["nuclei", "-version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(f"{BOLD_GREEN}Nuclei is installed.")
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        # Nuclei is not installed; proceed with installation
+        print(f"{BOLD_YELLOW}Nuclei is not installed. Installing now... Please wait.")
+        subprocess.run(["sudo", "apt", "install", "-y", "nuclei"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"{BOLD_GREEN}Nuclei installed successfully.")
 
 
 def nuclei_submenu():
@@ -103,17 +107,9 @@ def nuclei_submenu():
 
 def nuclei_main():
     clear_screen()
-    if not is_go_installed():
-        print(f"{BOLD_RED}Go is not installed. Installing Go...")
-        install_go()
-    else:
-        print(f"{BOLD_GREEN}Go is already installed.")
-
-    setup_go_environment()
-
-    clear_screen()
-    install_nuclei()
-    clear_screen()
+    check_and_install_go()
+    print("\n")
+    check_and_install_nuclei()
     nuclei_submenu()
 
 if __name__ == "__main__":
