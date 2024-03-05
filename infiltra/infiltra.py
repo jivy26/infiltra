@@ -227,7 +227,7 @@ def display_menu(version, project_path, ascii_art):
         ("5. NMAP", f"{DEFAULT_COLOR}Run scans and parse results  TCP {tcpscan_ran} | UDP {udpscan_ran}"),
         ("6. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
         ("7. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)"),
-        ("\n Parsers ", f"{BOLD_YELLOW}NMAP Parser Moved to NMAP Menu"),
+        ("\n   Parsers", f"{BOLD_YELLOW}NMAP Parser Moved to NMAP Menu"),
         ("8. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {sslscan_ran}"),
         ("9. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings.  {sslscan_ran}")
     ]
