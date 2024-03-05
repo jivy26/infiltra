@@ -23,8 +23,26 @@ BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 
 # Function to run EyeWitness
+
+def is_selenium_installed():
+    try:
+        # Try to import Selenium to see if it is installed
+        __import__('selenium')
+        return True
+    except ImportError:
+        return False
+
+def install_selenium_with_setup():
+    eyewitness_dir = pkg_resources.resource_filename('infiltra', 'eyewitness/Python/setup')
+    setup_script_path = os.path.join(eyewitness_dir, 'setup.sh')
+    subprocess.run(['chmod', '+x', setup_script_path])  # Make the script executable
+    subprocess.run([setup_script_path])  # Run the setup script
+
 def run_eyewitness(domain):
     clear_screen()
+    if not is_selenium_installed():
+        print("Selenium not found, running setup...")
+        install_selenium_with_setup()
     eyewitness_script_path = pkg_resources.resource_filename('infiltra', 'eyewitness/Python/EyeWitness.py')
 
     # Set default file path
