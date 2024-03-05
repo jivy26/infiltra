@@ -24,53 +24,30 @@ BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 
 # Function to run EyeWitness
 
-def is_selenium_installed():
-    try:
-        # Try to import Selenium to see if it is installed
-        __import__('selenium')
-        return True
-    except ImportError:
-        return False
-
-def install_selenium_with_setup():
-    eyewitness_dir = pkg_resources.resource_filename('infiltra', 'eyewitness/Python/setup')
-    setup_script_path = os.path.join(eyewitness_dir, 'setup.sh')
-    subprocess.run(['chmod', '+x', setup_script_path])  # Make the script executable
-    subprocess.run([setup_script_path])  # Run the setup script
-
 def run_eyewitness(domain):
     clear_screen()
-    if not is_selenium_installed():
-        print("Selenium not found, running setup...")
-        install_selenium_with_setup()
-    eyewitness_script_path = pkg_resources.resource_filename('infiltra', 'eyewitness/Python/EyeWitness.py')
 
     # Set default file path
     default_file = 'aort_dns.txt'
 
     # Prompt user for input
     print(
-        f"\n{BOLD_CYAN}If you provide a domain, it will enumerate subdomains and attempt to screenshot them after enumeration.")
+        f"\n{BOLD_CYAN}If you provide a domain, it will enumerate subdomains and attempt to screenshot them after enumeration."
+    )
     user_input = input(
-        f"\n{BOLD_GREEN}Enter a single IP, domain, or path to a file with domains (leave blank to use default aort_dns.txt from nmap_grep): ").strip()
+        f"\n{BOLD_GREEN}Enter a single IP, domain, or path to a file with domains (leave blank to use default aort_dns.txt from nmap_grep): "
+    ).strip()
 
     # Determine which file or IP to use
-    if user_input:
-        input_file = user_input  # Use the user-provided file or IP
-    else:
-        input_file = default_file
+    input_file = user_input if user_input else default_file
 
     # Inform the user which input will be used
-    if os.path.isfile(input_file):
-        print(f"Using file: {input_file}")
-    else:
-        print(f"Using IP/domain: {input_file}")
+    print(f"Using file: {input_file}" if os.path.isfile(input_file) else f"Using IP/domain: {input_file}")
 
-    # Run the EyeWitness Python script
-    subprocess.run(['python3', eyewitness_script_path, input_file])
+    # Run the EyeWitness system command
+    subprocess.run(['eyewitness', '-f', input_file, '--web'])  # Modify the arguments as needed for EyeWitness
 
-    input(
-        f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
+    input(f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
 
 
 # AORT Integration
