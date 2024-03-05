@@ -9,7 +9,7 @@ from infiltra.utils import (is_valid_ip, list_txt_files, read_file_lines, is_val
 
 def run_ngrep(scan_type):
     clear_screen()
-    script_directory = pkg_resources.resource_filename('infiltra', 'nmap-grep.sh')
+    ngrep_script_path = pkg_resources.resource_filename('infiltra', 'nmap-grep.sh')
     output_file = f"{scan_type.lower()}.txt"  # Assume the output file is named tcp.txt or udp.txt based on the scan_type
     output_path = f"{scan_type.lower()}_parsed/"  # Assume the output folder is named tcp_parsed/ or udp_parsed/ based on the scan_type
 
