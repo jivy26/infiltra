@@ -326,7 +326,7 @@ def main():
     version = get_version()
 
     # Inside your main function or wherever you need to print the ASCII art
-    ascii_art = pyfiglet.figlet_format("Infiltra", font="colossal")
+    ascii_art = pyfiglet.figlet_format("Infiltra", font="alligator")
 
     # Check for last used project
     clear_screen()
