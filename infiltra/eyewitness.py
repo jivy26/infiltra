@@ -2,7 +2,8 @@ import os
 import subprocess
 import re
 
-from infiltra.utils import clear_screen, BOLD_GREEN, BOLD_CYAN
+from infiltra.utils import clear_screen, BOLD_GREEN, BOLD_CYAN, BOLD_YELLOW, BOLD_RED
+
 
 
 # Regex for validating a domain
@@ -44,32 +45,46 @@ def enumerate_and_screenshot_domain(domain):
 def run_eyewitness(input_path):
     subprocess.run(['eyewitness', '-f', input_path, '--web'], check=True)
 
-def main():
-    clear_screen()
-    install_required_tools()
-    clear_screen()
+def main(project_path):
+    while True:
+        clear_screen()
+        print(f"{BOLD_CYAN}EyeWitness Menu:")
+        print(f"1. Use AORT Subdomains")
+        print(f"2. Enumerate and Screenshot a Domain")
+        print(f"3. Use Custom Subdomain File")
+        print(f"\n{BOLD_RED}X. Return to OSINT Menu")
 
-    # Set default file path
-    default_file = 'aort_dns.txt'
+        choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
 
-    # Prompt user for input
-    print(
-        f"\n{BOLD_CYAN}If you provide a domain, it will enumerate subdomains and attempt to screenshot them after enumeration."
-    )
-    user_input = input(
-        f"\n{BOLD_GREEN}Enter a single IP, domain, or path to a file with domains (leave blank to use default aort_dns.txt from nmap_grep): "
-    ).strip()
+        if choice == '1':
+            aort_file_path = os.path.join(project_path, 'aort_dns.txt')
+            if os.path.isfile(aort_file_path):
+                run_eyewitness(aort_file_path)
+            else:
+                print(f"{BOLD_RED}AORT has not been run. Please go back a menu and run AORT, then try again.")
+                input(f"{BOLD_GREEN}Press Enter to continue...")
 
-    # If user input is a valid domain, perform enumeration and screenshot process
-    if is_valid_domain(user_input):
-        enumerate_and_screenshot_domain(user_input)
-    # If user input is a path to a file or left blank, use the normal EyeWitness process
-    elif os.path.isfile(user_input) or not user_input:
-        run_eyewitness(user_input or default_file)
-    else:
-        print(f"{BOLD_GREEN}Invalid input. Please enter a valid domain or file path.")
+        elif choice == '2':
+            domain = input(f"{BOLD_GREEN}Please enter a domain to enumerate and screenshot: ").strip()
+            if is_valid_domain(domain):
+                enumerate_and_screenshot_domain(domain)
+            else:
+                print(f"{BOLD_RED}Invalid domain. Please enter a valid domain.")
+                input(f"{BOLD_GREEN}Press Enter to continue...")
 
-    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
+        elif choice == '3':
+            custom_file = input(f"{BOLD_GREEN}Please enter the full path to your custom subdomain file: ").strip()
+            if os.path.isfile(custom_file):
+                run_eyewitness(custom_file)
+            else:
+                print(f"{BOLD_RED}File does not exist or invalid path.")
+                input(f"{BOLD_GREEN}Press Enter to continue...")
+
+        elif choice == 'x':
+            break
+        else:
+            print(f"{BOLD_YELLOW}Invalid choice, please try again.")
+            input(f"{BOLD_GREEN}Press Enter to continue...")
 
 if __name__ == "__main__":
     main()

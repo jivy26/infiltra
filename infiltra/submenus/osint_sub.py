@@ -210,7 +210,7 @@ def osint_submenu(project_path):
             bbot_main()
         elif choice == '5':
             if domain:
-                run_eyewitness()
+                run_eyewitness(project_path)
             else:
                 print(f"{BOLD_RED}Please set a domain first using option 1.")
         elif choice == 'x':
