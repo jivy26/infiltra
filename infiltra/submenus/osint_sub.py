@@ -92,13 +92,22 @@ def run_bbot(domain, project_path):
 
     # Clear the screen and display sample commands
     clear_screen()
-    print(f"{BOLD_CYAN}Select the bbot command to run:")
-    print(f"{BOLD_YELLOW}All output is saved to the bbot/ folder\n")
-    print(f"1. Enumerate Subdomains")
-    print(f"2. Subdomains, Port Scans, and Web Screenshots")
-    print(f"3. Subdomains and Basic Web Scan")
-    print(f"4. Full Enumeration {BOLD_YELLOW}--- Enumerates subdomains, emails, cloud buckets, port scan with nmap, "
-          f"basic web scan, nuclei scan, and web screenshots")
+    print(f"{BOLD_CYAN}OSINT Menu:")
+    print(f"{BOLD_CYAN}Domain: {BOLD_GREEN}{domain}\n")
+    menu_options = [
+        ("1. Enumerate Subdomains", f"{DEFAULT_COLOR}Placeholder"),
+        ("2. Subdomains, Port Scans, and Web Screenshots", f"{DEFAULT_COLOR}Placeholder"),
+        ("3. Subdomains and Basic Web Scan", f"{DEFAULT_COLOR}Placeholder"),
+        ("4. Full Enumeration", f"{DEFAULT_COLOR}Enumerates subdomains, emails, cloud buckets, port scan with nmap, "
+          f"basic web scan, nuclei scan, and web screenshots"),
+        ("5. Run EyeWitness", f"{DEFAULT_COLOR}Visual inspection tool for web domains.")
+    ]
+
+    for option, description in menu_options:
+        print(f"{BOLD_GREEN}{option.ljust(50)}{description}")
+
+    print(f"\n{BOLD_CYAN}Utilities:")
+    print(f"{BOLD_RED}X. Return to Main Menu".ljust(50) + f"\n")
 
     # Define bbot commands
     commands = {
