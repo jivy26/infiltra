@@ -54,7 +54,7 @@ def check_and_install_gnome_terminal():
         print(f"{BOLD_YELLOW}gnome-terminal is not installed. Installing now...")
         install_command = "sudo apt install gnome-terminal -y"
         try:
-            subprocess.run(install_command.split(), check=True)
+            subprocess.run(install_command.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
             print(f"{BOLD_GREEN}gnome-terminal installed successfully.")
         except subprocess.CalledProcessError as e:
             print(f"{BOLD_RED}Failed to install gnome-terminal: {e}")
@@ -70,7 +70,7 @@ def check_and_install_eyewitness():
         print(f"{BOLD_YELLOW}eyewitness is not installed. Installing now...")
         install_command = "sudo apt install eyewitness -y"
         try:
-            subprocess.run(install_command.split(), check=True)
+            subprocess.run(install_command.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
             print(f"{BOLD_GREEN}eyewitness installed successfully.")
         except subprocess.CalledProcessError as e:
             print(f"{BOLD_RED}Failed to install eyewitness: {e}")
