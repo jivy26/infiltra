@@ -91,61 +91,63 @@ def run_bbot(domain, project_path):
         install_bbot()
 
     # Clear the screen and display sample commands
-    clear_screen()
-    print(f"{BOLD_CYAN}OSINT Menu:")
-    print(f"{BOLD_CYAN}Domain: {BOLD_GREEN}{domain}\n")
-    menu_options = [
-        ("1. Enumerate Subdomains", f"{DEFAULT_COLOR}Placeholder"),
-        ("2. Subdomains, Port Scans, and Web Screenshots", f"{DEFAULT_COLOR}Placeholder"),
-        ("3. Subdomains and Basic Web Scan", f"{DEFAULT_COLOR}Placeholder"),
-        ("4. Full Enumeration", f"{DEFAULT_COLOR}Enumerates subdomains, emails, cloud buckets, port scan with nmap,"),
-        (" ", f"{DEFAULT_COLOR}basic web scan, nuclei scan, and web screenshots")
-    ]
+    while True:
+        clear_screen()
+        print(f"{BOLD_CYAN}OSINT Menu:")
+        print(f"{BOLD_CYAN}Domain: {BOLD_GREEN}{domain}\n")
+        menu_options = [
+            ("1. Enumerate Subdomains", f"{DEFAULT_COLOR}Placeholder"),
+            ("2. Subdomains, Port Scans, and Web Screenshots", f"{DEFAULT_COLOR}Placeholder"),
+            ("3. Subdomains and Basic Web Scan", f"{DEFAULT_COLOR}Placeholder"),
+            ("4. Full Enumeration", f"{DEFAULT_COLOR}Enumerates subdomains, emails, cloud buckets, port scan with nmap,"),
+            (" ", f"{DEFAULT_COLOR}basic web scan, nuclei scan, and web screenshots")
+        ]
 
-    for option, description in menu_options:
-        print(f"{BOLD_GREEN}{option.ljust(50)}{description}")
+        for option, description in menu_options:
+            print(f"{BOLD_GREEN}{option.ljust(50)}{description}")
 
-    print(f"\n{BOLD_CYAN}Utilities:")
-    print(f"{BOLD_RED}X. Return to Main Menu".ljust(50) + f"\n")
+        print(f"\n{BOLD_CYAN}Utilities:")
+        print(f"{BOLD_RED}X. Return to Main Menu".ljust(50) + f"\n")
 
-    # Define bbot commands
-    commands = {
-        '1': "-f subdomain-enum",
-        '2': "-f subdomain-enum -m nmap gowitness",
-        '3': "-f subdomain-enum web-basic",
-        '4': "-f subdomain-enum email-enum cloud-enum web-basic -m nmap gowitness nuclei --allow-deadly",
-    }
+        # Define bbot commands
+        commands = {
+            '1': "-f subdomain-enum",
+            '2': "-f subdomain-enum -m nmap gowitness",
+            '3': "-f subdomain-enum web-basic",
+            '4': "-f subdomain-enum email-enum cloud-enum web-basic -m nmap gowitness nuclei --allow-deadly",
+        }
 
-    choice = input(f"{BOLD_GREEN}Enter your choice (1-4): ").strip()
+        choice = input(f"{BOLD_GREEN}Enter your choice (1-4): ").strip()
 
-    # Notification message setup
-    notification_title = "BBOT scan completed."
-    notification_body = "BBOT scan completed."
+        # Notification message setup
+        notification_title = "BBOT scan completed."
+        notification_body = "BBOT scan completed."
 
-    if choice in commands:
-        command = commands[choice]
-        bbot_command = (f"echo -ne \"\\033]0;BBOT\\007\"; exec bbot -t {domain} {command} -o . --name bbot; "
-                        f"notify-send \"{notification_title}\" \"{notification_body}\"")
-        full_command = ['gnome-terminal', '--', 'bash', '-c', bbot_command]
+        if choice in commands:
+            command = commands[choice]
+            bbot_command = (f"echo -ne \"\\033]0;BBOT\\007\"; exec bbot -t {domain} {command} -o . --name bbot; "
+                            f"notify-send \"{notification_title}\" \"{notification_body}\"")
+            full_command = ['gnome-terminal', '--', 'bash', '-c', bbot_command]
 
-        # Change directory to the project path
-        os.chdir(project_path)
+            # Change directory to the project path
+            os.chdir(project_path)
 
-        # Print the command being executed for the user's reference
-        print(f"{BOLD_YELLOW}Executing: {full_command}")
+            # Print the command being executed for the user's reference
+            print(f"{BOLD_YELLOW}Executing: {full_command}")
 
-        # Run the bbot command
-        subprocess.Popen(full_command)
-        # exit_status = os.system(full_command)
-        #
-        # # Check exit status
-        # if exit_status != 0:
-        #     print(f"{BOLD_RED}bbot command failed with exit status {exit_status}")
-    else:
-        print(f"{BOLD_RED}Invalid choice, please enter a number from 1 to 4.")
-
-    # Wait for the user to acknowledge before returning to the menu
-    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
+            # Run the bbot command
+            subprocess.Popen(full_command)
+            # exit_status = os.system(full_command)
+            #
+            # # Check exit status
+            # if exit_status != 0:
+            #     print(f"{BOLD_RED}bbot command failed with exit status {exit_status}")
+        elif choice == 'x':
+            print(f"{BOLD_YELLOW}Returning to Previous Menu...")
+            break  # Exit the loop to return
+        else:
+            print(f"{BOLD_RED}Invalid choice, please try again.")
+            input(f"{BOLD_GREEN}Press Enter to continue...")
 
 
 def osint_submenu(project_path):
