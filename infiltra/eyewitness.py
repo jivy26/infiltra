@@ -47,6 +47,7 @@ def run_eyewitness(input_path):
 def main():
     clear_screen()
     install_required_tools()
+    clear_screen()
 
     # Set default file path
     default_file = 'aort_dns.txt'
