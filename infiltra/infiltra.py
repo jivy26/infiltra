@@ -244,6 +244,7 @@ def display_menu(version, project_path, ascii_art):
 
 # Main function
 def main():
+    clear_screen()
     check_and_install_gnome_terminal()
     check_and_install_eyewitness()
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
