@@ -8,7 +8,7 @@ setup(
         'colorama',
         'pydig',
         'ascii_magic',
-        'ascii_art',
+        'pyfiglet',
         'pipx'
     ],
     entry_points={

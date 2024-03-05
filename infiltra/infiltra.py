@@ -29,7 +29,7 @@ from infiltra.icmpecho import run_fping
 from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
-from infiltra.utils import (is_valid_ip,  get_version, get_ascii_art, list_txt_files, read_file_lines,
+from infiltra.utils import (is_valid_ip,  get_version, list_txt_files, read_file_lines,
                             is_valid_domain, clear_screen, run_subprocess, check_run_indicator, BOLD_RED,
                             BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_WHITE, BOLD_CYAN, BOLD_MAG, DEFAULT_COLOR)
 from infiltra.submenus.web_enum_sub import website_enumeration_submenu
