@@ -10,6 +10,22 @@ domain_regex = re.compile(
     r'^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$'
 )
 
+
+def is_installed(command):
+    return subprocess.run(["which", command], stdout=subprocess.PIPE).returncode == 0
+
+def install_required_tools():
+    # Check for and install 'pup' if necessary
+    if not is_installed("pup"):
+        print(f"{BOLD_CYAN}Installing 'pup'...")
+        subprocess.run(["sudo", "apt-get", "install", "-y", "pup"], check=True)
+
+    # Check for and install 'httprobe' if necessary
+    if not is_installed("httprobe"):
+        print(f"{BOLD_CYAN}Installing 'httprobe'...")
+        subprocess.run(["sudo", "apt-get", "install", "-y", "httprobe"], check=True)
+
+
 def is_valid_domain(domain):
     return re.match(domain_regex, domain) is not None
 
@@ -30,6 +46,8 @@ def run_eyewitness(input_path):
 
 def main():
     clear_screen()
+    install_required_tools()
+
     # Set default file path
     default_file = 'aort_dns.txt'
 
@@ -51,9 +69,6 @@ def main():
         print(f"{BOLD_GREEN}Invalid input. Please enter a valid domain or file path.")
 
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
-
-if __name__ == "__main__":
-    main()
 
 if __name__ == "__main__":
     main()
