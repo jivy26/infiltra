@@ -279,7 +279,7 @@ def display_menu(version, project_path, ascii_art):
     udpscan_ran = check_run_indicator(os.path.join(project_path, 'udp.txt'))
     sslscan_ran = check_run_indicator(os.path.join(project_path, 'sslscan.txt'))
 
-    print(ascii_art)
+    print(f"        " + ascii_art)
     print(f"{BOLD_CYAN}========================================================")
     update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" \
         if update_available else ""
