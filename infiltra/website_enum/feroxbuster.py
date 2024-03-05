@@ -1,5 +1,6 @@
 import subprocess
 import os
+from infiltra.utils import BOLD_GREEN, BOLD_YELLOW, BOLD_RED
 
 # Define the command to check if feroxbuster is installed
 check_command = "feroxbuster --version"
@@ -13,26 +14,24 @@ website_enum_domain_file = 'website_enum_domain.txt'
 
 
 # Function to check if feroxbuster is installed
-def is_feroxbuster_installed():
-    check_command = "feroxbuster --version"
+def check_and_install_feroxbuster():
     try:
-        subprocess.run(check_command.split(), check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return True
+        # Check if feroxbuster is installed
+        subprocess.run(["feroxbuster", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(f"{BOLD_GREEN}Feroxbuster is installed.")
     except subprocess.CalledProcessError:
+        # Feroxbuster is installed but returned a non-zero exit status
         print("Feroxbuster is installed but returned a non-zero exit status when checking version.")
-        return False
     except FileNotFoundError:
-        print("Feroxbuster is not installed or not found in the PATH.")
-        return False
-
-
-# Function to install feroxbuster
-def install_feroxbuster():
-    try:
-        subprocess.run(install_command.split(), check=True)
-        print("Feroxbuster installed successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred while installing feroxbuster: {e}")
+        # Feroxbuster is not installed; proceed with installation
+        print(f"{BOLD_YELLOW}Feroxbuster is not installed. Installing now...")
+        install_command = "sudo apt install feroxbuster -y"
+        try:
+            subprocess.run(install_command.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+            print(f"{BOLD_GREEN}Feroxbuster installed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"{BOLD_RED}Failed to install Feroxbuster: {e}")
+            sys.exit(1)
 
 
 def get_domain_to_use():
@@ -66,22 +65,7 @@ def run_feroxbuster(domain):
 
 # Main function
 def main(domain=None):
-    feroxbuster_installed = is_feroxbuster_installed()
-    if not feroxbuster_installed:
-        print("Feroxbuster is not installed. Installing now...")
-        install_feroxbuster()
-        feroxbuster_installed = is_feroxbuster_installed()  # Check again after attempting to install
-
-    if feroxbuster_installed:
-        if not domain:
-            domain = get_domain_to_use()
-
-        if domain:
-            run_feroxbuster(domain)
-        else:
-            print("No domain is set for enumeration. Please set a domain first.")
-    else:
-        print("Failed to install Feroxbuster. Please install it manually.")
+    check_and_install_feroxbuster()
 
 
 if __name__ == "__main__":
