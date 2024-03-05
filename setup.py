@@ -13,7 +13,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'infiltra=infiltra.ept:main',
+            'infiltra=infiltra.infiltra:main',
         ],
     },
     # Include additional files into the package
