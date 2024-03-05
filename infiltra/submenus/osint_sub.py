@@ -25,7 +25,7 @@ BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 def run_eyewitness(domain):
     clear_screen()
     script_directory = os.path.dirname(os.path.realpath(__file__))
-    eyewitness_dir = os.path.join(script_directory, 'eyewitness')
+    eyewitness_dir = os.path.join(script_directory, '..', 'eyewitness')
     eyewitness_script_path = os.path.join(eyewitness_dir, 'eyewitness.py')
 
     # Set default file path
