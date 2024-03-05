@@ -31,6 +31,7 @@ def is_valid_domain(domain):
     return re.match(domain_regex, domain) is not None
 
 def enumerate_and_screenshot_domain(domain):
+    clear_screen()
     rand = os.urandom(4).hex()  # Using random hex instead of RANDOM for better uniqueness
     temp_output_file = f"/tmp/enum_tmp_{rand}.txt"
     crtsh_command = (
@@ -43,6 +44,7 @@ def enumerate_and_screenshot_domain(domain):
     os.remove(temp_output_file)  # Clean up the temp file
 
 def run_eyewitness(input_path):
+    clear_screen()
     subprocess.run(['eyewitness', '-f', input_path, '--web'], check=True)
 
 def main(project_path):
@@ -69,6 +71,7 @@ def main(project_path):
             if is_valid_domain(domain):
                 enumerate_and_screenshot_domain(domain)
             else:
+                clear_screen()
                 print(f"{BOLD_RED}Invalid domain. Please enter a valid domain.")
                 input(f"{BOLD_GREEN}Press Enter to continue...")
 
