@@ -218,7 +218,6 @@ def display_menu(version, project_path, ascii_art):
     print(f"{BOLD_GREEN}Current Directory: {current_directory}\n")
 
     print(f"\n{BOLD_GREEN}Main Menu")
-    print(f"{BOLD_GREEN}✓{DEFAULT_COLOR}to the right of some menu items indicates that menu item has been completed for the current project")
     print(f"{BOLD_GREEN}========================================================\n")
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
@@ -238,6 +237,8 @@ def display_menu(version, project_path, ascii_art):
 
     print(f"\n{BOLD_CYAN}Utilities:")
     print(f"{BOLD_RED}X. Exit".ljust(30) + f"{DEFAULT_COLOR} Exit the application.\n")
+    print(f"\n{BOLD_BLUE}Legend:")
+    print(f"{BOLD_GREEN}✓{DEFAULT_COLOR} indicates a menu item has been run for the current project.")
 
     choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
     return choice
