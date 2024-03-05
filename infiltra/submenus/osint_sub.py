@@ -1,5 +1,6 @@
 import os
 import subprocess
+import pkg_resources
 
 from colorama import init, Fore, Style
 from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, write_to_file
@@ -24,9 +25,7 @@ BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 # Function to run EyeWitness
 def run_eyewitness(domain):
     clear_screen()
-    script_directory = os.path.dirname(os.path.realpath(__file__))
-    eyewitness_dir = os.path.join(script_directory, '..', 'eyewitness')
-    eyewitness_script_path = os.path.join(eyewitness_dir, 'eyewitness.py')
+    eyewitness_script_path = pkg_resources.resource_filename('infiltra', 'eyewitness/eyewitness.py')
 
     # Set default file path
     default_file = 'aort_dns.txt'
