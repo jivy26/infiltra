@@ -2,18 +2,19 @@ from setuptools import setup, find_packages
 
 setup(
     name='infiltra',
-    version='3.03',
+    version='3.4',
     packages=find_packages(),
     install_requires=[
         'colorama',
         'pydig',
         'ascii_magic',
         'ascii_art',
-        'pipx'
+        'pipx',
+        'requests'
     ],
     entry_points={
         'console_scripts': [
-            'infiltra=infiltra.ept:main',
+            'infiltra=infiltra.infiltra:main',
         ],
     },
     # Include additional files into the package

@@ -59,23 +59,6 @@ def check_and_install_gnome_terminal():
             sys.exit(1)
 
 
-def check_and_install_eyewitness():
-    try:
-        # Check if gnome-terminal is installed
-        subprocess.run(["which", "eyewitness"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print(f"{BOLD_GREEN}EyeWitness is installed.")
-    except subprocess.CalledProcessError:
-        # gnome-terminal is not installed; proceed with installation
-        print(f"{BOLD_YELLOW}EyeWitness is not installed. Installing now...")
-        install_command = "sudo apt install eyewitness -y"
-        try:
-            subprocess.run(install_command.split(), check=True)
-            print(f"{BOLD_GREEN}EyeWitness installed successfully.")
-        except subprocess.CalledProcessError as e:
-            print(f"{BOLD_RED}Failed to install EyeWitness: {e}")
-            sys.exit(1)
-
-
 # Handle FPING
 def check_alive_hosts():
     clear_screen()
@@ -342,8 +325,6 @@ def display_menu(version, project_path, ascii_art):
 # Main function
 def main():
     check_and_install_gnome_terminal()
-    check_and_install_eyewitness()
-
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
