@@ -1,5 +1,6 @@
 # check_bbot.py
 import subprocess
+from infiltra.utils import clear_screen
 
 def is_bbot_installed():
     try:
@@ -11,12 +12,13 @@ def is_bbot_installed():
 
 def install_bbot():
     try:
-        subprocess.run(["pip", "install", "bbot"], check=True)
+        subprocess.run(["pip", "install", "bbot"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
         print("bbot has been installed successfully.")
     except subprocess.CalledProcessError as e:
         print("An error occurred while installing bbot:", e)
 
 if __name__ == "__main__":
+    clear_screen()
     if not is_bbot_installed():
         print("bbot is not installed. Installing now...")
         install_bbot()
