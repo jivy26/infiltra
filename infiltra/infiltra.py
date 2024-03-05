@@ -35,6 +35,7 @@ from infiltra.utils import (is_valid_ip,  get_version, list_txt_files, read_file
 from infiltra.submenus.web_enum_sub import website_enumeration_submenu
 from infiltra.submenus.osint_sub import osint_submenu
 from infiltra.sshaudit import main as run_sshaudit
+from infiltra.submenus.nmap_sub import nmap_submenu
 
 
 # Utility Functions, Need to integrate into utils.py
@@ -192,82 +193,6 @@ def run_whois():
     input(f"{BOLD_GREEN}Press any key to return to the menu...")
 
 
-def run_ngrep(scan_type):
-    clear_screen()
-    script_directory = os.path.dirname(os.path.realpath(__file__))
-    ngrep_script_path = os.path.join(script_directory, 'nmap-grep.sh')
-    output_file = f"{scan_type.lower()}.txt"  # Assume the output file is named tcp.txt or udp.txt based on the scan_type
-    output_path = f"{scan_type.lower()}_parsed/"  # Assume the output folder is named tcp_parsed/ or udp_parsed/ based on the scan_type
-
-    # Check if the output directory already exists
-    if os.path.isdir(output_path):
-        overwrite = input(f"The directory {output_path} already exists. Overwrite it? (y/n): ").strip().lower()
-        if overwrite == 'y':
-            subprocess.run(['rm', '-rf', output_path])  # Removes the directory recursively
-        else:
-            print(f"Not overwriting the existing directory {output_path}.")
-            return  # Exit the function if the user does not want to overwrite
-
-    # Continue with running the nmap-grep.sh script
-    print(f"{BOLD_GREEN}Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans")
-    subprocess.run(['bash', ngrep_script_path, output_file, scan_type.upper()])
-    input(
-        f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
-
-
-# Function to run nmap scan
-def run_nmap():
-    clear_screen()
-
-    # List the available .txt files
-    txt_files = list_txt_files(os.getcwd())
-    if txt_files:
-        print(f"{BOLD_GREEN}NMAP Scanner\n")
-        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
-        for idx, file in enumerate(txt_files, start=1):
-            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
-
-    # Prompt for input: either a file number, a single IP, or 'x' to cancel
-    selection = input(
-        f"{BOLD_GREEN}\nEnter a number to select a file or input a single IP address: {BOLD_WHITE}").strip()
-
-    # Check if the input is a digit and within the range of listed files
-    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
-        ip_input = txt_files[int(selection) - 1]  # Use the selected file
-    elif is_valid_ip(selection) or is_valid_domain(selection):
-        ip_input = selection  # Use the entered IP or domain
-    else:
-        print(f"{BOLD_RED}Invalid input. Please enter a valid IP address, domain, or selection number.")
-        return
-
-    # Ask for the type of scan
-    clear_screen()
-    print(f"{BOLD_GREEN}NMAP Scanner\n")
-    print(f"{BOLD_MAG}NMAP Scans will launch in a separate terminal")
-    print(f"{BOLD_CYAN}TCP: {BOLD_WHITE}nmap -sSV --top-ports 4000 -Pn ")
-    print(f"{BOLD_CYAN}UDP: {BOLD_WHITE}nmap -sU --top-ports 400 -Pn ")
-    scan_type = input(f"\n{BOLD_GREEN}Enter scan type (tcp/udp/both): ").lower()
-
-    # Validate scan_type
-    if scan_type not in ['tcp', 'udp', 'both']:
-        print(f"{BOLD_RED}Invalid scan type: {scan_type}. Please enter 'tcp', 'udp', or 'both'.")
-        return
-
-    # Run the nmap scan using the selected file or entered IP/domain
-    nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
-    if scan_type in ['tcp', 'both']:
-        tcp_command_string = f"echo -ne \"\\033]0;NMAP TCP\\007\"; exec sudo python3 {nmap_script_path} {ip_input} tcp"
-        tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
-        subprocess.Popen(tcp_command)
-    if scan_type in ['udp', 'both']:
-        udp_command_string = f"echo -ne \"\\033]0;NMAP UDP\\007\"; exec sudo python3 {nmap_script_path} {ip_input} udp"
-        udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
-        subprocess.Popen(udp_command)
-
-    print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched.")
-    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
-
-
 def display_menu(version, project_path, ascii_art):
     clear_screen()
     update_available = check_and_update()
@@ -279,7 +204,7 @@ def display_menu(version, project_path, ascii_art):
     udpscan_ran = check_run_indicator(os.path.join(project_path, 'udp.txt'))
     sslscan_ran = check_run_indicator(os.path.join(project_path, 'sslscan.txt'))
 
-    print(f"        " + ascii_art)
+    print(ascii_art)
     print(f"{BOLD_CYAN}========================================================")
     update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" \
         if update_available else ""
@@ -299,8 +224,7 @@ def display_menu(version, project_path, ascii_art):
         ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results. {whois_ran}"),
         ("3. ICMP Echo", f"{DEFAULT_COLOR}Ping requests and parse live hosts.  {icmp_echo_ran}"),
         ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
-        ("5. NMAP Scans", f"{DEFAULT_COLOR}Discover open ports and services on the network.  TCP {tcpscan_ran} | UDP {udpscan_ran}"),
-        ("6. Parse NMAP Scans", f"{DEFAULT_COLOR}Parse NMAP TCP/UDP Scans."),
+        ("5. NMAP", f"{DEFAULT_COLOR}Run scans and parse results  TCP {tcpscan_ran} | UDP {udpscan_ran}"),
         ("7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {sslscan_ran}"),
         ("8. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings.  {sslscan_ran}"),
         ("9. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
@@ -363,7 +287,7 @@ def main():
             elif choice == '4':
                 osint_submenu(project_path)
             elif choice == '5':
-                run_nmap()
+                nmap_submenu(project_path)
             elif choice == '6':
                 clear_screen()
                 print(f"{BOLD_CYAN}NMAP Results Parser\n")
