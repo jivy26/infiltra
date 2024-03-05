@@ -23,6 +23,7 @@ GitHub: https://github.com/jivy26/infiltra
 import os
 import subprocess
 import sys
+import pyfiglet
 
 from infiltra.icmpecho import run_fping
 from infiltra.nuclei import nuclei_main
@@ -325,7 +326,7 @@ def main():
     version = get_version()
 
     # Inside your main function or wherever you need to print the ASCII art
-    ascii_art = get_ascii_art('logo.png', columns=80)
+    ascii_art = pyfiglet.figlet_format("Infiltra", font="colossal")
 
     # Check for last used project
     clear_screen()
