@@ -1,6 +1,5 @@
 import os
 import subprocess
-import pkg_resources
 
 from colorama import init, Fore, Style
 from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, write_to_file
@@ -211,7 +210,7 @@ def osint_submenu(project_path):
             bbot_main()
         elif choice == '5':
             if domain:
-                run_eyewitness(domain)
+                run_eyewitness()
             else:
                 print(f"{BOLD_RED}Please set a domain first using option 1.")
         elif choice == 'x':
