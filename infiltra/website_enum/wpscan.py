@@ -3,7 +3,8 @@ import subprocess
 import os
 import getpass
 import json
-from infiltra.utils import is_valid_domain
+
+from infiltra.utils import is_valid_domain, BOLD_RED, BOLD_GREEN, BOLD_YELLOW
 
 # Define the base directory for storing application data
 app_data_directory = pathlib.Path.home().joinpath('.config', 'infiltra')
@@ -26,25 +27,26 @@ website_enum_domain_file = 'website_enum_domain.txt'
 
 
 # Check if WPScan is installed
-def is_wpscan_installed():
+def check_and_install_wpscan():
+    check_command = "wpscan --version"
+    install_command = "sudo apt install wpscan -y"
+
     try:
+        # Check if WPScan is installed
         subprocess.run(check_command.split(), check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return True
+        print(f"{BOLD_GREEN}WPScan is installed.")
     except subprocess.CalledProcessError:
+        # WPScan is installed but returned a non-zero exit status
         print("WPScan is installed but returned a non-zero exit status when checking version.")
-        return False
     except FileNotFoundError:
-        print("WPScan is not installed or not found in the PATH.")
-        return False
-
-# Install WPScan
-def install_wpscan():
-    try:
-        subprocess.run(install_command.split(), check=True)
-        print("WPScan installed successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"An error occurred while installing WPScan: {e}")
-
+        # WPScan is not installed; proceed with installation
+        print(f"{BOLD_YELLOW}WPScan is not installed. Installing now...")
+        try:
+            subprocess.run(install_command.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+            print(f"{BOLD_GREEN}WPScan installed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"{BOLD_RED}Failed to install WPScan: {e}")
+            sys.exit(1)
 
 # Retrieve or ask for WPScan API key
 def get_wpscan_api_key():
@@ -75,9 +77,7 @@ def run_wpscan(domain, api_key):
         print(f"An error occurred while attempting to run WPScan: {e}")
 
 def main(domain=None):
-    if not is_wpscan_installed():
-        print("WPScan is not installed. Installing now...")
-        install_wpscan()
+    check_and_install_wpscan()
 
     api_key = get_wpscan_api_key()
     if not domain:
