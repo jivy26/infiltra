@@ -4,21 +4,20 @@ import sys
 
 from infiltra.utils import clear_screen, BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_CYAN, DEFAULT_COLOR
 
-def is_ssh_audit_installed():
+def check_and_install_ssh_audit():
     try:
+        # Check if ssh-audit is installed
         subprocess.run(["ssh-audit", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return True
+        print(f"{BOLD_GREEN}ssh-audit is installed.")
     except (subprocess.CalledProcessError, FileNotFoundError):
-        return False
-
-def install_ssh_audit():
-    try:
-        subprocess.run(["sudo", "apt", "install", "ssh-audit", "-y"], check=True)
-        print(f"{BOLD_GREEN}ssh-audit installed successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to install ssh-audit: {e}")
-        sys.exit(1)
-
+        # ssh-audit is not installed; proceed with installation
+        print(f"{BOLD_YELLOW}ssh-audit is not installed. Installing now... Please wait.")
+        try:
+            subprocess.run(["sudo", "apt", "install", "ssh-audit", "-y"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+            print(f"{BOLD_GREEN}ssh-audit installed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"{BOLD_RED}Failed to install ssh-audit: {e}")
+            sys.exit(1)
 def run_ssh_audit(ip, port=22):
     try:
         clear_screen()
@@ -38,9 +37,7 @@ def run_ssh_audit(ip, port=22):
 def main():
     clear_screen()
     print(f'{BOLD_GREEN} Checking if ssh-audit installed.\n')
-    if not is_ssh_audit_installed():
-        print("ssh-audit is not installed. Installing now...")
-        install_ssh_audit()
+    check_and_install_ssh_audit()
 
     clear_screen()
     print(f'{BOLD_BLUE} SSH-Audit and Parser\n')
