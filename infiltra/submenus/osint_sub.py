@@ -117,7 +117,7 @@ def run_bbot(domain, project_path):
             '4': "-f subdomain-enum email-enum cloud-enum web-basic -m nmap gowitness nuclei --allow-deadly",
         }
 
-        choice = input(f"{BOLD_GREEN}Enter your choice (1-4): ").strip()
+        choice = input(f"{BOLD_GREEN}Enter your choice: ").strip()
 
         # Notification message setup
         notification_title = "BBOT scan completed."
