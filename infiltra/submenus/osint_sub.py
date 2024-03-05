@@ -98,9 +98,8 @@ def run_bbot(domain, project_path):
         ("1. Enumerate Subdomains", f"{DEFAULT_COLOR}Placeholder"),
         ("2. Subdomains, Port Scans, and Web Screenshots", f"{DEFAULT_COLOR}Placeholder"),
         ("3. Subdomains and Basic Web Scan", f"{DEFAULT_COLOR}Placeholder"),
-        ("4. Full Enumeration", f"{DEFAULT_COLOR}Enumerates subdomains, emails, cloud buckets, port scan with nmap, "),
-        ("", f"{DEFAULT_COLOR}basic web scan, nuclei scan, and web screenshots"),
-        ("5. Run EyeWitness", f"{DEFAULT_COLOR}Visual inspection tool for web domains.")
+        ("4. Full Enumeration", f"{DEFAULT_COLOR}Enumerates subdomains, emails, cloud buckets, port scan with nmap,"),
+        (" ", f"{DEFAULT_COLOR}basic web scan, nuclei scan, and web screenshots")
     ]
 
     for option, description in menu_options:
