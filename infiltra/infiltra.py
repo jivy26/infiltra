@@ -225,10 +225,10 @@ def display_menu(version, project_path, ascii_art):
         ("3. ICMP Echo", f"{DEFAULT_COLOR}Ping requests and parse live hosts.  {icmp_echo_ran}"),
         ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
         ("5. NMAP", f"{DEFAULT_COLOR}Run scans and parse results  TCP {tcpscan_ran} | UDP {udpscan_ran}"),
-        ("7. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {sslscan_ran}"),
-        ("8. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings.  {sslscan_ran}"),
-        ("9. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
-        ("10. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
+        ("6. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {sslscan_ran}"),
+        ("7. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings.  {sslscan_ran}"),
+        ("8. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
+        ("9. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)")
     ]
 
     for option, description in menu_options:
@@ -289,21 +289,13 @@ def main():
             elif choice == '5':
                 nmap_submenu(project_path)
             elif choice == '6':
-                clear_screen()
-                print(f"{BOLD_CYAN}NMAP Results Parser\n")
-                scan_type = input(f"{BOLD_GREEN}Enter the scan type that you want to parse (TCP/UDP): ").upper()
-                run_ngrep(scan_type)
-            elif choice == '7':
                 run_sslscanparse()
-            elif choice == '8':
+            elif choice == '7':
                 run_sshaudit()
-            elif choice == '9':
+            elif choice == '8':
                 website_enumeration_submenu()
-            elif choice == '10':
+            elif choice == '9':
                 nuclei_main()
-            elif choice == 'u':
-                print("Checking for updates...")
-                updated = check_and_update()
             elif choice == 'x':
                 break
             else:

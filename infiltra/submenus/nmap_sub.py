@@ -80,7 +80,7 @@ def run_nmap():
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
 
-def nmap_submenu():
+def nmap_submenu(project_path):
     clear_screen()
 
     while True:
