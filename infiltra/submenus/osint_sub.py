@@ -25,7 +25,7 @@ BOLD_WHITE = Fore.WHITE + Style.BRIGHT
 # Function to run EyeWitness
 def run_eyewitness(domain):
     clear_screen()
-    eyewitness_script_path = pkg_resources.resource_filename('infiltra', 'eyewitness/eyewitness.py')
+    eyewitness_script_path = pkg_resources.resource_filename('infiltra', 'eyewitness/Python/eyewitness.py')
 
     # Set default file path
     default_file = 'aort_dns.txt'
