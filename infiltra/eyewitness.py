@@ -55,6 +55,7 @@ def main(project_path):
         if choice == '1':
             aort_file_path = os.path.join(project_path, 'aort_dns.txt')
             if os.path.isfile(aort_file_path):
+                clear_screen()
                 run_eyewitness(aort_file_path)
             else:
                 print(f"{BOLD_RED}AORT has not been run. Please go back a menu and run AORT, then try again.")
@@ -63,6 +64,7 @@ def main(project_path):
         elif choice == '2':
             domain = input(f"{BOLD_GREEN}Please enter a domain to enumerate and screenshot: ").strip()
             if is_valid_domain(domain):
+                clear_screen()
                 enumerate_and_screenshot_domain(domain)
             else:
                 print(f"{BOLD_RED}Invalid domain. Please enter a valid domain.")
@@ -71,6 +73,7 @@ def main(project_path):
         elif choice == '3':
             custom_file = input(f"{BOLD_GREEN}Please enter the full path to your custom subdomain file: ").strip()
             if os.path.isfile(custom_file):
+                clear_screen()
                 run_eyewitness(custom_file)
             else:
                 print(f"{BOLD_RED}File does not exist or invalid path.")

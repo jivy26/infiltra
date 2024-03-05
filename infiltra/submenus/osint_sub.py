@@ -60,33 +60,21 @@ def run_dnsrecon(domain):
 
     dnsrecon_command = ["dnsrecon", "-d", domain, "-t", "std"]
 
-    misconfiguration_found = False
+    try:
+        # Run the DNSRecon command and capture the output
+        process = subprocess.run(dnsrecon_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
 
-    while not misconfiguration_found:
-        print(f"{BOLD_GREEN}DNSRecon is starting, only findings will be displayed. If no findings are found recon will "
-              f"rerun for screenshotting.\n")
+        # Print the entire output
+        print(process.stdout)
 
-        try:
-            process = subprocess.Popen(dnsrecon_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        # Separate processing for specific findings
+        print(f"\n{BOLD_GREEN}Specific Findings:")
+        for line in process.stdout.split('\n'):
+            if "[-]" in line:  # Assuming "[-]" indicates findings
+                print(f"{BOLD_RED}{line}")
 
-            while True:
-                output = process.stdout.readline()
-                if output == '' and process.poll() is not None:
-                    break
-                if "[-]" in output.strip():
-                    print(output.strip())
-                    misconfiguration_found = True
-
-            process.wait()  # Wait for DNSRecon to finish if still running
-
-            if not misconfiguration_found:
-                print(f"{BOLD_RED}No misconfigurations found, rerunning DNSRecon for domain: {BOLD_GREEN}{domain}\n")
-                # You can add a delay here if you want to wait before rerunning
-                # time.sleep(2)
-
-        except Exception as e:
-            print(f"{BOLD_RED}An error occurred while running DNSRecon: {e}")
-            break  # Exit the loop if there's an error
+    except Exception as e:
+        print(f"{BOLD_RED}An error occurred while running DNSRecon: {e}")
 
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
