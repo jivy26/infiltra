@@ -26,7 +26,7 @@ nuclei_command = f"nuclei -t {nuclei_templates_path}"
 # Initialize Colorama with autoreset
 init(autoreset=True)
 
-# Define colors using Colorama, matching ept.py
+# Define colors using Colorama, matching infiltra.py
 DEFAULT_COLOR = Fore.WHITE
 BOLD_BLUE = Fore.BLUE + Style.BRIGHT
 BOLD_CYAN = Fore.CYAN + Style.BRIGHT

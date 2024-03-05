@@ -153,14 +153,17 @@ def project_submenu():
         elif choice == '2':
             clear_screen()
             project_path = load_project()
-            save_last_project(os.path.basename(project_path))
-            if project_path:
-                os.chdir(project_path)
+            if project_path is not None:
+                save_last_project(os.path.basename(project_path))
+                if project_path:
+                    os.chdir(project_path)
         elif choice == '3':
             clear_screen()
             project_path = delete_project()
-            if project_path:
-                os.chdir(project_path)
+            if project_path is not None:
+                save_last_project(os.path.basename(project_path))
+                if project_path:
+                    os.chdir(project_path)
         elif choice == 'x':
             print(f"{BOLD_YELLOW}Returning to the main menu...")
             break

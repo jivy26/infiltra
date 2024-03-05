@@ -198,6 +198,28 @@ def run_ngrep(scan_type):
         f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
 
 
+def get_project_directory(base_path):
+    # Check for both 'Projects' and 'projects' directories
+    projects_upper = os.path.join(base_path, 'Projects')
+    projects_lower = os.path.join(base_path, 'projects')
+    project_path = None
+
+    # If both directories exist, ask the user to choose one
+    if os.path.exists(projects_upper) and os.path.exists(projects_lower):
+        choice = input(f"{BOLD_YELLOW}Both 'Projects' and 'projects' folders exist. Which one do you want to use? (U/l): ").strip().lower()
+        project_path = projects_upper if choice != 'l' else projects_lower
+    elif os.path.exists(projects_upper):
+        project_path = projects_upper
+    elif os.path.exists(projects_lower):
+        project_path = projects_lower
+    else:
+        # If neither directory exists, create the default 'projects' directory
+        os.makedirs(projects_lower, exist_ok=True)
+        project_path = projects_lower
+
+    return project_path
+
+
 # Function to run nmap scan
 def run_nmap():
     clear_screen()
