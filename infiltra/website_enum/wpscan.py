@@ -4,7 +4,7 @@ import os
 import getpass
 import json
 
-from infiltra.utils import is_valid_domain, BOLD_RED, BOLD_GREEN, BOLD_YELLOW
+from infiltra.utils import is_valid_domain, BOLD_RED, BOLD_GREEN, BOLD_YELLOW, clear_screen
 
 # Define the base directory for storing application data
 app_data_directory = pathlib.Path.home().joinpath('.config', 'infiltra')
@@ -77,6 +77,7 @@ def run_wpscan(domain, api_key):
         print(f"An error occurred while attempting to run WPScan: {e}")
 
 def main(domain=None):
+    clear_screen()
     check_and_install_wpscan()
 
     api_key = get_wpscan_api_key()
