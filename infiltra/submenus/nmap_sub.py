@@ -1,14 +1,15 @@
 import os
 import subprocess
 
+import pkg_resources
+
 from infiltra.utils import (is_valid_ip, list_txt_files, read_file_lines, is_valid_domain, clear_screen, write_to_file,
                             BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_WHITE, BOLD_CYAN, BOLD_MAG, DEFAULT_COLOR)
 
 
 def run_ngrep(scan_type):
     clear_screen()
-    script_directory = os.path.dirname(os.path.realpath(__file__))
-    ngrep_script_path = os.path.join(script_directory, 'nmap-grep.sh')
+    script_directory = pkg_resources.resource_filename('infiltra', 'nmap-grep.sh')
     output_file = f"{scan_type.lower()}.txt"  # Assume the output file is named tcp.txt or udp.txt based on the scan_type
     output_path = f"{scan_type.lower()}_parsed/"  # Assume the output folder is named tcp_parsed/ or udp_parsed/ based on the scan_type
 
