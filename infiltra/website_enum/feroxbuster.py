@@ -66,6 +66,13 @@ def run_feroxbuster(domain):
 # Main function
 def main(domain=None):
     check_and_install_feroxbuster()
+    if not domain:
+        domain = get_domain_to_use()
+
+    if domain:
+        run_feroxbuster(domain)
+    else:
+        print("No domain is set for enumeration. Please set a domain first.")
 
 
 if __name__ == "__main__":
