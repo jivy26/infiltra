@@ -11,16 +11,16 @@ def main():
     # Get the username of the currently logged-in user
     username = getpass.getuser()
 
-    # Define the absolute path to ept.py using the username
+    # Define the absolute path to infiltra.py using the username
     ept_script_path = f'/home/{username}/tools/ept/ept.py'
 
     while True:
-        # Check if the ept.py script exists at the specified path
+        # Check if the infiltra.py script exists at the specified path
         if not os.path.isfile(ept_script_path):
             print(f"Error: {ept_script_path} does not exist.")
             sys.exit(1)
 
-        # Run the ept.py script using its absolute path and wait for it to complete
+        # Run the infiltra.py script using its absolute path and wait for it to complete
         process = subprocess.run(['python', ept_script_path], cwd=os.path.dirname(ept_script_path))
 
         # If the exit code is the special update code, restart the script
