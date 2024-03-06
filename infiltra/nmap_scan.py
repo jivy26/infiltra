@@ -16,8 +16,14 @@ def nmap_is_installed():
     return subprocess.run(['which', 'nmap'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0
 
 
-def run_nmap_scan(ip_list, scan_type, schedule=False):
-    marker_file = "/tmp/nmap_scan_ongoing.marker"
+def run_nmap_scan(ip_list, scan_type, project_path, schedule=False):
+    # Create the 'tmp' directory within the project path if it doesn't exist
+    tmp_dir = os.path.join(project_path, 'tmp')
+    os.makedirs(tmp_dir, exist_ok=True)
+
+    # Define the path to the marker file inside the 'tmp' direc
+    marker_file = os.path.join(tmp_dir, "nmap_scan_ongoing.marker")
+
     if scan_type not in ["tcp", "udp", "both"]:
         print("Invalid scan type: Choose 'tcp', 'udp', or 'both'.")
         sys.exit(1)

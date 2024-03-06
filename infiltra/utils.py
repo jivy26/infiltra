@@ -85,7 +85,7 @@ def read_file_lines(filepath):
 def list_txt_files(directory):
     txt_files = [f for f in os.listdir(directory) if f.endswith('.txt')]
     if not txt_files:
-        console.print("No .txt files found in the current directory.", RICH_RED)
+        print(f"{BOLD_RED}No .txt files found in the current directory.")
         return None
     return txt_files
 

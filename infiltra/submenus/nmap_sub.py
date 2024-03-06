@@ -44,9 +44,13 @@ def run_ngrep(scan_type):
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
 
-def get_scheduled_scans_status():
+def get_scheduled_scans_status(project_path):
+    # Ensure there is a 'tmp' directory in the project path
+    tmp_dir = os.path.join(project_path, 'tmp')
+    os.makedirs(tmp_dir, exist_ok=True)
+
     # Check for ongoing scans by looking for marker files
-    marker_file = "/tmp/nmap_scan_ongoing.marker"  # This should match the path in nmap_scan.py
+    marker_file = os.path.join(tmp_dir, "nmap_scan_ongoing.marker")
     ongoing_scans = "Ongoing Scans: "
     if os.path.exists(marker_file):
         with open(marker_file, "r") as f:
@@ -166,7 +170,7 @@ def nmap_submenu(project_path):
         console.print("NMAP Menu:\n", style=RICH_CYAN)
         print("========================================================")
         # Get the status of scheduled scans
-        scheduled_scans_status = get_scheduled_scans_status()
+        scheduled_scans_status = get_scheduled_scans_status(project_path)
         print(scheduled_scans_status)
         print(f"{BOLD_CYAN}========================================================\n")
         menu_options = [
