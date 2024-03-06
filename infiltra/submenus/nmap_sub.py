@@ -131,7 +131,7 @@ def nmap_submenu(project_path):
         print(f"{BOLD_CYAN}NMAP Menu:")
 
         menu_options = [
-            ("1. Run Scans", f"{DEFAULT_COLOR}Run TCP and/or UDP Scans."),
+            ("1. Run Scans", f"{DEFAULT_COLOR}Run TCP and/or UDP Scans. {BOLD_YELLOW}(Scheduling Not Working)"),
             ("2. Parse Results", f"{DEFAULT_COLOR}Parse NMAP Results.")
         ]
 
