@@ -78,7 +78,7 @@ def cancel_scheduled_scan():
         return
 
     # Ask the user to input the job number to cancel
-    job_number = console.input("[bold green]Enter the job number to cancel or 'x' to cancel:[/]", style=RICH_COLOR)
+    job_number = input(f"{BOLD_GREEN}Enter the job number to cancel or 'x' to cancel:")
     if job_number.lower() == 'x':
         return
 
@@ -100,7 +100,7 @@ def run_nmap():
         console.print("NMAP Scanner\n",  style=RICH_GREEN)
         console.print("Available .txt Files In This Project's Folder\n",  style=RICH_CYAN)
         for idx, file in enumerate(txt_files, start=1):
-            console.print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
+            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
     selection = input(f"{BOLD_GREEN}\nEnter a number to select a file or input a single IP address or 'x' to cancel: {BOLD_WHITE}").strip()
 
