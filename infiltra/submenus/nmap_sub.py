@@ -6,21 +6,22 @@ import pkg_resources
 from infiltra.utils import (
     is_valid_ip, list_txt_files, is_valid_domain, clear_screen,
     console,
-    BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_WHITE, BOLD_CYAN, DEFAULT_COLOR, RICH_RED, RICH_YELLOW, RICH_CYAN, RICH_GREEN
+    BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_WHITE, BOLD_CYAN, DEFAULT_COLOR,
+    RICH_RED, RICH_YELLOW, RICH_CYAN, RICH_GREEN, RICH_COLOR
 )
 
 def check_and_install_at():
     try:
         subprocess.run(["which", "at"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        console.print("at is installed.", style=RICH_GREEN)
+        console.print("at is installed.",  style=RICH_GREEN)
     except subprocess.CalledProcessError:
-        console.print("at is not installed. Installing now...", style=RICH_YELLOW)
+        console.print("at is not installed. Installing now...",  style=RICH_YELLOW)
         install_command = "sudo apt install at -y"
         try:
             subprocess.run(install_command.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-            console.print("at installed successfully.", style=RICH_GREEN)
+            console.print("at installed successfully.",  style=RICH_GREEN)
         except subprocess.CalledProcessError as e:
-            console.print(f"Failed to install at: {e}", style=RICH_RED)
+            console.print(f"Failed to install at: {e}",  style=RICH_RED)
             sys.exit(1)
 
 
@@ -35,12 +36,12 @@ def run_ngrep(scan_type):
         if overwrite == 'y':
             subprocess.run(['rm', '-rf', output_path])
         else:
-            console.print(f"Not overwriting the existing directory {output_path}.", style=DEFAULT_COLOR)
+            console.print(f"Not overwriting the existing directory {output_path}.",  style=RICH_COLOR)
             return
 
-    console.print(f"Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans", style=RICH_GREEN)
+    console.print(f"Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans",  style=RICH_GREEN)
     subprocess.run(['bash', ngrep_script_path, output_file, scan_type.upper()])
-    console.input("Press Enter to return to the menu...", style=RICH_GREEN)
+    console.input("Press Enter to return to the menu...",  style=RICH_GREEN)
 
 
 def get_scheduled_scans_status():
@@ -73,17 +74,17 @@ def cancel_scheduled_scan():
         return
 
     # Ask the user to input the job number to cancel
-    job_number = input(f"{BOLD_GREEN}Enter the job number to cancel or 'x' to cancel: {BOLD_WHITE}")
+    job_number = console.input("[bold green]Enter the job number to cancel or 'x' to cancel:[/]", style=RICH_COLOR)
     if job_number.lower() == 'x':
         return
 
     # Attempt to cancel the job
     try:
         subprocess.run(['atrm', job_number], check=True)
-        print(f"{BOLD_YELLOW}Scheduled scan {job_number} cancelled.")
+        console.print("Scheduled scan {job_number} cancelled.",  style=RICH_YELLOW)
     except subprocess.CalledProcessError:
-        print(f"{BOLD_RED}Failed to cancel scheduled scan {job_number}.")
-    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
+        console.print("Failed to cancel scheduled scan {job_number}.",  style=RICH_RED)
+    console.input("Press Enter to return to the menu...",  style=RICH_GREEN)
 
 
 def run_nmap():
@@ -92,8 +93,8 @@ def run_nmap():
     # List the available .txt files
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
-        console.print("NMAP Scanner\n", style=RICH_GREEN)
-        console.print("Available .txt Files In This Project's Folder\n", style=RICH_CYAN)
+        console.print("NMAP Scanner\n",  style=RICH_GREEN)
+        console.print("Available .txt Files In This Project's Folder\n",  style=RICH_CYAN)
         for idx, file in enumerate(txt_files, start=1):
             console.print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 

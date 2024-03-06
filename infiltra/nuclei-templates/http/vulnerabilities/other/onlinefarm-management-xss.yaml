@@ -34,7 +34,7 @@ http:
       - type: word
         part: body
         words:
-          - '<em style="color: black;"><script>alert(document.domain)</script>'
+          - '<em "color: black;"><script>alert(document.domain)</script>'
 
       - type: word
         part: header

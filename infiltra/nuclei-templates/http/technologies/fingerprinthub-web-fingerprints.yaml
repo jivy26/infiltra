@@ -1942,7 +1942,7 @@ http:
       - type: word
         name: chnitc-system
         words:
-          - <a href="http://www.chnitc.com" style="text-decoration:none;color:#fff;">
+          - <a href="http://www.chnitc.com" "text-decoration:none;color:#fff;">
 
       - type: word
         name: chnitc-system
@@ -2913,7 +2913,7 @@ http:
       - type: word
         name: diaowen-system
         words:
-          - powered by <a href="http://www.dwsurvey.net" style=
+          - powered by <a href="http://www.dwsurvey.net" 
 
       - type: word
         name: differsoft-itsystem
@@ -2933,7 +2933,7 @@ http:
       - type: word
         name: dingruan-cgm
         words:
-          - id='cgm' style='background-image
+          - id='cgm' 'background-image
 
       - type: word
         condition: and
@@ -4636,7 +4636,7 @@ http:
       - type: word
         name: gzqxrh-system
         words:
-          - 'style="vertical-align: middle; cursor: pointer'
+          - '"vertical-align: middle; cursor: pointer'
 
       - type: word
         name: gzqxrh-system
@@ -4862,7 +4862,7 @@ http:
       - type: word
         name: hanweb-system
         words:
-          - <a href='http://www.hanweb.com' style='display:none'>
+          - <a href='http://www.hanweb.com' 'display:none'>
 
       - type: word
         name: hanweb-system
@@ -5164,7 +5164,7 @@ http:
       - type: word
         name: hisense-webpos
         words:
-          - <legend><img src="../../content/images/hisense.bmp" style="height:20px; padding-left:-10px"/>webpos登录</legend>
+          - <legend><img src="../../content/images/hisense.bmp" "height:20px; padding-left:-10px"/>webpos登录</legend>
 
       - type: word
         name: hisense-webpos
@@ -6979,7 +6979,7 @@ http:
       - type: word
         name: locomoco
         words:
-          - Locomoco WebServer - <span style='color:blue'>RUN ( SUCCESS )
+          - Locomoco WebServer - <span 'color:blue'>RUN ( SUCCESS )
 
       - type: word
         name: logsign-siem
@@ -7394,7 +7394,7 @@ http:
       - type: word
         name: mercurial
         words:
-          - title="mercurial" style=
+          - title="mercurial" 
 
       - type: word
         name: message-solution
@@ -8377,7 +8377,7 @@ http:
       - type: word
         name: norton-cloud-connect
         words:
-          - '<h2 style="margin-left: 0px;">norton cloud connect</h2>'
+          - '<h2 "margin-left: 0px;">norton cloud connect</h2>'
 
       - type: word
         name: novell-groupwise
@@ -8567,7 +8567,7 @@ http:
       - type: word
         name: nvidia-mellanox-mlnx-os
         words:
-          - '<div style=''display: none;'' id="setstatusiconstatediv"></div>'
+          - '<div ''display: none;'' id="setstatusiconstatediv"></div>'
 
       - type: word
         name: nvidia-mellanox-mlnx-os
@@ -9708,7 +9708,7 @@ http:
       - type: word
         name: phpremoteview
         words:
-          - "style='font: 8pt verdana'>phpremoteview"
+          - "'font: 8pt verdana'>phpremoteview"
 
       - type: word
         name: phpshe
@@ -9868,7 +9868,7 @@ http:
       - type: word
         name: pmway-e4
         words:
-          - '风<span style="padding-left: 12px;"></span>格'
+          - '风<span "padding-left: 12px;"></span>格'
 
       - type: word
         name: pmway-e4
@@ -10256,7 +10256,7 @@ http:
       - type: word
         name: quest-password-manager
         words:
-          - style="display:none" id="account_notfilled.textbox
+          - "display:none" id="account_notfilled.textbox
 
       - type: word
         name: quest-password-manager
@@ -10804,7 +10804,7 @@ http:
       - type: word
         name: sangfor-tamper-resistance
         words:
-          - <li style="color:#999999;margin-left:6px;list-style:circle inside;">如忘记密码，请与防火墙管理员联系</li>
+          - <li "color:#999999;margin-left:6px;list-style:circle inside;">如忘记密码，请与防火墙管理员联系</li>
 
       - type: word
         name: sangfor-tamper-resistance
@@ -11129,7 +11129,7 @@ http:
       - type: word
         name: shopsn
         words:
-          - '<span>shopsn全网开源<a style="padding: 0px" href="http://www.shopsn.net'
+          - '<span>shopsn全网开源<a "padding: 0px" href="http://www.shopsn.net'
 
       - type: word
         name: shopxo
@@ -11768,7 +11768,7 @@ http:
       - type: word
         name: sugarcrm
         words:
-          - "<img style='margin-top: 2px' border='0' width='106' height='23' src='include/images/poweredby_sugarcrm.png' alt='powered by sugarcrm'>"
+          - "<img 'margin-top: 2px' border='0' width='106' height='23' src='include/images/poweredby_sugarcrm.png' alt='powered by sugarcrm'>"
 
       - type: word
         name: sugarcrm
@@ -11972,7 +11972,7 @@ http:
       - type: word
         name: symantec-endpoint-protection-manager
         words:
-          - '<div style="font-family: tahoma, verdana, arial, helvetica, sans-serif; font-size:11px;">version'
+          - '<div "font-family: tahoma, verdana, arial, helvetica, sans-serif; font-size:11px;">version'
 
       - type: word
         condition: and
@@ -11984,7 +11984,7 @@ http:
       - type: word
         name: symantec-endpoint-protection-manager
         words:
-          - <tr><td align="left" style="font-family:arial; font-size:18pt"><b>symantec endpoint protection manager<br>web access</b></td></tr>
+          - <tr><td align="left" "font-family:arial; font-size:18pt"><b>symantec endpoint protection manager<br>web access</b></td></tr>
 
       - type: word
         name: symantec-thawte_ssl_cert
@@ -12129,7 +12129,7 @@ http:
       - type: word
         name: team-board
         words:
-          - <a href="licence.asp"><b style='color:#ff9900'>
+          - <a href="licence.asp"><b 'color:#ff9900'>
 
       - type: word
         name: team-board
@@ -13567,7 +13567,7 @@ http:
       - type: word
         name: weatimages
         words:
-          - <div align="center" class="weatimages_toppest_navig" style="text-decoration:underline;">
+          - <div align="center" class="weatimages_toppest_navig" "text-decoration:underline;">
 
       - type: word
         name: web-control-panel
@@ -13623,7 +13623,7 @@ http:
       - type: word
         name: webasyst-shop-script
         words:
-          - 'powered by webasyst shop-script <a href="http://www.shop-script.com/" style="font-weight: normal">shopping cart software</a>'
+          - 'powered by webasyst shop-script <a href="http://www.shop-script.com/" "font-weight: normal">shopping cart software</a>'
 
       - type: word
         name: webbased-pear-package-manager
@@ -13735,7 +13735,7 @@ http:
       - type: word
         name: webray-situation-awareness
         words:
-          - 'class="disclaimer" style="color: #ffffff">《盛邦安全网站监控预警平台服务协议》</a>'
+          - 'class="disclaimer" "color: #ffffff">《盛邦安全网站监控预警平台服务协议》</a>'
 
       - type: word
         name: websidestory
@@ -14634,7 +14634,7 @@ http:
       - type: word
         name: yunanbao-yunxz
         words:
-          - 'id=mtokenplugin width=0 height=0 style="position: absolute;left: 0px; top: 0px"'
+          - 'id=mtokenplugin width=0 height=0 "position: absolute;left: 0px; top: 0px"'
 
       - type: word
         name: yuneasy-ipcalling
@@ -15022,7 +15022,7 @@ http:
       - type: word
         name: zzcms
         words:
-          - /inc/showuserlogin.php?style=h&t=math.random()
+          - /inc/showuserlogin.php?h&t=math.random()
 
       - type: word
         name: zzsmit-public-bicycle-management-system

@@ -53,15 +53,15 @@ def run_subprocess(command, working_directory=None, shell=False):
                                 text=True, check=True)
         return result.stdout
     except subprocess.CalledProcessError as e:
-        console.print(f"Subprocess error: {e.stderr}", style=RICH_RED)
+        console.print(f"Subprocess error: {e.stderr}", RICH_RED)
         return None
 
 def check_run_indicator(pattern):
     files = glob.glob(pattern)
     if files:
-        return Text("✓", style=RICH_GREEN)
+        return Text("✓", RICH_GREEN)
     else:
-        return Text("", style=DEFAULT_COLOR)
+        return Text("", DEFAULT_COLOR)
 
 def is_valid_ip(ip):
     try:
@@ -79,13 +79,13 @@ def read_file_lines(filepath):
         with open(filepath, 'r') as file:
             return file.read().splitlines()
     except FileNotFoundError:
-        console.print(f"File not found: {filepath}", style=RICH_RED)
+        console.print(f"File not found: {filepath}", RICH_RED)
         return None
 
 def list_txt_files(directory):
     txt_files = [f for f in os.listdir(directory) if f.endswith('.txt')]
     if not txt_files:
-        console.print("No .txt files found in the current directory.", style=RICH_RED)
+        console.print("No .txt files found in the current directory.", RICH_RED)
         return None
     return txt_files
 
@@ -94,7 +94,7 @@ def write_to_file(filepath, content, mode='w'):
         with open(filepath, mode) as file:
             file.write(content)
     except IOError as e:
-        console.print(f"IO error occurred: {e}", style=RICH_RED)
+        console.print(f"IO error occurred: {e}", RICH_RED)
 
 def is_valid_hostname(hostname):
     if not hostname or len(hostname) > 255 or hostname[-1] == ".":
@@ -106,5 +106,5 @@ def get_version():
     try:
         return get_distribution_version('infiltra')
     except Exception as e:
-        console.print(f"Could not read version: {e}", style=RICH_RED)
+        console.print(f"Could not read version: {e}", RICH_RED)
         return "unknown"
