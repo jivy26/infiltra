@@ -15,14 +15,14 @@ init(autoreset=True)
 
 # Define colors using Colorama
 DEFAULT_COLOR = Fore.WHITE
-IT_MAG = Fore.MAGENTA + Style.BRIGHT
-BOLD_BLUE = Fore.BLUE + Style.BRIGHT
-BOLD_CYAN = Fore.CYAN + Style.BRIGHT
-BOLD_GREEN = Fore.GREEN + Style.BRIGHT
-BOLD_RED = Fore.RED + Style.BRIGHT
-BOLD_MAG = Fore.MAGENTA + Style.BRIGHT
-BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
-BOLD_WHITE = Fore.WHITE + Style.BRIGHT
+IT_MAG = Fore.MAGENTA + Style.bold
+BOLD_BLUE = Fore.BLUE + Style.bold
+BOLD_CYAN = Fore.CYAN + Style.bold
+BOLD_GREEN = Fore.GREEN + Style.bold
+BOLD_RED = Fore.RED + Style.bold
+BOLD_MAG = Fore.MAGENTA + Style.bold
+BOLD_YELLOW = Fore.YELLOW + Style.bold
+BOLD_WHITE = Fore.WHITE + Style.bold
 
 
 # Create a console object for Rich
