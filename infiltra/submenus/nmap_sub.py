@@ -94,11 +94,20 @@ def run_nmap():
     elif action == 'later':
         date_input = input(f"{BOLD_GREEN}Enter date for the scan (dd/mm/yyyy): {BOLD_WHITE}").strip()
         time_input = input(f"{BOLD_GREEN}Enter time in military time (HHMM, e.g., 1600 for 4pm): {BOLD_WHITE}").strip()
+
+        # Ensure time is properly formatted for the `at` command
+        if len(time_input) == 3:  # If only 3 digits, add a '0' in the front
+            time_input = '0' + time_input
+        time_input = time_input[:2] + ':' + time_input[2:]
+
         schedule_datetime = f"{date_input} {time_input}"
 
-        at_command = f'echo "{command_string}" | at {schedule_datetime}'
-        subprocess.run(at_command, shell=True)
-        print(f"{BOLD_GREEN}Scan scheduled for {schedule_datetime}.")
+        try:
+            at_command = f'echo "{command_string}" | at {schedule_datetime}'
+            subprocess.run(at_command, shell=True, check=True)
+            print(f"{BOLD_GREEN}Scan scheduled for {schedule_datetime}.")
+        except subprocess.CalledProcessError as e:
+            print(f"{BOLD_RED}An error occurred while scheduling the scan: {e}")
 
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
