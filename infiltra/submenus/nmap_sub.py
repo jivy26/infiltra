@@ -75,7 +75,7 @@ def cancel_scheduled_scan():
     # Attempt to cancel the job
     try:
         subprocess.run(['atrm', job_number], check=True)
-        print(f"{BOLD_GREEN}Scheduled scan {job_number} cancelled.")
+        print(f"{BOLD_YELLOW}Scheduled scan {job_number} cancelled.")
     except subprocess.CalledProcessError:
         print(f"{BOLD_RED}Failed to cancel scheduled scan {job_number}.")
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
