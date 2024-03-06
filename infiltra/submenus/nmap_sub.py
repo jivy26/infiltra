@@ -55,6 +55,32 @@ def get_scheduled_scans_status():
     return scan_status
 
 
+def cancel_scheduled_scan():
+    clear_screen()
+    print(f"{BOLD_CYAN}Cancel a Scheduled Nmap Scan\n")
+    # First, show all scheduled scans
+    scheduled_scans = subprocess.run(['atq'], capture_output=True, text=True)
+    print(scheduled_scans.stdout)
+
+    if scheduled_scans.stdout.strip() == "":
+        print(f"{BOLD_YELLOW}No scheduled scans to cancel.")
+        input(f"{BOLD_GREEN}Press Enter to return to the menu...")
+        return
+
+    # Ask the user to input the job number to cancel
+    job_number = input(f"{BOLD_GREEN}Enter the job number to cancel or 'x' to cancel: {BOLD_WHITE}")
+    if job_number.lower() == 'x':
+        return
+
+    # Attempt to cancel the job
+    try:
+        subprocess.run(['atrm', job_number], check=True)
+        print(f"{BOLD_GREEN}Scheduled scan {job_number} cancelled.")
+    except subprocess.CalledProcessError:
+        print(f"{BOLD_RED}Failed to cancel scheduled scan {job_number}.")
+    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
+
+
 def run_nmap():
     clear_screen()
 
@@ -136,10 +162,11 @@ def nmap_submenu(project_path):
         # Get the status of scheduled scans
         scheduled_scans_status = get_scheduled_scans_status()
         print(scheduled_scans_status)
-        print(f"{BOLD_CYAN}========================================================")
+        print(f"{BOLD_CYAN}========================================================\n")
         menu_options = [
-            ("1. Run Scans", f"{DEFAULT_COLOR}Run TCP and/or UDP Scans. {BOLD_YELLOW}(Scheduling Not Working)"),
-            ("2. Parse Results", f"{DEFAULT_COLOR}Parse NMAP Results.")
+            ("1. Run Scans", f"{DEFAULT_COLOR}Run TCP and/or UDP Scans."),
+            ("2. Cancel Scans", f"{DEFAULT_COLOR}Cancel scheduled scans."),
+            ("3. Parse Results", f"{DEFAULT_COLOR}Parse NMAP Results.")
         ]
 
         for option, description in menu_options:
@@ -153,6 +180,8 @@ def nmap_submenu(project_path):
         if choice == '1':
             run_nmap()
         elif choice == '2':
+            cancel_scheduled_scan()
+        elif choice == '3':
             clear_screen()
             print(f"{BOLD_CYAN}NMAP Results Parser\n")
             scan_type = input(f"{BOLD_GREEN}Enter the scan type that you want to parse (TCP/UDP): ").upper()
