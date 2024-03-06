@@ -45,6 +45,16 @@ def run_ngrep(scan_type):
         f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
 
 
+def get_scheduled_scans_status():
+    # Use 'atq' to list the queued jobs and 'at -c' to inspect a specific job.
+    scheduled_scans = subprocess.run(['atq'], capture_output=True, text=True)
+    if scheduled_scans.stdout:
+        scan_status = f"{BOLD_GREEN}Upcoming Scans:\n{scheduled_scans.stdout}"
+    else:
+        scan_status = f"{BOLD_YELLOW}No upcoming scans are scheduled."
+    return scan_status
+
+
 def run_nmap():
     clear_screen()
 
@@ -121,7 +131,11 @@ def nmap_submenu(project_path):
 
     while True:
         clear_screen()
-        print(f"{BOLD_CYAN}NMAP Menu:")
+        print(f"{BOLD_CYAN}NMAP Menu:\n")
+
+        # Get the status of scheduled scans and display it
+        scheduled_scans_status = get_scheduled_scans_status()
+        print(scheduled_scans_status)
 
         menu_options = [
             ("1. Run Scans", f"{DEFAULT_COLOR}Run TCP and/or UDP Scans. {BOLD_YELLOW}(Scheduling Not Working)"),
