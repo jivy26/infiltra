@@ -3,24 +3,41 @@ import re
 import ipaddress
 import subprocess
 import glob
+from colorama import init, Fore, Style
 from rich.console import Console
 from rich.style import Style
 from rich.text import Text
 from importlib.metadata import version as get_distribution_version
 
+
+# Initialize Colorama
+init(autoreset=True)
+
+# Define colors using Colorama
+DEFAULT_COLOR = Fore.WHITE
+IT_MAG = Fore.MAGENTA + Style.BRIGHT
+BOLD_BLUE = Fore.BLUE + Style.BRIGHT
+BOLD_CYAN = Fore.CYAN + Style.BRIGHT
+BOLD_GREEN = Fore.GREEN + Style.BRIGHT
+BOLD_RED = Fore.RED + Style.BRIGHT
+BOLD_MAG = Fore.MAGENTA + Style.BRIGHT
+BOLD_YELLOW = Fore.YELLOW + Style.BRIGHT
+BOLD_WHITE = Fore.WHITE + Style.BRIGHT
+
+
 # Create a console object for Rich
 console = Console()
 
 # Style definitions using Rich
-DEFAULT_COLOR = Style(color="white")
-IT_MAG = Style(color="magenta", bold=True)
-BOLD_BLUE = Style(color="blue", bold=True)
-BOLD_CYAN = Style(color="cyan", bold=True)
-BOLD_GREEN = Style(color="green", bold=True)
-BOLD_RED = Style(color="red", bold=True)
-BOLD_MAG = Style(color="magenta", bold=True)
-BOLD_YELLOW = Style(color="yellow", bold=True)
-BOLD_WHITE = Style(color="white", bold=True)
+RICH_COLOR = Style(color="white")
+RICH_BLUE = Style(color="blue", bold=True)
+RICH_CYAN = Style(color="cyan", bold=True)
+RICH_GREEN = Style(color="green", bold=True)
+RICH_RED = Style(color="red", bold=True)
+RICH_MAG = Style(color="magenta", bold=True)
+RICH_YELLOW = Style(color="yellow", bold=True)
+RICH_WHITE = Style(color="white", bold=True)
+
 
 def clear_screen():
     if os.name == 'nt':
@@ -35,13 +52,13 @@ def run_subprocess(command, working_directory=None, shell=False):
                                 text=True, check=True)
         return result.stdout
     except subprocess.CalledProcessError as e:
-        console.print(f"Subprocess error: {e.stderr}", style=BOLD_RED)
+        console.print(f"Subprocess error: {e.stderr}", style=RICH_RED)
         return None
 
 def check_run_indicator(pattern):
     files = glob.glob(pattern)
     if files:
-        return Text("✓", style=BOLD_GREEN)
+        return Text("✓", style=RICH_GREEN)
     else:
         return Text("", style=DEFAULT_COLOR)
 
@@ -61,13 +78,13 @@ def read_file_lines(filepath):
         with open(filepath, 'r') as file:
             return file.read().splitlines()
     except FileNotFoundError:
-        console.print(f"File not found: {filepath}", style=BOLD_RED)
+        console.print(f"File not found: {filepath}", style=RICH_RED)
         return None
 
 def list_txt_files(directory):
     txt_files = [f for f in os.listdir(directory) if f.endswith('.txt')]
     if not txt_files:
-        console.print("No .txt files found in the current directory.", style=BOLD_RED)
+        console.print("No .txt files found in the current directory.", style=RICH_RED)
         return None
     return txt_files
 
@@ -76,7 +93,7 @@ def write_to_file(filepath, content, mode='w'):
         with open(filepath, mode) as file:
             file.write(content)
     except IOError as e:
-        console.print(f"IO error occurred: {e}", style=BOLD_RED)
+        console.print(f"IO error occurred: {e}", style=RICH_RED)
 
 def is_valid_hostname(hostname):
     if not hostname or len(hostname) > 255 or hostname[-1] == ".":
@@ -88,5 +105,5 @@ def get_version():
     try:
         return get_distribution_version('infiltra')
     except Exception as e:
-        console.print(f"Could not read version: {e}", style=BOLD_RED)
+        console.print(f"Could not read version: {e}", style=RICH_RED)
         return "unknown"

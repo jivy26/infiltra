@@ -3,46 +3,44 @@ import subprocess
 import sys
 import pkg_resources
 
-from infiltra.utils import (is_valid_ip, list_txt_files, read_file_lines, is_valid_domain, clear_screen, write_to_file,
-                            BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_WHITE, BOLD_CYAN, BOLD_MAG, DEFAULT_COLOR)
+from infiltra.utils import (
+    is_valid_ip, list_txt_files, is_valid_domain, clear_screen,
+    console,
+    BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_WHITE, BOLD_CYAN, DEFAULT_COLOR, RICH_RED, RICH_YELLOW, RICH_CYAN, RICH_GREEN
+)
 
 def check_and_install_at():
     try:
-        # Check if gnome-terminal is installed
         subprocess.run(["which", "at"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print(f"{BOLD_GREEN}at is installed.")
+        console.print("at is installed.", style=RICH_GREEN)
     except subprocess.CalledProcessError:
-        # gnome-terminal is not installed; proceed with installation
-        print(f"{BOLD_YELLOW}at is not installed. Installing now...")
+        console.print("at is not installed. Installing now...", style=RICH_YELLOW)
         install_command = "sudo apt install at -y"
         try:
             subprocess.run(install_command.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-            print(f"{BOLD_GREEN}at installed successfully.")
+            console.print("at installed successfully.", style=RICH_GREEN)
         except subprocess.CalledProcessError as e:
-            print(f"{BOLD_RED}Failed to install at: {e}")
+            console.print(f"Failed to install at: {e}", style=RICH_RED)
             sys.exit(1)
 
 
 def run_ngrep(scan_type):
     clear_screen()
     ngrep_script_path = pkg_resources.resource_filename('infiltra', 'nmap-grep.sh')
-    output_file = f"{scan_type.lower()}.txt"  # Assume the output file is named tcp.txt or udp.txt based on the scan_type
-    output_path = f"{scan_type.lower()}_parsed/"  # Assume the output folder is named tcp_parsed/ or udp_parsed/ based on the scan_type
+    output_file = f"{scan_type.lower()}.txt"
+    output_path = f"{scan_type.lower()}_parsed/"
 
-    # Check if the output directory already exists
     if os.path.isdir(output_path):
-        overwrite = input(f"The directory {output_path} already exists. Overwrite it? (y/n): ").strip().lower()
+        overwrite = console.input("The directory [bold cyan]{}[/bold cyan] already exists. Overwrite it? (y/n): ", output_path).strip().lower()
         if overwrite == 'y':
-            subprocess.run(['rm', '-rf', output_path])  # Removes the directory recursively
+            subprocess.run(['rm', '-rf', output_path])
         else:
-            print(f"Not overwriting the existing directory {output_path}.")
-            return  # Exit the function if the user does not want to overwrite
+            console.print(f"Not overwriting the existing directory {output_path}.", style=DEFAULT_COLOR)
+            return
 
-    # Continue with running the nmap-grep.sh script
-    print(f"{BOLD_GREEN}Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans")
+    console.print(f"Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans", style=RICH_GREEN)
     subprocess.run(['bash', ngrep_script_path, output_file, scan_type.upper()])
-    input(
-        f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
+    console.input("Press Enter to return to the menu...", style=RICH_GREEN)
 
 
 def get_scheduled_scans_status():
@@ -94,10 +92,10 @@ def run_nmap():
     # List the available .txt files
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
-        print(f"{BOLD_GREEN}NMAP Scanner\n")
-        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
+        console.print("NMAP Scanner\n", style=RICH_GREEN)
+        console.print("Available .txt Files In This Project's Folder\n", style=RICH_CYAN)
         for idx, file in enumerate(txt_files, start=1):
-            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
+            console.print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
     selection = input(f"{BOLD_GREEN}\nEnter a number to select a file or input a single IP address or 'x' to cancel: {BOLD_WHITE}").strip()
 
