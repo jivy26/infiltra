@@ -96,14 +96,13 @@ def run_nmap():
         time_input = input(f"{BOLD_GREEN}Enter time in military time (HHMM, e.g., 1600 for 4pm): {BOLD_WHITE}").strip()
 
         # Ensure time is properly formatted for the `at` command
-        # Remove the colon from the time input as `at` might not accept it
         if len(time_input) == 3:  # If only 3 digits, add a '0' in the front
             time_input = '0' + time_input
         if ':' in time_input:
             time_input = time_input.replace(':', '')  # Remove colon
 
         # Combine date and time for the `at` command
-        schedule_datetime = f"{date_input} {time_input}"
+        schedule_datetime = f"{time_input} {date_input}"
         at_command = f'echo "sudo python3 {nmap_script_path} {ip_input} {scan_type} True" | at {schedule_datetime}'
         try:
             subprocess.run(at_command, shell=True, check=True)
