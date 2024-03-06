@@ -46,13 +46,20 @@ def run_ngrep(scan_type):
 
 
 def get_scheduled_scans_status():
+    # Check for ongoing scans by looking for marker files
+    marker_file = "/tmp/nmap_scan_ongoing.marker"  # This should match the path in nmap_scan.py
+    ongoing_scans = "Ongoing Scans: "
+    if os.path.exists(marker_file):
+        with open(marker_file, "r") as f:
+            ongoing_scans += f.read()
+    else:
+        ongoing_scans += "None"
+
     # Use 'atq' to list the queued jobs and 'at -c' to inspect a specific job.
     scheduled_scans = subprocess.run(['atq'], capture_output=True, text=True)
-    if scheduled_scans.stdout:
-        scan_status = f"{BOLD_GREEN}Upcoming Scans:\n\n{scheduled_scans.stdout}"
-    else:
-        scan_status = f"{BOLD_YELLOW}No upcoming scans are scheduled."
-    return scan_status
+    scheduled_scans_output = scheduled_scans.stdout if scheduled_scans.stdout else "No upcoming scans are scheduled."
+
+    return f"{BOLD_GREEN}{ongoing_scans}\n\n{BOLD_YELLOW}Upcoming Scans:\n{scheduled_scans_output}"
 
 
 def cancel_scheduled_scan():

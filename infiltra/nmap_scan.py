@@ -17,6 +17,7 @@ def nmap_is_installed():
 
 
 def run_nmap_scan(ip_list, scan_type, schedule=False):
+    marker_file = "/tmp/nmap_scan_ongoing.marker"
     if scan_type not in ["tcp", "udp", "both"]:
         print("Invalid scan type: Choose 'tcp', 'udp', or 'both'.")
         sys.exit(1)
@@ -39,12 +40,20 @@ def run_nmap_scan(ip_list, scan_type, schedule=False):
             udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_scan_command]
             subprocess.Popen(udp_command)
     else:
+        # Create a marker file to indicate the scan has started
+        with open(marker_file, "w") as f:
+            f.write("Scan started")
+
         # For scheduled execution, run the command directly
         if scan_type == "tcp" or scan_type == "both":
             subprocess.run(tcp_scan_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         if scan_type == "udp" or scan_type == "both":
             subprocess.run(udp_scan_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+       # Delete the marker file
+        if os.path.exists(marker_file):
+            os.remove(marker_file)
 
 
 def main():
