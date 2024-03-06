@@ -3,7 +3,8 @@ import re
 import ipaddress
 import subprocess
 import glob
-from colorama import init, Fore, Style
+from colorama import init, Fore
+from colorama import Style as Style1
 from rich.console import Console
 from rich.style import Style
 from rich.text import Text
@@ -15,14 +16,14 @@ init(autoreset=True)
 
 # Define colors using Colorama
 DEFAULT_COLOR = Fore.WHITE
-IT_MAG = Fore.MAGENTA
-BOLD_BLUE = Fore.BLUE
-BOLD_CYAN = Fore.CYAN
-BOLD_GREEN = Fore.GREEN
-BOLD_RED = Fore.RED
-BOLD_MAG = Fore.MAGENTA
-BOLD_YELLOW = Fore.YELLOW
-BOLD_WHITE = Fore.WHITE
+IT_MAG = Fore.MAGENTA + Style1.BRIGHT
+BOLD_BLUE = Fore.BLUE + Style1.BRIGHT
+BOLD_CYAN = Fore.CYAN + Style1.BRIGHT
+BOLD_GREEN = Fore.GREEN + Style1.BRIGHT
+BOLD_RED = Fore.RED + Style1.BRIGHT
+BOLD_MAG = Fore.MAGENTA + Style1.BRIGHT
+BOLD_YELLOW = Fore.YELLOW + Style1.BRIGHT
+BOLD_WHITE = Fore.WHITE + Style1.BRIGHT
 
 
 # Create a console object for Rich
