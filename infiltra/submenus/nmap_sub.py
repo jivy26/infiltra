@@ -84,7 +84,7 @@ def cancel_scheduled_scan():
         console.print("Scheduled scan {job_number} cancelled.",  style=RICH_YELLOW)
     except subprocess.CalledProcessError:
         console.print("Failed to cancel scheduled scan {job_number}.",  style=RICH_RED)
-    console.input("Press Enter to return to the menu...",  style=RICH_GREEN)
+    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
 
 def run_nmap():
@@ -163,25 +163,25 @@ def nmap_submenu(project_path):
 
     while True:
         clear_screen()
-        console.print("NMAP Menu:\n", style=RICH_CYAN)
-        console.print("========================================================", style=RICH_CYAN)
+        print("NMAP Menu:\n", style=RICH_CYAN)
+        print("========================================================")
         # Get the status of scheduled scans
         scheduled_scans_status = get_scheduled_scans_status()
         print(scheduled_scans_status)
-        console.print("========================================================\n", style=RICH_CYAN)
+        print(f"{BOLD_CYAN}========================================================\n")
         menu_options = [
-            ("1. Run Scans", "Run or Schedule TCP and/or UDP Scans."),
-            ("2. Cancel Scans", "Cancel scheduled scans."),
-            ("3. Parse Results", "Parse NMAP Results.")
+            ("1. Run Scans", f"{DEFAULT_COLOR}Run or Schedule TCP and/or UDP Scans."),
+            ("2. Cancel Scans", f"{DEFAULT_COLOR}Cancel scheduled scans."),
+            ("3. Parse Results", f"{DEFAULT_COLOR}Parse NMAP Results.")
         ]
 
         for option, description in menu_options:
             print(f"{BOLD_GREEN}{option.ljust(50)}{description}")
 
-        console.print("\nUtilities:", style=RICH_CYAN)
-        console.print("X. Return to Main Menu".ljust(50) + f"\n", style=RICH_RED)
+        print(f"\n{BOLD_CYAN}Utilities:")
+        print(f"{BOLD_RED}X. Return to Main Menu".ljust(50) + f"\n")
 
-        choice = console.input("\nEnter your choice: ", style=RICH_GREEN).lower()
+        choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
 
         if choice == '1':
             run_nmap()
@@ -189,14 +189,14 @@ def nmap_submenu(project_path):
             cancel_scheduled_scan()
         elif choice == '3':
             clear_screen()
-            console.print("NMAP Results Parser\n", style=RICH_CYAN)
-            scan_type = console.input("Enter the scan type that you want to parse (TCP/UDP): ", style=RICH_GREEN).upper()
+            print(f"{BOLD_CYAN}NMAP Results Parser\n")
+            scan_type = input(f"{BOLD_GREEN}Enter the scan type that you want to parse (TCP/UDP): ").upper()
             run_ngrep(scan_type)
         elif choice == 'x':
             return
         else:
-            console.print("Invalid choice, please try again.", style=RICH_YELLOW)
-            console.input("Press Enter to continue...", style=RICH_GREEN)
+            print(f"{BOLD_YELLOW}Invalid choice, please try again.")
+            input(f"{BOLD_GREEN}Press Enter to continue...")
 
 
 if __name__ == '__main__':
