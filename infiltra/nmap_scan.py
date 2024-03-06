@@ -16,7 +16,7 @@ def nmap_is_installed():
     return subprocess.run(['which', 'nmap'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0
 
 
-def run_nmap_scan(ip_list, scan_type):
+def run_nmap_scan(ip_list, scan_type, schedule=False):
     if scan_type not in ["tcp", "udp", "both"]:
         print("Invalid scan type: Choose 'tcp', 'udp', or 'both'.")
         sys.exit(1)
@@ -25,28 +25,34 @@ def run_nmap_scan(ip_list, scan_type):
         print("Nmap is not installed or not found in PATH.")
         sys.exit(1)
 
-    # Notification message setup
-    notification_title = "Nmap Scan Complete"
-    notification_body = f"Scan type {scan_type.upper()} completed."
+    # Prepare command strings
+    tcp_scan_command = f"sudo nmap -sSV --top-ports 4000 -Pn -oG tcp.txt {' '.join(ip_list)}"
+    udp_scan_command = f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}"
 
-    if scan_type == "tcp" or scan_type == "both":
-        title_command = "echo -ne \"\\033]0;NMAP TCP Scan\\007\"; "
-        tcp_scan_command = f"sudo nmap -sSV --top-ports 4000 -Pn -oG tcp.txt {' '.join(ip_list)}; notify-send \"{notification_title}\" \"{notification_body}\""
-        full_tcp_command = ['gnome-terminal', '--', 'bash', '-c', title_command + tcp_scan_command]
-        subprocess.Popen(full_tcp_command)
+    if not schedule:
+        # For immediate execution, use gnome-terminal
+        if scan_type == "tcp" or scan_type == "both":
+            tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_scan_command]
+            subprocess.Popen(tcp_command)
 
-    if scan_type == "udp" or scan_type == "both":
-        title_command = "echo -ne \"\\033]0;NMAP UDP Scan\\007\"; "
-        udp_scan_command = f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}; notify-send \"{notification_title}\" \"{notification_body}\""
-        full_udp_command = ['gnome-terminal', '--', 'bash', '-c', title_command + udp_scan_command]
-        subprocess.Popen(full_udp_command)
+        if scan_type == "udp" or scan_type == "both":
+            udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_scan_command]
+            subprocess.Popen(udp_command)
+    else:
+        # For scheduled execution, run the command directly
+        if scan_type == "tcp" or scan_type == "both":
+            subprocess.run(tcp_scan_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        if scan_type == "udp" or scan_type == "both":
+            subprocess.run(udp_scan_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: nmap_scan.py [single_ip/ip_file_path] [tcp/udp/both]")
+    if len(sys.argv) < 3:
+        print("Usage: nmap_scan.py [single_ip/ip_file_path] [tcp/udp/both] [True/False for scheduled]")
         sys.exit(1)
 
+    scheduled = len(sys.argv) == 4 and sys.argv[3] == 'True'
     input_arg = sys.argv[1]
     scan_type = sys.argv[2].lower()
 
@@ -59,21 +65,15 @@ def main():
                     if not is_valid_ip(ip):
                         print(f"Invalid IP found in file: {ip}")
                         sys.exit(1)
-                # Run scan with file input
-                result = run_nmap_scan(["-iL", input_arg], scan_type)
+            # Run scan with file input
+            run_nmap_scan(["-iL", input_arg], scan_type, scheduled)
         elif is_valid_ip(input_arg):
             # Run scan with single IP
-            result = run_nmap_scan([input_arg], scan_type)
+            run_nmap_scan([input_arg], scan_type, scheduled)
         else:
             print("Invalid input: Please provide a valid single IP or a path to a text file with IPs.")
             sys.exit(1)
 
-        # Handle the results of the scan
-        for key, value in result.items():
-            if value.returncode != 0:
-                print(f"Error in {key} scan: {value.stderr.decode().strip()}")
-            else:
-                print(f"{key.capitalize()} scan completed successfully.")
     except Exception as e:
         print(f"An error occurred: {e}")
         sys.exit(1)
