@@ -105,13 +105,7 @@ def run_nmap():
         schedule_datetime = f"{time_input} {date_input}"
         at_command = f'echo "sudo python3 {nmap_script_path} {ip_input} {scan_type} True" | at {schedule_datetime}'
         try:
-            subprocess.run(at_command, shell=True, check=True)
-            print(f"{BOLD_GREEN}Scan scheduled for {schedule_datetime}.")
-        except subprocess.CalledProcessError as e:
-            print(f"{BOLD_RED}An error occurred while scheduling the scan: {e}")
-
-        try:
-            at_command = f'echo "{command_string}" | at {schedule_datetime}'
+            at_command = f'echo "sudo python3 {nmap_script_path} {ip_input} {scan_type} True" | at {schedule_datetime}'
             subprocess.run(at_command, shell=True, check=True)
             print(f"{BOLD_GREEN}Scan scheduled for {schedule_datetime}.")
         except subprocess.CalledProcessError as e:
