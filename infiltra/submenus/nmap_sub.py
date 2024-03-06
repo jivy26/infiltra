@@ -1,10 +1,26 @@
 import os
 import subprocess
-
+import sys
 import pkg_resources
 
 from infiltra.utils import (is_valid_ip, list_txt_files, read_file_lines, is_valid_domain, clear_screen, write_to_file,
                             BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_WHITE, BOLD_CYAN, BOLD_MAG, DEFAULT_COLOR)
+
+def check_and_install_at():
+    try:
+        # Check if gnome-terminal is installed
+        subprocess.run(["which", "at"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(f"{BOLD_GREEN}at is installed.")
+    except subprocess.CalledProcessError:
+        # gnome-terminal is not installed; proceed with installation
+        print(f"{BOLD_YELLOW}at is not installed. Installing now...")
+        install_command = "sudo apt install at -y"
+        try:
+            subprocess.run(install_command.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+            print(f"{BOLD_GREEN}at installed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"{BOLD_RED}Failed to install at: {e}")
+            sys.exit(1)
 
 
 def run_ngrep(scan_type):
