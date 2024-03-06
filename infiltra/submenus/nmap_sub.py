@@ -32,16 +32,16 @@ def run_ngrep(scan_type):
     output_path = f"{scan_type.lower()}_parsed/"
 
     if os.path.isdir(output_path):
-        overwrite = console.input("The directory [bold cyan]{}[/bold cyan] already exists. Overwrite it? (y/n): ", output_path).strip().lower()
+        overwrite = console.input(f"The directory [bold cyan]{output_path}[/bold cyan] already exists. Overwrite it? (y/n): ").strip().lower()
         if overwrite == 'y':
             subprocess.run(['rm', '-rf', output_path])
         else:
-            console.print(f"Not overwriting the existing directory {output_path}.",  style=RICH_COLOR)
+            console.print(f"Not overwriting the existing directory {output_path}.", style=RICH_COLOR)
             return
 
-    console.print(f"Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans",  style=RICH_GREEN)
+    console.print(f"Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans", style=RICH_GREEN)
     subprocess.run(['bash', ngrep_script_path, output_file, scan_type.upper()])
-    console.input("Press Enter to return to the menu...",  style=RICH_GREEN)
+    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
 
 def get_scheduled_scans_status():
