@@ -49,7 +49,7 @@ def get_scheduled_scans_status():
     # Use 'atq' to list the queued jobs and 'at -c' to inspect a specific job.
     scheduled_scans = subprocess.run(['atq'], capture_output=True, text=True)
     if scheduled_scans.stdout:
-        scan_status = f"{BOLD_GREEN}Upcoming Scans:\n{scheduled_scans.stdout}"
+        scan_status = f"{BOLD_GREEN}Upcoming Scans:\n\n{scheduled_scans.stdout}"
     else:
         scan_status = f"{BOLD_YELLOW}No upcoming scans are scheduled."
     return scan_status
@@ -128,7 +128,7 @@ def run_nmap():
 
         print(f"\n{BOLD_GREEN}Nmap {scan_type} scan launched.")
     elif action == 'later':
-        date_input = input(f"{BOLD_GREEN}Enter date for the scan (dd/mm/yyyy): {BOLD_WHITE}").strip()
+        date_input = input(f"{BOLD_GREEN}Enter date for the scan (mm/dd/yyyy): {BOLD_WHITE}").strip()
         time_input = input(f"{BOLD_GREEN}Enter time in military time (HHMM, e.g., 1600 for 4pm): {BOLD_WHITE}").strip()
 
         # Ensure time is properly formatted for the `at` command
@@ -164,7 +164,7 @@ def nmap_submenu(project_path):
         print(scheduled_scans_status)
         print(f"{BOLD_CYAN}========================================================\n")
         menu_options = [
-            ("1. Run Scans", f"{DEFAULT_COLOR}Run TCP and/or UDP Scans."),
+            ("1. Run Scans", f"{DEFAULT_COLOR}Run or Schedule TCP and/or UDP Scans."),
             ("2. Cancel Scans", f"{DEFAULT_COLOR}Cancel scheduled scans."),
             ("3. Parse Results", f"{DEFAULT_COLOR}Parse NMAP Results.")
         ]
