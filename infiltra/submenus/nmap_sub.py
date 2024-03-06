@@ -163,7 +163,7 @@ def nmap_submenu(project_path):
 
     while True:
         clear_screen()
-        print("NMAP Menu:\n", style=RICH_CYAN)
+        console.print("NMAP Menu:\n", style=RICH_CYAN)
         print("========================================================")
         # Get the status of scheduled scans
         scheduled_scans_status = get_scheduled_scans_status()
