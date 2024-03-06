@@ -77,7 +77,7 @@ def run_nmap():
         print(f"{BOLD_RED}Invalid option: {action}. Please enter 'now' or 'later'.")
         return
 
-    nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
+    nmap_script_path = pkg_resources.resource_filename('infiltra', 'nmap_scan.py')
     command_string = f"sudo python3 {nmap_script_path} {ip_input} {scan_type}"
 
     if action == 'now':
