@@ -126,6 +126,7 @@ def run_nmap():
 
 def nmap_submenu(project_path):
     clear_screen()
+    check_and_install_at()
 
     while True:
         clear_screen()
