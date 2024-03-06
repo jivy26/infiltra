@@ -132,11 +132,11 @@ def nmap_submenu(project_path):
     while True:
         clear_screen()
         print(f"{BOLD_CYAN}NMAP Menu:\n")
-
-        # Get the status of scheduled scans and display it
+        print(f"{BOLD_CYAN}========================================================")
+        # Get the status of scheduled scans
         scheduled_scans_status = get_scheduled_scans_status()
         print(scheduled_scans_status)
-
+        print(f"{BOLD_CYAN}========================================================")
         menu_options = [
             ("1. Run Scans", f"{DEFAULT_COLOR}Run TCP and/or UDP Scans. {BOLD_YELLOW}(Scheduling Not Working)"),
             ("2. Parse Results", f"{DEFAULT_COLOR}Parse NMAP Results.")
