@@ -45,33 +45,6 @@ def run_ngrep(scan_type):
         f"{BOLD_GREEN}Press Enter to return to the menu...")  # Allow users to see the message before returning to the menu
 
 
-def schedule_scan():
-    clear_screen()
-    print(f"{BOLD_CYAN}Schedule a New Nmap Scan\n")
-
-    # Prompt for date and time
-    date_input = input(f"{BOLD_GREEN}Enter date for the scan (dd/mm/yyyy): {BOLD_WHITE}").strip()
-    time_input = input(f"{BOLD_GREEN}Enter time in military time (HHMM, e.g., 1600 for 4pm): {BOLD_WHITE}").strip()
-
-    # Reuse the logic from run_nmap to select target and scan type
-    # For simplicity, this example directly asks for IP or domain; extend as needed
-    ip_input = input(f"{BOLD_GREEN}Enter the IP address or domain to scan: {BOLD_WHITE}").strip()
-    if not (is_valid_ip(ip_input) or is_valid_domain(ip_input)):
-        print(f"{BOLD_RED}Invalid IP or domain. Returning to menu.")
-        return
-    scan_type = input(f"{BOLD_GREEN}Enter scan type (tcp/udp/both): ").lower()
-
-    # Construct the nmap command string
-    nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
-    command_string = f"sudo python3 {nmap_script_path} {ip_input} {scan_type}"
-
-    # Schedule the command using `at`
-    schedule_datetime = f"{date_input} {time_input}"
-    at_command = f'echo "{command_string}" | at {schedule_datetime}'
-    subprocess.run(at_command, shell=True)
-    print(f"{BOLD_GREEN}Scan scheduled for {schedule_datetime}.")
-
-
 def run_nmap():
     clear_screen()
 
@@ -83,45 +56,52 @@ def run_nmap():
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
-    # Prompt for input: either a file number, a single IP, or 'x' to cancel
-    selection = input(
-        f"{BOLD_GREEN}\nEnter a number to select a file or input a single IP address: {BOLD_WHITE}").strip()
+    selection = input(f"{BOLD_GREEN}\nEnter a number to select a file or input a single IP address or 'x' to cancel: {BOLD_WHITE}").strip()
 
-    # Check if the input is a digit and within the range of listed files
     if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
-        ip_input = txt_files[int(selection) - 1]  # Use the selected file
+        ip_input = txt_files[int(selection) - 1]
     elif is_valid_ip(selection) or is_valid_domain(selection):
-        ip_input = selection  # Use the entered IP or domain
+        ip_input = selection
     else:
         print(f"{BOLD_RED}Invalid input. Please enter a valid IP address, domain, or selection number.")
         return
 
-    # Ask for the type of scan
-    clear_screen()
-    print(f"{BOLD_GREEN}NMAP Scanner\n")
-    print(f"{BOLD_MAG}NMAP Scans will launch in a separate terminal")
-    print(f"{BOLD_CYAN}TCP: {BOLD_WHITE}nmap -sSV --top-ports 4000 -Pn ")
-    print(f"{BOLD_CYAN}UDP: {BOLD_WHITE}nmap -sU --top-ports 400 -Pn ")
     scan_type = input(f"\n{BOLD_GREEN}Enter scan type (tcp/udp/both): ").lower()
-
-    # Validate scan_type
     if scan_type not in ['tcp', 'udp', 'both']:
         print(f"{BOLD_RED}Invalid scan type: {scan_type}. Please enter 'tcp', 'udp', or 'both'.")
         return
 
-    # Run the nmap scan using the selected file or entered IP/domain
-    nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
-    if scan_type in ['tcp', 'both']:
-        tcp_command_string = f"echo -ne \"\\033]0;NMAP TCP\\007\"; exec sudo python3 {nmap_script_path} {ip_input} tcp"
-        tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
-        subprocess.Popen(tcp_command)
-    if scan_type in ['udp', 'both']:
-        udp_command_string = f"echo -ne \"\\033]0;NMAP UDP\\007\"; exec sudo python3 {nmap_script_path} {ip_input} udp"
-        udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
-        subprocess.Popen(udp_command)
+    # Decide whether to run now or schedule
+    action = input(f"\n{BOLD_GREEN}Do you want to run the scan now or schedule it for later? (now/later): ").lower()
+    if action not in ['now', 'later']:
+        print(f"{BOLD_RED}Invalid option: {action}. Please enter 'now' or 'later'.")
+        return
 
-    print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched.")
+    nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
+    command_string = f"sudo python3 {nmap_script_path} {ip_input} {scan_type}"
+
+    if action == 'now':
+        if scan_type in ['tcp', 'both']:
+            tcp_command_string = f"echo -ne \"\\033]0;NMAP TCP\\007\"; exec {command_string} tcp"
+            tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
+            subprocess.Popen(tcp_command)
+        if scan_type in ['udp', 'both']:
+            udp_command_string = f"echo -ne \"\\033]0;NMAP UDP\\007\"; exec {command_string} udp"
+            udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
+            subprocess.Popen(udp_command)
+
+        print(f"\n{BOLD_GREEN}Nmap {scan_type} scan launched.")
+    elif action == 'later':
+        date_input = input(f"{BOLD_GREEN}Enter date for the scan (dd/mm/yyyy): {BOLD_WHITE}").strip()
+        time_input = input(f"{BOLD_GREEN}Enter time in military time (HHMM, e.g., 1600 for 4pm): {BOLD_WHITE}").strip()
+        schedule_datetime = f"{date_input} {time_input}"
+
+        at_command = f'echo "{command_string}" | at {schedule_datetime}'
+        subprocess.run(at_command, shell=True)
+        print(f"{BOLD_GREEN}Scan scheduled for {schedule_datetime}.")
+
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
+
 
 
 def nmap_submenu(project_path):
@@ -134,8 +114,7 @@ def nmap_submenu(project_path):
 
         menu_options = [
             ("1. Run Scans", f"{DEFAULT_COLOR}Run TCP and/or UDP Scans."),
-            ("2. Schedule Scans", f"{DEFAULT_COLOR}Schedule a Future NMAP Scan."),
-            ("3. Parse Results", f"{DEFAULT_COLOR}Parse NMAP Results.")
+            ("2. Parse Results", f"{DEFAULT_COLOR}Parse NMAP Results.")
         ]
 
         for option, description in menu_options:
@@ -149,8 +128,6 @@ def nmap_submenu(project_path):
         if choice == '1':
             run_nmap()
         elif choice == '2':
-            schedule_scan()
-        elif choice == '3':
             clear_screen()
             print(f"{BOLD_CYAN}NMAP Results Parser\n")
             scan_type = input(f"{BOLD_GREEN}Enter the scan type that you want to parse (TCP/UDP): ").upper()
