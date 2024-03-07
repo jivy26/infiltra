@@ -39,8 +39,9 @@ RICH_MAG = Style(color="magenta", bold=True)
 RICH_YELLOW = Style(color="yellow", bold=True)
 RICH_WHITE = Style(color="white", bold=True)
 line_spacer_style = Style(bgcolor="#2e2e2e")
-header_style = Style(color="#546E7A")
-interactive_element_style = Style(color="#bd10e0")
+header_style = Style(color="#C0C0C0")
+interactive_element_style = Style(color="#1FA2FF")
+
 
 def clear_screen():
     if os.name == 'nt':
