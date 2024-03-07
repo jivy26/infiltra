@@ -32,7 +32,7 @@ from infiltra.updater import check_and_update
 from infiltra.utils import (is_valid_ip,  get_version, list_txt_files, read_file_lines,
                             clear_screen, run_subprocess, check_run_indicator, BOLD_RED,
                             BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_WHITE, BOLD_CYAN, BOLD_MAG, DEFAULT_COLOR,
-                            console, line_spacer_style, header_style)
+                            console, Text, line_spacer_style, interactive_element_style, header_style)
 from infiltra.submenus.web_enum_sub import website_enumeration_submenu
 from infiltra.submenus.osint_sub import osint_submenu
 from infiltra.sshaudit import main as run_sshaudit
@@ -215,7 +215,7 @@ def display_menu(version, project_path, ascii_art):
     print(f"{BOLD_YELLOW}            Author: @jivy26\n")
 
     current_directory = project_path if project_path else os.getcwd()
-    print(f"{BOLD_GREEN}        Current Directory: {current_directory}\n")
+    print(f"{BOLD_GREEN}          Current Directory: {current_directory}\n")
     console.print("\n────────────────────────────────────────────────────────────────────────────────\n", style=line_spacer_style)
 
     menu_options = [
@@ -239,7 +239,8 @@ def display_menu(version, project_path, ascii_art):
     print(f"\n{BOLD_BLUE}Legend:")
     print(f"{BOLD_GREEN}✓{DEFAULT_COLOR} indicates a menu item has been run for the current project.")
 
-    choice = input(f"\n{BOLD_GREEN}Enter your choice: ").lower()
+    choice_text = Text("Enter your choice: ", style=interactive_element_style)
+    choice = console.input(choice_text).lower()
     return choice
 
 

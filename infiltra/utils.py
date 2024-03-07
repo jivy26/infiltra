@@ -40,6 +40,7 @@ RICH_YELLOW = Style(color="yellow", bold=True)
 RICH_WHITE = Style(color="white", bold=True)
 line_spacer_style = Style(bgcolor="#2e2e2e")
 header_style = Style(color="#4a90e2")
+interactive_element_style = Style(color="#bd10e0")
 
 def clear_screen():
     if os.name == 'nt':
