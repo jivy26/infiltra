@@ -30,8 +30,9 @@ from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import (is_valid_ip,  get_version, list_txt_files, read_file_lines,
-                            is_valid_domain, clear_screen, run_subprocess, check_run_indicator, BOLD_RED,
-                            BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_WHITE, BOLD_CYAN, BOLD_MAG, DEFAULT_COLOR)
+                            clear_screen, run_subprocess, check_run_indicator, BOLD_RED,
+                            BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE, BOLD_WHITE, BOLD_CYAN, BOLD_MAG, DEFAULT_COLOR,
+                            console, line_spacer_style)
 from infiltra.submenus.web_enum_sub import website_enumeration_submenu
 from infiltra.submenus.osint_sub import osint_submenu
 from infiltra.sshaudit import main as run_sshaudit
@@ -205,14 +206,14 @@ def display_menu(version, project_path, ascii_art):
     sslscan_ran = check_run_indicator(os.path.join(project_path, 'sslscan.txt'))
 
     print(ascii_art)
-    print(f"{BOLD_CYAN}========================================================")
+    print(f"{BOLD_CYAN}────────────────────────────────────────────────────────────────────────────────")
     update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" \
         if update_available else ""
     print(f"{BOLD_CYAN}                Current Version: v{version}")
     print(f"{BOLD_MAG}{update_msg}")
     print(f"{BOLD_YELLOW}            https://github.com/jivy26/infiltra")
     print(f"{BOLD_YELLOW}            Author: @jivy26")
-    print(f"{BOLD_CYAN}========================================================\n")
+    console.print("────────────────────────────────────────────────────────────────────────────────\n", style=line_spacer_style)
 
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_GREEN}Current Directory: {current_directory}\n")

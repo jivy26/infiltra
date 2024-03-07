@@ -38,7 +38,7 @@ RICH_RED = Style(color="red", bold=True)
 RICH_MAG = Style(color="magenta", bold=True)
 RICH_YELLOW = Style(color="yellow", bold=True)
 RICH_WHITE = Style(color="white", bold=True)
-
+line_spacer_style = Style(bgcolor="#2e2e2e")
 
 def clear_screen():
     if os.name == 'nt':
