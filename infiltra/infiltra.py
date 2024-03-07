@@ -215,7 +215,7 @@ def display_menu(version, project_path, ascii_art):
     print(f"{BOLD_YELLOW}            Author: @jivy26\n")
 
     current_directory = project_path if project_path else os.getcwd()
-    print(f"{BOLD_GREEN}Current Directory: {current_directory}\n")
+    print(f"{BOLD_GREEN}        Current Directory: {current_directory}\n")
     console.print("\n────────────────────────────────────────────────────────────────────────────────\n", style=line_spacer_style)
 
     menu_options = [
