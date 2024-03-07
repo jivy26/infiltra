@@ -212,13 +212,12 @@ def display_menu(version, project_path, ascii_art):
     console.print(f"                Current Version: v{version}", style=header_style)
     print(f"{BOLD_MAG}{update_msg}")
     print(f"{BOLD_YELLOW}            https://github.com/jivy26/infiltra")
-    print(f"{BOLD_YELLOW}            Author: @jivy26")
-    console.print("\n────────────────────────────────────────────────────────────────────────────────\n", style=line_spacer_style)
+    print(f"{BOLD_YELLOW}            Author: @jivy26\n")
 
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_GREEN}Current Directory: {current_directory}\n")
-
     console.print("\n────────────────────────────────────────────────────────────────────────────────\n", style=line_spacer_style)
+
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
         ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results. {BOLD_GREEN}{whois_ran}"),
