@@ -218,8 +218,7 @@ def display_menu(version, project_path, ascii_art):
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_GREEN}Current Directory: {current_directory}\n")
 
-    print(f"\n{BOLD_GREEN}Main Menu")
-    print(f"{BOLD_GREEN}========================================================\n")
+    console.print("\n────────────────────────────────────────────────────────────────────────────────\n", style=line_spacer_style)
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
         ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results. {BOLD_GREEN}{whois_ran}"),
