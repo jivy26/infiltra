@@ -239,7 +239,7 @@ def display_menu(version, project_path, ascii_art):
     print(f"\n{BOLD_BLUE}Legend:")
     print(f"{BOLD_GREEN}✓{DEFAULT_COLOR} indicates a menu item has been run for the current project.")
 
-    choice_text = Text("Enter your choice: ", style=interactive_element_style)
+    choice_text = Text("\n\nEnter your choice: ", style=interactive_element_style)
     choice = console.input(choice_text).lower()
     return choice
 
