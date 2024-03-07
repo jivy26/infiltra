@@ -224,7 +224,7 @@ def display_menu(version, project_path, ascii_art):
         ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results. {BOLD_GREEN}{whois_ran}"),
         ("3. ICMP Echo", f"{DEFAULT_COLOR}Ping requests and parse live hosts.  {BOLD_GREEN}{icmp_echo_ran}"),
         ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
-        ("5. NMAP", f"{DEFAULT_COLOR}Run scans and parse results  TCP {BOLD_GREEN}{tcpscan_ran} | UDP {BOLD_GREEN}{udpscan_ran}"),
+        ("5. NMAP", f"{DEFAULT_COLOR}Run scans and parse results  TCP {BOLD_GREEN}{tcpscan_ran} {DEFAULT_COLOR}| UDP {BOLD_GREEN}{udpscan_ran}"),
         ("6. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
         ("7. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)"),
         (f"\n{BOLD_BLUE}Parsers", f"{BOLD_YELLOW}NMAP Parser Moved to NMAP Menu"),
