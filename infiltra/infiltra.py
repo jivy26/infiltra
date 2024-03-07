@@ -221,15 +221,15 @@ def display_menu(version, project_path, ascii_art):
     print(f"{BOLD_GREEN}========================================================\n")
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
-        ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results. {whois_ran}"),
-        ("3. ICMP Echo", f"{DEFAULT_COLOR}Ping requests and parse live hosts.  {icmp_echo_ran}"),
+        ("2. Whois", f"{DEFAULT_COLOR}Perform WHOIS lookups and parse results. {BOLD_GREEN}{whois_ran}"),
+        ("3. ICMP Echo", f"{DEFAULT_COLOR}Ping requests and parse live hosts.  {BOLD_GREEN}{icmp_echo_ran}"),
         ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
-        ("5. NMAP", f"{DEFAULT_COLOR}Run scans and parse results  TCP {tcpscan_ran} | UDP {udpscan_ran}"),
+        ("5. NMAP", f"{DEFAULT_COLOR}Run scans and parse results  TCP {BOLD_GREEN}{tcpscan_ran} | UDP {BOLD_GREEN}{udpscan_ran}"),
         ("6. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
         ("7. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)"),
         (f"\n{BOLD_BLUE}Parsers", f"{BOLD_YELLOW}NMAP Parser Moved to NMAP Menu"),
-        ("8. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {sslscan_ran}"),
-        ("9. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings.  {sslscan_ran}")
+        ("8. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {BOLD_GREEN}{sslscan_ran}"),
+        ("9. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings.")
     ]
 
     for option, description in menu_options:
