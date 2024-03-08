@@ -2,6 +2,7 @@ import subprocess
 import re
 from datetime import datetime
 
+
 def run_fping(hosts_input):
     # Get the current date to include in the filename
     current_date = datetime.now().strftime("%Y-%m-%d")
@@ -9,7 +10,8 @@ def run_fping(hosts_input):
     alive_hosts_filename = "alivehosts.txt"  # File to store alive hosts
 
     # Command to execute fping
-    command = ['fping', '-s', '-c', '1', '-f', hosts_input] if isinstance(hosts_input, str) else ['fping', '-s', '-c', '1'] + hosts_input
+    command = ['fping', '-s', '-c', '1', '-f', hosts_input] if isinstance(hosts_input, str) else ['fping', '-s', '-c',
+                                                                                                  '1'] + hosts_input
 
     # Running the fping command
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
