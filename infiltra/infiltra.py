@@ -25,7 +25,7 @@ import subprocess
 import sys
 import pyfiglet
 
-from infiltra.icmpecho import run_fping
+from icmpecho import run_fping
 from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
@@ -206,7 +206,7 @@ def display_menu(version, project_path, ascii_art):
     sslscan_ran = check_run_indicator(os.path.join(project_path, 'sslscan.txt'))
 
     print(ascii_art)
-    console.print("────────────────────────────────────────────────────────────────────────────────\n", style=line_spacer_style)
+    console.print("─────────────────────────────────────────────────────────────────────────────────────────\n", style=line_spacer_style)
     update_msg = "\n                  Update Available!\n  Please exit and run pip install --upgrade infiltra\n" \
         if update_available else ""
     console.print(f"                Current Version: v{version}", style=header_style)
@@ -216,7 +216,7 @@ def display_menu(version, project_path, ascii_art):
 
     current_directory = project_path if project_path else os.getcwd()
     print(f"{BOLD_GREEN}          Current Directory: {current_directory}\n")
-    console.print("\n────────────────────────────────────────────────────────────────────────────────\n", style=line_spacer_style)
+    console.print("\n─────────────────────────────────────────────────────────────────────────────────────────\n", style=line_spacer_style)
 
     menu_options = [
         ("1. Projects", f"{DEFAULT_COLOR}Create, Load, or Delete Projects"),
