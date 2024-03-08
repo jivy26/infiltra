@@ -25,7 +25,7 @@ import subprocess
 import sys
 import pyfiglet
 
-from icmpecho import run_fping
+from .icmpecho import run_fping
 from infiltra.nuclei import nuclei_main
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
