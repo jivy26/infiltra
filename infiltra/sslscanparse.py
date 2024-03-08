@@ -9,7 +9,7 @@ import re
 import datetime
 import sys
 
-from .utils import BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE
+from infiltra.utils import BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE
 
 
 # Default path to the file containing IP addresses if no command-line argument is provided
