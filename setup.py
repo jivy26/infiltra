@@ -27,6 +27,7 @@ setup(
             '*.sh',
             '*.yaml',
             '*.png',
+            '*.py',
             'venv/*',
             'eyewitness/*',
             'bbot/*',
