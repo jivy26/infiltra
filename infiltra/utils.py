@@ -32,7 +32,7 @@ console = Console()
 # Style definitions using Rich
 RICH_COLOR = Style(color="white")
 RICH_BLUE = Style(color="blue", bold=True)
-RICH_CYAN: Style = Style(color="cyan", bold=True)
+#RICH_CYAN = Style = Style(color="cyan", bold=True)
 RICH_GREEN = Style(color="green", bold=True)
 RICH_RED = Style(color="red", bold=True)
 RICH_MAG = Style(color="magenta", bold=True)
