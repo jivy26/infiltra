@@ -123,7 +123,8 @@ def check_alive_hosts():
 # Function to run sslscan and parse results
 def run_sslscanparse():
     clear_screen()
-    sslscan_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py')
+    sslscan_script_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py'))
+    print(f"Path to sslscanparse.py: {sslscan_script_path}")
 
     # List the available .txt files
     txt_files = list_txt_files(os.getcwd())
