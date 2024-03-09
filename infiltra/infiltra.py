@@ -26,7 +26,7 @@ import sys
 import pyfiglet
 
 from infiltra.icmpecho import run_fping
-from infiltra.nuclei import nuclei_main
+from infiltra.sippts import main as run_sippts
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import (is_valid_ip,  get_version, list_txt_files, read_file_lines,
@@ -113,6 +113,47 @@ def check_alive_hosts():
     clear_screen()
     print(f"\n{BOLD_CYAN}Running FPING\n")
     alive_hosts = run_fping(hosts)
+    print(f"\n{BOLD_GREEN}Alive Hosts:")
+    for host in alive_hosts:
+        print(f"{BOLD_YELLOW}{host}")
+
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
+
+
+def run_voip_tests():
+    clear_screen()
+
+    # List .txt files in the current directory
+    txt_files = list_txt_files(os.getcwd())
+    if txt_files:
+        print(f"{BOLD_GREEN}VoIP Testing Utilizing SIPPTS\n")
+        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
+        for idx, file in enumerate(txt_files, start=1):
+            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
+
+    # Prompt the user for an IP address or a file number
+    selection = input(f"\n{BOLD_GREEN}Enter a number to select a file, or input a single IP address: {BOLD_WHITE}").strip()
+
+    # If user enters a digit within the range of listed files, select the file
+    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
+        file_selected = txt_files[int(selection) - 1]
+        hosts_input = os.path.join(os.getcwd(), file_selected)
+    elif is_valid_ip(selection):
+        hosts_input = selection
+    else:
+        print(f"{BOLD_RED}Invalid input. Please enter a valid IP address or selection number.")
+        return
+
+    # If it's a file, read IPs from it; if it's a single IP, create a list with it
+    if os.path.isfile(hosts_input):
+        hosts = read_file_lines(hosts_input)
+    else:
+        hosts = [hosts_input]
+
+    # Run fping with the list of IPs
+    clear_screen()
+    print(f"\n{BOLD_CYAN}Running SIPPTS\n")
+    alive_hosts = run_sippts(hosts)
     print(f"\n{BOLD_GREEN}Alive Hosts:")
     for host in alive_hosts:
         print(f"{BOLD_YELLOW}{host}")
@@ -243,10 +284,11 @@ def display_menu(version, project_path, ascii_art):
         ("4. OSINT and Black Box OSINT", f"{DEFAULT_COLOR}AORT, DNS Recon, BBOT, and EyeWitness available."),
         ("5. NMAP", f"{DEFAULT_COLOR}Run scans and parse results  TCP {BOLD_GREEN}{tcpscan_ran} {DEFAULT_COLOR}| UDP {BOLD_GREEN}{udpscan_ran}"),
         ("6. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
-        ("7. Vulnerability Scanner", f"{BOLD_YELLOW}(In-Progress)"),
+        ("7. VoIP (SIP) Testing", f"{DEFAULT_COLOR} Run various SIPPTS modules against VoIP devices"),
         (f"\n{BOLD_BLUE}Parsers", f"{BOLD_YELLOW}NMAP Parser Moved to NMAP Menu"),
         ("8. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {BOLD_GREEN}{sslscan_ran}"),
-        ("9. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings.")
+        ("9. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings."),
+        (f"\n\n{BOLD_YELLOW}Vulnerability Scanner", f"{BOLD_RED}(Not Functioning)")
     ]
 
     for option, description in menu_options:
@@ -313,7 +355,7 @@ def main():
             elif choice == '6':
                 website_enumeration_submenu()
             elif choice == '7':
-                nuclei_main()
+                run_sippts()
             elif choice == '8':
                 run_sslscanparse()
             elif choice == '9':
