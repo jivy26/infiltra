@@ -123,40 +123,43 @@ def check_alive_hosts():
 def run_voip_tests():
     clear_screen()
 
-    # List .txt files in the current directory
+    # List the available .txt files
     txt_files = list_txt_files(os.getcwd())
     if txt_files:
-        print(f"{BOLD_GREEN}VoIP Testing Utilizing SIPPTS\n")
+        print(f"{BOLD_GREEN}SSLScanner and Parser\n")
         print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
-    # Prompt the user for an IP address or a file number
-    selection = input(f"\n{BOLD_GREEN}Enter a number to select a file, or input a single IP address: {BOLD_WHITE}").strip()
-
-    # If user enters a digit within the range of listed files, select the file
-    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
-        file_selected = txt_files[int(selection) - 1]
-        hosts_input = os.path.join(os.getcwd(), file_selected)
-    elif is_valid_ip(selection):
-        hosts_input = selection
-    else:
-        print(f"{BOLD_RED}Invalid input. Please enter a valid IP address or selection number.")
-        return
+    # Prompt for input: either a file number or a custom file path
+    selection = input(f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path: {BOLD_WHITE}").strip()
 
     # If it's a file, read IPs from it; if it's a single IP, create a list with it
-    if os.path.isfile(hosts_input):
-        hosts = read_file_lines(hosts_input)
+    if os.path.isfile(selection):
+        hosts = read_file_lines(selection)
     else:
-        hosts = [hosts_input]
+        hosts = [selection]
 
-    # Run fping with the list of IPs
-    clear_screen()
-    print(f"\n{BOLD_CYAN}Running SIPPTS\n")
-    alive_hosts = run_sippts(hosts)
-    print(f"\n{BOLD_GREEN}Alive Hosts:")
-    for host in alive_hosts:
-        print(f"{BOLD_YELLOW}{host}")
+    # Iterate over each host and run the provided SIPPTS commands
+    for ip in hosts:
+        clear_screen()
+        print(f"{BOLD_GREEN}Running VoIP tests on {ip} with SIPPTS")
+
+        # SIPPTS commands based on the provided list
+        sippts_commands = [
+            f'sipscan -i {ip} -r 5060',
+            f'sipenumerate -i {ip} -r 5060',
+            f'sipexten -i {ip} -r 5060 -e 100-150',
+            f'sipinvite -i {ip} -r 5060 -tu 100'
+        ]
+
+        for command in sippts_commands:
+            print(f"{BOLD_CYAN}Executing: {command}")
+            try:
+                # Execute the SIPPTS command
+                subprocess.run(['bash', '-c', command], check=True)
+            except subprocess.CalledProcessError as e:
+                print(f"{BOLD_RED}Failed to execute {command}: {e}")
 
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
