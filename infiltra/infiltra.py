@@ -145,41 +145,53 @@ def run_voip_tests():
     clear_screen()
     txt_files = list_available_files()
 
+    # Check for non-standard ports
+    use_non_standard_port = input(
+        f"{BOLD_GREEN}Are you testing a non-standard port other than 5060? (y/N): {BOLD_WHITE}").strip().lower()
+    if use_non_standard_port == 'y':
+        non_standard_ports = True
+    else:
+        non_standard_ports = False
+
     # If no files are available, return or handle this case appropriately
     if not txt_files:
         print(f"{BOLD_RED}No .txt files available for VoIP testing.")
         return
 
     # Prompt for input: either a file number or a custom file path
-    selection = input(f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path or a single IP address: {BOLD_WHITE}").strip()
+    selection = input(
+        f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path or IP address (with optional port): {BOLD_WHITE}").strip()
 
     # Check if selection is a digit and within the range of listed files
     if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
         input_file = txt_files[int(selection) - 1]  # Use the selected file
     elif os.path.isfile(selection):
         input_file = selection  # The entered string is a path to a file
-    elif is_valid_ip(selection):
-        input_file = selection  # The entered string is a valid IP address
     else:
-        print(f"{BOLD_RED}Invalid input. Please enter a valid selection number, file path, or IP address.")
-        return
+        input_file = selection  # The entered string is either an IP address or IP:port
 
-    # If it's a file, read IPs from it; if it's a single IP, create a list with it
+    # If it's a file, read IPs (and optional ports) from it; otherwise, use the input directly
     if os.path.isfile(input_file):
         hosts = read_file_lines(input_file)
     else:
         hosts = [input_file]
 
     # Iterate over each host and run the provided SIPPTS commands
-    for ip in hosts:
+    for host in hosts:
         clear_screen()
-        print(f"{BOLD_GREEN}Running VoIP tests on {ip} with SIPPTS")
+        ip, port = (host.split(':') + ['5060'])[:2]  # Defaults to 5060 if no port is specified
+        print(f"{BOLD_GREEN}Running VoIP tests on {ip} with SIPPTS (Port: {port})")
 
-        # SIPPTS commands based on the provided list
+        # SIPPTS commands adjusted for custom port
         sippts_commands = [
+            f'sipscan -i {ip} -r {port}',
+            f'sipenumerate -i {ip} -r {port}',
+            f'sipexten -i {ip} -r {port} -e 100-110',
+            f'sipinvite -i {ip} -r {port} -tu 100'
+        ] if non_standard_ports else [
             f'sipscan -i {ip} -r 5060',
             f'sipenumerate -i {ip} -r 5060',
-            f'sipexten -i {ip} -r 5060 -e 100-150',
+            f'sipexten -i {ip} -r 5060 -e 100-110',
             f'sipinvite -i {ip} -r 5060 -tu 100'
         ]
 
