@@ -119,26 +119,56 @@ def check_alive_hosts():
 
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
+# Sippts
 
-def run_voip_tests():
-    clear_screen()
+def list_available_files():
+    udp_parsed_dir = 'udp_parsed/'
+    udp_hosts_file = '5060-udp-hosts.txt'
+    udp_hosts_path = os.path.join(udp_parsed_dir, udp_hosts_file)
 
-    # List the available .txt files
+    # Start by listing .txt files in the current directory
     txt_files = list_txt_files(os.getcwd())
+
+    # Check if udp_parsed/ exists and 5060-udp-hosts.txt is inside it
+    if os.path.isdir(udp_parsed_dir) and os.path.isfile(udp_hosts_path):
+        txt_files.append(udp_hosts_path)  # Add the udp hosts file to the list of available files
+
     if txt_files:
-        print(f"{BOLD_GREEN}SSLScanner and Parser\n")
-        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
+        print(f"{BOLD_GREEN}VoIP Testing Utilizing SIPPTS\n")
+        print(f"{BOLD_CYAN}Available .txt Files:\n")
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
+    return txt_files
+
+def run_voip_tests():
+    clear_screen()
+    txt_files = list_available_files()
+
+    # If no files are available, return or handle this case appropriately
+    if not txt_files:
+        print(f"{BOLD_RED}No .txt files available for VoIP testing.")
+        return
+
     # Prompt for input: either a file number or a custom file path
-    selection = input(f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path: {BOLD_WHITE}").strip()
+    selection = input(f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path or a single IP address: {BOLD_WHITE}").strip()
+
+    # Check if selection is a digit and within the range of listed files
+    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
+        input_file = txt_files[int(selection) - 1]  # Use the selected file
+    elif os.path.isfile(selection):
+        input_file = selection  # The entered string is a path to a file
+    elif is_valid_ip(selection):
+        input_file = selection  # The entered string is a valid IP address
+    else:
+        print(f"{BOLD_RED}Invalid input. Please enter a valid selection number, file path, or IP address.")
+        return
 
     # If it's a file, read IPs from it; if it's a single IP, create a list with it
-    if os.path.isfile(selection):
-        hosts = read_file_lines(selection)
+    if os.path.isfile(input_file):
+        hosts = read_file_lines(input_file)
     else:
-        hosts = [selection]
+        hosts = [input_file]
 
     # Iterate over each host and run the provided SIPPTS commands
     for ip in hosts:
