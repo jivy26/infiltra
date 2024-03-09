@@ -8,41 +8,16 @@ import subprocess
 import re
 import datetime
 import sys
-import os
-import traceback
-
-from infiltra.utils import BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE
-
-
-# Precompiled regex patterns
-ansi_escape_pattern = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
-protocol_enabled_pattern = {proto: re.compile(rf"{proto}\s+(enabled)") for proto in ['SSLv2', 'SSLv3', 'TLSv1.0', 'TLSv1.1']}
-fallback_scsv_pattern = re.compile(r"Server does not support TLS Fallback SCSV")
-session_renegotiation_pattern = re.compile(r"Session renegotiation (supported)")
-cipher_line_pattern = re.compile(r'Accepted\s+\S+\s+(\d+)\s+bits')
-tls_compression_pattern = re.compile(r'TLS Compression:\s+(.*)')
-not_valid_before_pattern = re.compile(r'Not valid before:\s+(.+)')
-not_valid_after_pattern = re.compile(r'Not valid after:\s+(.+)')
-subject_pattern = re.compile(r'Subject:\s+(.*)')
-issuer_pattern = re.compile(r'Issuer:\s+(.*)')
-dhe_pattern = re.compile(r'DHE.*?(\d+) bits')
-rsa_pattern = re.compile(r'RSA Key Strength:\s+(\d+)')
 
 
 # Default path to the file containing IP addresses if no command-line argument is provided
 default_ip_file_path = 'tcp_parsed/https-hosts.txt'  # Define this before using it in the conditional statement below
 
-# Check if the command-line argument was provided for the IP file path
+# Check if a command-line argument was provided for the IP file path
 if len(sys.argv) > 1:
     ip_file_path = sys.argv[1]
-    if not os.path.isfile(ip_file_path) or os.stat(ip_file_path).st_size == 0:
-        print(f"Error: The file '{ip_file_path}' does not exist or is empty.")
-        sys.exit(1)
 else:
     ip_file_path = default_ip_file_path  # Use the default IP file path
-    if not os.path.isfile(ip_file_path) or os.stat(ip_file_path).st_size == 0:
-        print(f"Error: The default file '{ip_file_path}' does not exist or is empty.")
-        sys.exit(1)
 
 # Vulnerability criteria
 vulnerabilities = {
@@ -53,6 +28,14 @@ vulnerabilities = {
     'TLS Fallback Not Enabled': 'Server does not support TLS Fallback SCSV',
     'Insecure Hashing Algorithm': ['MD5', 'SHA-1', 'RC4']
 }
+
+# ANSI Escape Code for Bold Text
+GREEN = '\033[92m'
+BLUE = '\033[34;1m'
+YELLOW = '\033[33;1m'
+MAGENTA = '\033[35;1m'
+BOLD = '\033[1m'
+END = '\033[0m'
 
 
 # Function to open a new terminal window and run sslscan
@@ -65,11 +48,11 @@ def open_new_terminal_and_run_sslscan(target):
 
     # Command to open a new terminal window and run sslscan
     command = f"sslscan --port={port} {ip}"
-    print(f"{BOLD_YELLOW}Launching sslscan for {ip} in a new window...")
+    print(f"{YELLOW}Launching sslscan for {ip} in a new window...{END}")
     subprocess.Popen(['x-terminal-emulator', '-e', f"bash -c '{command}; echo Press enter to close...; read'"])
 
     # Instead of waiting for user input, just log the action
-    print(f"{BOLD_YELLOW}Scan launched for {ip}. Check the new window for results.")
+    print(f"{YELLOW}Scan launched for {ip}. Check the new window for results.{END}")
 
 
 # Function to remove ANSI escape codes
@@ -106,13 +89,13 @@ def ssl_scan(ip):
 
     try:
         result = subprocess.run(['sslscan', ip], capture_output=True, text=True, timeout=60)
-
-        if result.returncode != 0:
-            # Handle the error, maybe log it or print it
-            print(f"sslscan returned a non-zero exit status for {ip}. Error message:\n{result.stderr}")
-            return {f"Error running sslscan on {ip}": [result.stderr]}
-
         output_lines = result.stdout.split('\n')
+
+        # Debug: Print raw output to check for ANSI codes
+        # print("Raw sslscan output:")
+        # print(result.stdout)
+
+        # Variables to store subject and issuer for comparison
         subject = ""
         issuer = ""
 
@@ -255,8 +238,7 @@ def ssl_scan(ip):
 
         return {vuln: lines for vuln, lines in findings.items() if lines}
     except Exception as e:
-        error_traceback = traceback.format_exc()
-        return {f"Error scanning {ip}": [str(e), error_traceback]}
+        return {f"Error scanning {ip}": [str(e)]}
 
 
 # Read IPs from file and run sslscan, output to sslscan.txt
@@ -269,57 +251,18 @@ with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
             tls_fallback_scsv_found = False
 
             output_file.write(f"\n\n=============[Scanning {ip}]=============\n")
-            print(f"\n\n{BOLD_BLUE}=============[{BOLD_GREEN}Scanning {ip}{BOLD_BLUE}]=============", flush=True)
+            print(f"\n\n{BLUE}=============[{END}{GREEN}Scanning {ip}{END}{BLUE}]============={END}", flush=True)
             scan_results = ssl_scan(ip)
             if scan_results:
                 for vuln, lines in scan_results.items():
                     output_file.write(f"\n- {vuln} Found on {ip}\n\n")
                     output_file.writelines('\n'.join(lines) + '\n')
-                    print(f"\n{BOLD_GREEN}- {vuln} Found on {ip}\n", flush=True)
+                    print(f"\n{GREEN}{BOLD}- {vuln} Found on {ip}{END}\n", flush=True)
                     for line in lines:
                         print(line)
             else:
                 # No findings, so automatically open sslscan in a new window
                 output_file.write(f"\nNo findings for {ip}, automatically loading a window to run scans for a screenshot.\n")
-                print(f"\n{BOLD_YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.", flush=True)
+                print(f"\n{YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.{END}", flush=True)
                 open_new_terminal_and_run_sslscan(ip)
                 # Pause the script to allow the user to take a screenshot
-
-# This is the main execution block that will only run if sslscanparse.py is executed as a script
-if __name__ == "__main__":
-    # Check if the command-line argument was provided for the IP file path
-    if len(sys.argv) > 1:
-        ip_file_path = sys.argv[1]
-        if not os.path.isfile(ip_file_path) or os.stat(ip_file_path).st_size == 0:
-            print(f"Error: The file '{ip_file_path}' does not exist or is empty.")
-            sys.exit(1)
-    else:
-        ip_file_path = default_ip_file_path  # Use the default IP file path
-        if not os.path.isfile(ip_file_path) or os.stat(ip_file_path).st_size == 0:
-            print(f"Error: The default file '{ip_file_path}' does not exist or is empty.")
-            sys.exit(1)
-
-    # Read IPs from file and run sslscan, output to sslscan.txt
-    with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
-        for ip in file:
-            ip = ip.strip()
-            if ip:
-                # Initialize (or reset) the flag for each IP address before processing it
-                self_signed_found = False
-                tls_fallback_scsv_found = False
-
-                output_file.write(f"\n\n=============[Scanning {ip}]=============\n")
-                print(f"\n\n{BOLD_BLUE}=============[{BOLD_GREEN}Scanning {ip}{BOLD_BLUE}]=============")
-                scan_results = ssl_scan(ip)
-                if scan_results:
-                    for vuln, lines in scan_results.items():
-                        output_file.write(f"\n- {vuln} Found on {ip}\n\n")
-                        output_file.writelines('\n'.join(lines) + '\n')
-                        print(f"\n{BOLD_GREEN}- {vuln} Found on {ip}\n")
-                        for line in lines:
-                            print(line)
-                else:
-                    # No findings, so automatically open sslscan in a new window
-                    output_file.write(f"\nNo findings for {ip}, automatically loading a window to run scans for a screenshot.\n")
-                    print(f"\n{BOLD_YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.")
-                    open_new_terminal_and_run_sslscan(ip)
