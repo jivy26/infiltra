@@ -186,12 +186,25 @@ def run_voip_tests():
         for command in sippts_commands:
             print(f"{BOLD_CYAN}Executing: {command}")
             try:
-                # Execute the SIPPTS command
-                subprocess.run(['bash', '-c', command], check=True)
+                # Run the command and capture the output
+                result = subprocess.run(['bash', '-c', command], check=True, stdout=subprocess.PIPE,
+                                        stderr=subprocess.PIPE, text=True)
+                output = result.stdout
+
+                # Exclude unwanted output from the results
+                filtered_output = '\n'.join(filter(lambda line: not line.startswith('☎'), output.splitlines()))
+
+                print(filtered_output)
+
             except subprocess.CalledProcessError as e:
                 print(f"{BOLD_RED}Failed to execute {command}: {e}")
+            # Wait for the user to press Enter to continue
+            input(f"{BOLD_GREEN}Press Enter to continue to the next command...")
 
-    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
+        # Optional: Wait after all commands for an IP have been run
+        input(f"{BOLD_GREEN}Finished with IP {ip}. Press Enter to continue to the next IP...")
+
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu")
 
 
 # Function to run sslscan and parse results
