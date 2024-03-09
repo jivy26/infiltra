@@ -80,14 +80,15 @@ def check_and_install_sippts():
         subprocess.run(["which", "sipscan"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print(f"{BOLD_GREEN}sippts is installed.")
     except subprocess.CalledProcessError:
+        home_dir = os.path.expanduser('~')  # Get the path to the home directory
+        sippts_dir = os.path.join(home_dir, 'sippts')  # Set the path for sippts directory
         print(f"{BOLD_YELLOW}sippts is not installed. Installing now...")
         try:
-            # Clone the repository
-            subprocess.run(["git", "clone", "https://github.com/Pepelux/sippts.git"], check=True)
+            subprocess.run(["git", "clone", "https://github.com/Pepelux/sippts.git", sippts_dir], check=True)
             # Install using pip
-            subprocess.run(["pip", "install", "./sippts"], cwd="sippts", check=True)
-            # Remove the directory after installation
-            subprocess.run(["rm", "-R", "sippts"], check=True)
+            subprocess.run(["pip", "install", "."], cwd=sippts_dir, check=True)
+            # Optionally, remove the directory after installation if you wish
+            subprocess.run(["rm", "-Rf", sippts_dir], check=True)
             print(f"{BOLD_GREEN}sippts installed successfully.")
         except subprocess.CalledProcessError as e:
             print(f"{BOLD_RED}Failed to install sippts: {e}")
