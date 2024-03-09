@@ -284,3 +284,42 @@ with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
                 print(f"\n{BOLD_YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.", flush=True)
                 open_new_terminal_and_run_sslscan(ip)
                 # Pause the script to allow the user to take a screenshot
+
+# This is the main execution block that will only run if sslscanparse.py is executed as a script
+if __name__ == "__main__":
+    # Check if the command-line argument was provided for the IP file path
+    if len(sys.argv) > 1:
+        ip_file_path = sys.argv[1]
+        if not os.path.isfile(ip_file_path) or os.stat(ip_file_path).st_size == 0:
+            print(f"Error: The file '{ip_file_path}' does not exist or is empty.")
+            sys.exit(1)
+    else:
+        ip_file_path = default_ip_file_path  # Use the default IP file path
+        if not os.path.isfile(ip_file_path) or os.stat(ip_file_path).st_size == 0:
+            print(f"Error: The default file '{ip_file_path}' does not exist or is empty.")
+            sys.exit(1)
+
+    # Read IPs from file and run sslscan, output to sslscan.txt
+    with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
+        for ip in file:
+            ip = ip.strip()
+            if ip:
+                # Initialize (or reset) the flag for each IP address before processing it
+                self_signed_found = False
+                tls_fallback_scsv_found = False
+
+                output_file.write(f"\n\n=============[Scanning {ip}]=============\n")
+                print(f"\n\n{BOLD_BLUE}=============[{BOLD_GREEN}Scanning {ip}{BOLD_BLUE}]=============")
+                scan_results = ssl_scan(ip)
+                if scan_results:
+                    for vuln, lines in scan_results.items():
+                        output_file.write(f"\n- {vuln} Found on {ip}\n\n")
+                        output_file.writelines('\n'.join(lines) + '\n')
+                        print(f"\n{BOLD_GREEN}- {vuln} Found on {ip}\n")
+                        for line in lines:
+                            print(line)
+                else:
+                    # No findings, so automatically open sslscan in a new window
+                    output_file.write(f"\nNo findings for {ip}, automatically loading a window to run scans for a screenshot.\n")
+                    print(f"\n{BOLD_YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.")
+                    open_new_terminal_and_run_sslscan(ip)
