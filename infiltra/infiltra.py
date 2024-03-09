@@ -198,8 +198,6 @@ def run_voip_tests():
 
             except subprocess.CalledProcessError as e:
                 print(f"{BOLD_RED}Failed to execute {command}: {e}")
-            # Wait for the user to press Enter to continue
-            input(f"{BOLD_GREEN}Press Enter to continue to the next command...")
 
         # Optional: Wait after all commands for an IP have been run
         input(f"{BOLD_GREEN}Finished with IP {ip}. Press Enter to continue to the next IP...")
