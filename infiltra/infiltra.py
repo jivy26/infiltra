@@ -146,17 +146,30 @@ def run_voip_tests():
     txt_files = list_available_files()
 
     # Check for non-standard ports
-    use_non_standard_port = input(
-        f"{BOLD_GREEN}Are you testing a non-standard port other than 5060? (y/N): {BOLD_WHITE}").strip().lower()
-    if use_non_standard_port == 'y':
-        non_standard_ports = True
-    else:
-        non_standard_ports = False
+    use_non_standard_port = input(f"{BOLD_GREEN}Are you testing a non-standard port other than 5060? (y/N): {BOLD_WHITE}").strip().lower()
+    non_standard_ports = use_non_standard_port == 'y'
 
-    # If no files are available, return or handle this case appropriately
-    if not txt_files:
-        print(f"{BOLD_RED}No .txt files available for VoIP testing.")
-        return
+    hosts = []
+    if non_standard_ports:
+        print(f"{BOLD_GREEN}Enter IP addresses with the non-standard port (format IP:port), one per line. Press Ctrl+D when done:")
+        while True:
+            try:
+                line = input()
+                if ":" not in line:
+                    print(f"{BOLD_RED}Invalid input. Please enter the data in 'IP:port' format.")
+                    continue
+                ip, port = line.split(":", 1)
+                if not is_valid_ip(ip) or not port.isdigit():
+                    print(f"{BOLD_RED}Invalid IP or port. Please enter a valid IP address and port.")
+                    continue
+                hosts.append(line)
+            except EOFError:
+                break  # Ctrl+D pressed, stop reading input
+    else:
+        # If no files are available and not using non-standard port, return
+        if not txt_files:
+            print(f"{BOLD_RED}No .txt files available for VoIP testing.")
+            return
 
     # Prompt for input: either a file number or a custom file path
     selection = input(
