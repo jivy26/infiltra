@@ -121,12 +121,31 @@ def check_alive_hosts():
 
 
 # Function to run sslscan and parse results
-# Function to run sslscan and parse results
 def run_sslscanparse():
     clear_screen()
     sslscan_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py')
 
-    # Rest of your existing code...
+    # List the available .txt files
+    txt_files = list_txt_files(os.getcwd())
+    if txt_files:
+        print(f"{BOLD_GREEN}SSLScanner and Parser\n")
+        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
+        for idx, file in enumerate(txt_files, start=1):
+            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
+
+    # Prompt for input: either a file number or a custom file path
+    selection = input(f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path: {BOLD_WHITE}").strip()
+
+    # Check if the input is a digit and within the range of listed files
+    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
+        input_file = os.path.join(os.getcwd(), txt_files[int(selection) - 1])  # Use the selected file
+    else:
+        input_file = selection  # Assume the entered string is a custom file path
+
+    # Validate that the file exists
+    if not os.path.isfile(input_file):
+        print(f"{BOLD_RED}File does not exist: {input_file}")
+        return
 
     # Run the sslscanparse script
     clear_screen()
