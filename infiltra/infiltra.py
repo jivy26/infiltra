@@ -121,47 +121,43 @@ def check_alive_hosts():
 
 
 # Function to run sslscan and parse results
+# Function to run sslscan and parse results
 def run_sslscanparse():
     clear_screen()
     sslscan_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py')
 
-    # List the available .txt files
-    txt_files = list_txt_files(os.getcwd())
-    if txt_files:
-        print(f"{BOLD_GREEN}SSLScanner and Parser\n")
-        print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
-        for idx, file in enumerate(txt_files, start=1):
-            print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
-
-    # Prompt for input: either a file number or a custom file path
-    selection = input(f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path: {BOLD_WHITE}").strip()
-
-    # Check if the input is a digit and within the range of listed files
-    if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
-        input_file = os.path.join(os.getcwd(), txt_files[int(selection) - 1])  # Use the selected file
-    else:
-        input_file = selection  # Assume the entered string is a custom file path
-
-    # Validate that the file exists
-    if not os.path.isfile(input_file):
-        print(f"{BOLD_RED}File does not exist: {input_file}")
-        return
+    # Rest of your existing code...
 
     # Run the sslscanparse script
     clear_screen()
     print(f"\n{BOLD_GREEN}Running sslscanparse.py on {input_file}")
-    with subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True) as process:
-        try:
-            # Output each line as it's generated
-            for line in process.stdout:
-                print(line, end='')  # stdout is already newline-terminated
-            process.wait()
-            # After the process ends, check for any remaining stderr output
-            stderr_output = process.stderr.read()
-            if stderr_output:
-                print(f"{BOLD_RED}Error:\n{stderr_output}")
-        except Exception as e:
-            print(f"{BOLD_RED}An error occurred: {e}")
+
+    # Start the process
+    process = subprocess.Popen(['python3', sslscan_script_path, input_file], stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE, text=True)
+
+    # Try to capture output and error messages
+    try:
+        stdout, stderr = process.communicate(timeout=120)  # Set a timeout for the operation
+    except subprocess.TimeoutExpired:
+        process.kill()
+        stdout, stderr = process.communicate()  # Get what was output before killing
+        print(f"{BOLD_RED}Process timed out. Partial output:\n{stdout}")
+        print(f"{BOLD_RED}Partial errors:\n{stderr}")
+        return
+    except Exception as e:
+        print(f"{BOLD_RED}An error occurred while running sslscanparse.py: {e}")
+        return
+
+    # Print stdout and stderr
+    print(f"{BOLD_GREEN}Output:\n{stdout}")
+    if stderr:
+        print(f"{BOLD_RED}Error:\n{stderr}")
+
+    # Check return code
+    if process.returncode != 0:
+        print(
+            f"{BOLD_RED}sslscanparse.py exited with a non-zero status. There might be issues with the script or the environment.")
 
     input(f"\n\n{BOLD_BLUE}Press Enter to return to the menu....")
 
