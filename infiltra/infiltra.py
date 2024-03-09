@@ -26,7 +26,6 @@ import sys
 import pyfiglet
 
 from infiltra.icmpecho import run_fping
-from infiltra.sippts import main as run_sippts
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
 from infiltra.utils import (is_valid_ip,  get_version, list_txt_files, read_file_lines,
@@ -38,8 +37,6 @@ from infiltra.submenus.osint_sub import osint_submenu
 from infiltra.sshaudit import main as run_sshaudit
 from infiltra.submenus.nmap_sub import nmap_submenu
 
-
-# Utility Functions, Need to integrate into utils.py
 
 # Ensure libnotify-bin is installed for notify-send to work
 subprocess.run(["sudo", "apt-get", "install", "-y", "libnotify-bin"], check=True)
@@ -75,6 +72,25 @@ def check_and_install_eyewitness():
             print(f"{BOLD_GREEN}eyewitness installed successfully.")
         except subprocess.CalledProcessError as e:
             print(f"{BOLD_RED}Failed to install eyewitness: {e}")
+            sys.exit(1)
+
+
+def check_and_install_sippts():
+    try:
+        subprocess.run(["which", "sipscan"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        print(f"{BOLD_GREEN}sippts is installed.")
+    except subprocess.CalledProcessError:
+        print(f"{BOLD_YELLOW}sippts is not installed. Installing now...")
+        try:
+            # Clone the repository
+            subprocess.run(["git", "clone", "https://github.com/Pepelux/sippts.git"], check=True)
+            # Install using pip
+            subprocess.run(["pip", "install", "./sippts"], cwd="sippts", check=True)
+            # Remove the directory after installation
+            subprocess.run(["rm", "-R", "sippts"], check=True)
+            print(f"{BOLD_GREEN}sippts installed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"{BOLD_RED}Failed to install sippts: {e}")
             sys.exit(1)
 
 
