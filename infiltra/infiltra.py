@@ -125,6 +125,7 @@ def run_sslscanparse():
     clear_screen()
     sslscan_script_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py'))
     print(f"Path to sslscanparse.py: {sslscan_script_path}")
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
     # List the available .txt files
     txt_files = list_txt_files(os.getcwd())
