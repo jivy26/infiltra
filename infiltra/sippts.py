@@ -24,7 +24,6 @@ def run_sippts_commands_for_host(ip):
     output_dir = 'voip'
     os.makedirs(output_dir, exist_ok=True)
 
-    # Placeholder for actual SIPPTS commands. Replace '<command_here>' with actual commands.
     sippts_commands = [
         f'sipscan -i {ip} -r 5060',
         f'sipenumerate -i {ip} r 5060',

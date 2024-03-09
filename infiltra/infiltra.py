@@ -355,7 +355,7 @@ def main():
             elif choice == '6':
                 website_enumeration_submenu()
             elif choice == '7':
-                run_sippts()
+                run_voip_tests()
             elif choice == '8':
                 run_sslscanparse()
             elif choice == '9':
