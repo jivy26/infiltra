@@ -8,18 +8,41 @@ import subprocess
 import re
 import datetime
 import sys
+import os
+import traceback
 
 from infiltra.utils import BOLD_GREEN, BOLD_YELLOW, BOLD_BLUE
+
+
+# Precompiled regex patterns
+ansi_escape_pattern = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
+protocol_enabled_pattern = {proto: re.compile(rf"{proto}\s+(enabled)") for proto in ['SSLv2', 'SSLv3', 'TLSv1.0', 'TLSv1.1']}
+fallback_scsv_pattern = re.compile(r"Server does not support TLS Fallback SCSV")
+session_renegotiation_pattern = re.compile(r"Session renegotiation (supported)")
+cipher_line_pattern = re.compile(r'Accepted\s+\S+\s+(\d+)\s+bits')
+tls_compression_pattern = re.compile(r'TLS Compression:\s+(.*)')
+not_valid_before_pattern = re.compile(r'Not valid before:\s+(.+)')
+not_valid_after_pattern = re.compile(r'Not valid after:\s+(.+)')
+subject_pattern = re.compile(r'Subject:\s+(.*)')
+issuer_pattern = re.compile(r'Issuer:\s+(.*)')
+dhe_pattern = re.compile(r'DHE.*?(\d+) bits')
+rsa_pattern = re.compile(r'RSA Key Strength:\s+(\d+)')
 
 
 # Default path to the file containing IP addresses if no command-line argument is provided
 default_ip_file_path = 'tcp_parsed/https-hosts.txt'  # Define this before using it in the conditional statement below
 
-# Check if a command-line argument was provided for the IP file path
+# Check if the command-line argument was provided for the IP file path
 if len(sys.argv) > 1:
     ip_file_path = sys.argv[1]
+    if not os.path.isfile(ip_file_path) or os.stat(ip_file_path).st_size == 0:
+        print(f"Error: The file '{ip_file_path}' does not exist or is empty.")
+        sys.exit(1)
 else:
     ip_file_path = default_ip_file_path  # Use the default IP file path
+    if not os.path.isfile(ip_file_path) or os.stat(ip_file_path).st_size == 0:
+        print(f"Error: The default file '{ip_file_path}' does not exist or is empty.")
+        sys.exit(1)
 
 # Vulnerability criteria
 vulnerabilities = {
@@ -83,13 +106,13 @@ def ssl_scan(ip):
 
     try:
         result = subprocess.run(['sslscan', ip], capture_output=True, text=True, timeout=60)
+
+        if result.returncode != 0:
+            # Handle the error, maybe log it or print it
+            print(f"sslscan returned a non-zero exit status for {ip}. Error message:\n{result.stderr}")
+            return {f"Error running sslscan on {ip}": [result.stderr]}
+
         output_lines = result.stdout.split('\n')
-
-        # Debug: Print raw output to check for ANSI codes
-        # print("Raw sslscan output:")
-        # print(result.stdout)
-
-        # Variables to store subject and issuer for comparison
         subject = ""
         issuer = ""
 
@@ -232,7 +255,8 @@ def ssl_scan(ip):
 
         return {vuln: lines for vuln, lines in findings.items() if lines}
     except Exception as e:
-        return {f"Error scanning {ip}": [str(e)]}
+        error_traceback = traceback.format_exc()
+        return {f"Error scanning {ip}": [str(e), error_traceback]}
 
 
 # Read IPs from file and run sslscan, output to sslscan.txt
