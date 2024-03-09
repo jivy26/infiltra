@@ -389,6 +389,7 @@ def main():
     clear_screen()
     check_and_install_gnome_terminal()
     check_and_install_eyewitness()
+    check_and_install_sippts()
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
