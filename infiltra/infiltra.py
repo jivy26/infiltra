@@ -192,7 +192,7 @@ def run_voip_tests():
 
 
 def run_ntp():
-    msf_password = "kali"
+    msf_password = "kali"  #
     clear_screen()
     project_cwd = os.getcwd()  # Get current working directory for the project
     ntp_dir = os.path.join(project_cwd, 'ntp')
@@ -211,8 +211,7 @@ def run_ntp():
 
     # Call ntp.py functions with the list of hosts
     run_ntpq(hosts, ntp_dir)
-
-    run_ntp_fuzzer(hosts, ntp_dir, msf_password)
+    run_ntp_fuzzer(hosts, ntp_dir, msf_password)  # Pass the password to the fuzzer function
 
     print(f"{BOLD_GREEN}NTP analysis completed. Results saved to {ntp_dir}/ntpq.txt and {ntp_dir}/ntp_fuzzer.txt")
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")

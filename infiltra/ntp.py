@@ -52,34 +52,26 @@ def run_ntpq(hosts, output_dir):
 
 
 def run_ntp_fuzzer(hosts, output_dir, password):
-    output_file = os.path.join(output_dir, 'ntp_fuzzer.txt')
+    client = MsfRpcClient(password, ssl=True)  # Make sure to set ssl=True if msfrpcd is running with SSL
+    console_id = client.consoles.console().cid  # Create a new console and get its ID
 
-    # Connect to the Metasploit RPC server
-    client = MsfRpcClient(password, port=55553)
+    for host in hosts:
+        # Run the fuzzer for each host
+        client.consoles.console(console_id).write('use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer\n')
+        client.consoles.console(console_id).write(f'set RHOSTS {host}\n')
+        client.consoles.console(console_id).write('set VERBOSE true\n')
+        client.consoles.console(console_id).write('run\n')
 
-    with open(output_file, 'w') as file:
-        for host in hosts:
-            try:
-                # Create a new console
-                console_id = client.consoles.console()
-                # Write commands to the console
-                console.write('use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer\n')
-                console.write('set RHOSTS {}\n'.format(host))
-                console.write('set VERBOSE true\n')
-                console.write('run\n')
+        # Allow some time for the command to execute, may require tuning
+        time.sleep(5)
 
-                # Wait for the job to finish, this is just an example, may need to adjust the timing
-                time.sleep(5)  # Give some time for the command to run
-                # Read console output
-                result = client.consoles.console(console_id).read()
+        # Read the output
+        output = client.consoles.console(console_id).read()['data']
+        print(output)  # Print to the console
 
-                file.write(f"Fuzzer results for {host}:\n{result['data']}\n\n")
-                print(f"Fuzzer results for {host}:\n{result['data']}\n")
+        # Save the output to a file
+        with open(f"{output_dir}/ntp_fuzzer_{host}.txt", 'w') as file:
+            file.write(output)
 
-                # Destroy the console when done
-                client.consoles.console(console_id).destroy()
-
-            except Exception as e:
-                error_msg = f"Failed to run NTP fuzzer for {host}: {e}\n\n"
-                print(error_msg)  # Print to the console
-                file.write(error_msg)  # Write to the file
+        # Clean up the console, if you are done with it
+        client.consoles.console(console_id).destroy()
