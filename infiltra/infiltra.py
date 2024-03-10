@@ -242,7 +242,7 @@ def run_voip_tests():
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu")
 
 
-def handle_ntp_menu():
+def run_ntp():
     clear_screen()
     project_cwd = os.getcwd()  # Get current working directory for the project
     ntp_dir = os.path.join(project_cwd, 'ntp')
@@ -392,9 +392,10 @@ def display_menu(version, project_path, ascii_art):
         ("5. NMAP", f"{DEFAULT_COLOR}Run scans and parse results  TCP {BOLD_GREEN}{tcpscan_ran} {DEFAULT_COLOR}| UDP {BOLD_GREEN}{udpscan_ran}"),
         ("6. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
         ("7. VoIP (SIP) Testing", f"{DEFAULT_COLOR} Run various SIPPTS modules against VoIP devices"),
+        ("8. NTP Testing", f"{DEFAULT_COLOR} Run NTPQ and Metasploit against NTP servers"),
         (f"\n{BOLD_BLUE}Parsers", f"{BOLD_YELLOW}NMAP Parser Moved to NMAP Menu"),
-        ("8. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {BOLD_GREEN}{sslscan_ran}"),
-        ("9. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings."),
+        ("9. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {BOLD_GREEN}{sslscan_ran}"),
+        ("10. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings."),
         (f"\n\n{BOLD_YELLOW}Vulnerability Scanner", f"{BOLD_RED}(Not Functioning)")
     ]
 
@@ -465,8 +466,10 @@ def main():
             elif choice == '7':
                 run_voip_tests()
             elif choice == '8':
-                run_sslscanparse()
+                run_ntp()
             elif choice == '9':
+                run_sslscanparse()
+            elif choice == '10':
                 run_sshaudit()
             elif choice == 'x':
                 break
