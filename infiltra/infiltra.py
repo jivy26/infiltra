@@ -258,10 +258,8 @@ def run_ntp():
         hosts = [hosts_input]
 
     # Call ntp.py functions with the list of hosts
-    print(f"{BOLD_CYAN}Running ntpq -p...")
     run_ntpq(hosts, ntp_dir)
 
-    print(f"{BOLD_CYAN}Running Metasploit NTP fuzzer...")
     run_ntp_fuzzer(hosts, ntp_dir)
 
     print(f"{BOLD_GREEN}NTP analysis completed. Results saved to {ntp_dir}/ntpq.txt and {ntp_dir}/ntp_fuzzer.txt")
