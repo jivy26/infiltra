@@ -7,6 +7,7 @@ from infiltra.utils import RICH_CYAN, RICH_RED, RICH_GREEN, console, clear_scree
 
 
 def start_metasploit_rpc(password):
+    clear_screen()
     console.print("[+] Starting Metaploit RPC daemon please wait...\n", style=RICH_GREEN)
     msf_rpcd_command = [
         'msfrpcd',
@@ -27,6 +28,7 @@ def start_metasploit_rpc(password):
 
 
 def run_ntpq(hosts, output_dir):
+    clear_screen()
     output_file = os.path.join(output_dir, 'ntpq.txt')
     with open(output_file, 'w') as file:
         for host in hosts:
@@ -59,12 +61,12 @@ def run_ntp_fuzzer(hosts, output_dir, password):
         for host in hosts:
             try:
                 # Create a new console
-                console_id = client.consoles.console().cid
+                console_id = client.consoles.console()
                 # Write commands to the console
-                client.consoles.console(console_id).write('use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer\n')
-                client.consoles.console(console_id).write(f'set RHOSTS {host}\n')
-                client.consoles.console(console_id).write('set VERBOSE true\n')
-                client.consoles.console(console_id).write('run\n')
+                console.write('use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer\n')
+                console.write('set RHOSTS {}\n'.format(host))
+                console.write('set VERBOSE true\n')
+                console.write('run\n')
 
                 # Wait for the job to finish, this is just an example, may need to adjust the timing
                 time.sleep(5)  # Give some time for the command to run
