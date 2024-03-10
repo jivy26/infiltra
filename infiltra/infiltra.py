@@ -212,7 +212,7 @@ def run_ntp():
     # Call ntp.py functions with the list of hosts
     run_ntpq(hosts, ntp_dir)
 
-    run_ntp_fuzzer(hosts, ntp_dir)
+    run_ntp_fuzzer(hosts, ntp_dir, msf_password)
 
     print(f"{BOLD_GREEN}NTP analysis completed. Results saved to {ntp_dir}/ntpq.txt and {ntp_dir}/ntp_fuzzer.txt")
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")

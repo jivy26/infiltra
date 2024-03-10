@@ -48,7 +48,7 @@ def run_ntpq(hosts, output_dir):
                 file.write(error_msg)  # Write to the file
 
 
-def run_ntp_fuzzer(hosts, output_dir):
+def run_ntp_fuzzer(hosts, output_dir, password):
     output_file = os.path.join(output_dir, 'ntp_fuzzer.txt')
 
     # Connect to the Metasploit RPC server
