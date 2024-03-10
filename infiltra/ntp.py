@@ -23,9 +23,15 @@ def run_ntp_fuzzer(hosts, output_dir):
     output_file = os.path.join(output_dir, 'ntp_fuzzer.txt')
     with open(output_file, 'w') as file:
         for host in hosts:
-            # Assuming the Metasploit framework is initialized and msfconsole is available in the PATH
-            console.print(f"{RICH_CYAN}Running Metasploit NTP fuzzer on {host}")
-            command = f"msfconsole -q -x 'use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer; set RHOSTS {host}; run; exit'"
+            print(f"Running Metasploit NTP fuzzer on {host}")
+            # Add 'set VERBOSE true' to the Metasploit command string
+            command = (
+                f"msfconsole -q -x '"
+                f"use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer; "
+                f"set RHOSTS {host}; "
+                f"set VERBOSE true; "
+                f"run; exit'"
+            )
             try:
                 result = subprocess.run(['bash', '-c', command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
                 output = f"Fuzzer results for {host}:\n{result.stdout}\n\n"
