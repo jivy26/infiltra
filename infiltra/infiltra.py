@@ -25,6 +25,8 @@ import subprocess
 import sys
 import pyfiglet
 
+from install_dependencies import (check_and_install_sippts, check_and_install_eyewitness, check_and_install_pymetasploit3,
+                                  check_and_install_gnome_terminal)
 from infiltra.icmpecho import run_fping
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
@@ -36,64 +38,11 @@ from infiltra.submenus.web_enum_sub import website_enumeration_submenu
 from infiltra.submenus.osint_sub import osint_submenu
 from infiltra.sshaudit import main as run_sshaudit
 from infiltra.submenus.nmap_sub import nmap_submenu
-from infiltra.ntp import run_ntpq, run_ntp_fuzzer
+from infiltra.ntp import run_ntpq, run_ntp_fuzzer, start_metasploit_rpc
 
 
 # Ensure libnotify-bin is installed for notify-send to work
 subprocess.run(["sudo", "apt-get", "install", "-y", "libnotify-bin"], check=True)
-
-
-def check_and_install_gnome_terminal():
-    try:
-        # Check if gnome-terminal is installed
-        subprocess.run(["which", "gnome-terminal"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print(f"{BOLD_GREEN}gnome-terminal is installed.")
-    except subprocess.CalledProcessError:
-        # gnome-terminal is not installed; proceed with installation
-        print(f"{BOLD_YELLOW}gnome-terminal is not installed. Installing now...")
-        install_command = "sudo apt install gnome-terminal -y"
-        try:
-            subprocess.run(install_command.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-            print(f"{BOLD_GREEN}gnome-terminal installed successfully.")
-        except subprocess.CalledProcessError as e:
-            print(f"{BOLD_RED}Failed to install gnome-terminal: {e}")
-            sys.exit(1)
-
-def check_and_install_eyewitness():
-    try:
-        # Check if gnome-terminal is installed
-        subprocess.run(["which", "eyewitness"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print(f"{BOLD_GREEN}eyewitness is installed.")
-    except subprocess.CalledProcessError:
-        # gnome-terminal is not installed; proceed with installation
-        print(f"{BOLD_YELLOW}eyewitness is not installed. Installing now...")
-        install_command = "sudo apt install eyewitness -y"
-        try:
-            subprocess.run(install_command.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-            print(f"{BOLD_GREEN}eyewitness installed successfully.")
-        except subprocess.CalledProcessError as e:
-            print(f"{BOLD_RED}Failed to install eyewitness: {e}")
-            sys.exit(1)
-
-
-def check_and_install_sippts():
-    try:
-        subprocess.run(["which", "sipscan"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print(f"{BOLD_GREEN}sippts is installed.")
-    except subprocess.CalledProcessError:
-        tmp_dir = '/tmp/sippts'  # Use /tmp as the directory for installation
-        print(f"{BOLD_YELLOW}sippts is not installed. Installing now...")
-        try:
-            # Ensure the directory is clean before cloning
-            subprocess.run(["rm", "-rf", tmp_dir], check=True)
-            subprocess.run(["git", "clone", "https://github.com/Pepelux/sippts.git", tmp_dir], check=True)
-            # Install using pip
-            subprocess.run(["pip", "install", "-e", tmp_dir], check=True)
-            # The cloned repository is left in /tmp and will eventually be cleaned up by the system
-            print(f"{BOLD_GREEN}sippts installed successfully.")
-        except subprocess.CalledProcessError as e:
-            print(f"{BOLD_RED}Failed to install sippts: {e}")
-            sys.exit(1)
 
 
 # Handle FPING
@@ -243,10 +192,13 @@ def run_voip_tests():
 
 
 def run_ntp():
+    msf_password = "kali"
     clear_screen()
     project_cwd = os.getcwd()  # Get current working directory for the project
     ntp_dir = os.path.join(project_cwd, 'ntp')
     os.makedirs(ntp_dir, exist_ok=True)  # Create ntp directory in the project's CWD
+
+    start_metasploit_rpc(msf_password)
 
     hosts_input = input(f"{BOLD_GREEN}Enter a single IP or the path to a file with IP addresses: {BOLD_WHITE}").strip()
 
@@ -416,6 +368,7 @@ def main():
     check_and_install_gnome_terminal()
     check_and_install_eyewitness()
     check_and_install_sippts()
+    check_and_install_pymetasploit3()
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
