@@ -10,7 +10,8 @@ setup(
         'pydig',
         'ascii_magic',
         'pyfiglet',
-        'pipx'
+        'pipx',
+        'pymetasploit3'
     ],
     entry_points={
         'console_scripts': [
