@@ -36,6 +36,7 @@ from infiltra.submenus.web_enum_sub import website_enumeration_submenu
 from infiltra.submenus.osint_sub import osint_submenu
 from infiltra.sshaudit import main as run_sshaudit
 from infiltra.submenus.nmap_sub import nmap_submenu
+from infiltra.ntp import run_ntpq, run_ntp_fuzzer
 
 
 # Ensure libnotify-bin is installed for notify-send to work
@@ -240,6 +241,31 @@ def run_voip_tests():
 
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu")
 
+
+def handle_ntp_menu():
+    clear_screen()
+    project_cwd = os.getcwd()  # Get current working directory for the project
+    ntp_dir = os.path.join(project_cwd, 'ntp')
+    os.makedirs(ntp_dir, exist_ok=True)  # Create ntp directory in the project's CWD
+
+    hosts_input = input(f"{BOLD_GREEN}Enter a single IP or the path to a file with IP addresses: {BOLD_WHITE}").strip()
+
+    # Validate input and create hosts list
+    if os.path.isfile(hosts_input):
+        with open(hosts_input, 'r') as file:
+            hosts = [line.strip() for line in file.readlines()]
+    else:
+        hosts = [hosts_input]
+
+    # Call ntp.py functions with the list of hosts
+    print(f"{BOLD_CYAN}Running ntpq -p...")
+    run_ntpq(hosts, ntp_dir)
+
+    print(f"{BOLD_CYAN}Running Metasploit NTP fuzzer...")
+    run_ntp_fuzzer(hosts, ntp_dir)
+
+    print(f"{BOLD_GREEN}NTP analysis completed. Results saved to {ntp_dir}/ntpq.txt and {ntp_dir}/ntp_fuzzer.txt")
+    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
 
 # Function to run sslscan and parse results
