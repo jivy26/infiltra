@@ -2,7 +2,7 @@ import subprocess
 import os
 import time
 
-from pymetasploit3 import MsfRpcClient
+from pymetasploit3.msfrpc import MsfRpcClient
 from infiltra.utils import RICH_CYAN, RICH_RED, RICH_GREEN, console, clear_screen
 
 
