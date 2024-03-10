@@ -32,7 +32,7 @@ def run_ntpq(hosts, output_dir):
     output_file = os.path.join(output_dir, 'ntpq.txt')
     with open(output_file, 'w') as file:
         for host in hosts:
-            print(f"Running ntpq -p on {host}")
+            console.print(f"Running ntpq -p on {host}", style=RICH_GREEN)
             try:
                 result = subprocess.run(['ntpq', '-p', host], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
                 if "**Request timed out" in result.stderr:
@@ -56,6 +56,8 @@ def run_ntp_fuzzer(hosts, output_dir, password):
     console_id = client.consoles.console().cid  # Create a new console and get its ID
 
     for host in hosts:
+        console.print(f"Running Metasploit NTP Fuzzer on {host}", style=RICH_GREEN)
+
         # Run the fuzzer for each host
         client.consoles.console(console_id).write('use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer\n')
         client.consoles.console(console_id).write(f'set RHOSTS {host}\n')

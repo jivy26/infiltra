@@ -21,23 +21,6 @@ def check_and_install_gnome_terminal():
             sys.exit(1)
 
 
-def check_and_install_pymetasploit3():
-    try:
-        # Check if gnome-terminal is installed
-        subprocess.run(["which", "pymetasploit3"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print(f"{BOLD_GREEN}pymetasploit3 is installed.")
-    except subprocess.CalledProcessError:
-        # gnome-terminal is not installed; proceed with installation
-        print(f"{BOLD_YELLOW}pymetasploit3 is not installed. Installing now...")
-        install_command = "pip install pymetasploit3"
-        try:
-            subprocess.run(install_command.split(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-            print(f"{BOLD_GREEN}pymetasploit3 installed successfully.")
-        except subprocess.CalledProcessError as e:
-            print(f"{BOLD_RED}Failed to install gpymetasploit3: {e}")
-            sys.exit(1)
-
-
 def check_and_install_eyewitness():
     try:
         # Check if gnome-terminal is installed

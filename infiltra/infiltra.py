@@ -25,7 +25,7 @@ import subprocess
 import sys
 import pyfiglet
 
-from infiltra.install_dependencies import (check_and_install_sippts, check_and_install_eyewitness, check_and_install_pymetasploit3,
+from infiltra.install_dependencies import (check_and_install_sippts, check_and_install_eyewitness,
                                   check_and_install_gnome_terminal)
 from infiltra.icmpecho import run_fping
 from infiltra.project_handler import project_submenu, last_project_file_path
