@@ -9,7 +9,7 @@ def run_ntpq(hosts, output_dir):
     with open(output_file, 'w') as file:
         for host in hosts:
             try:
-                console.print(f"{RICH_CYAN}Running ntpq -p on {host}")
+                console.print(f"Running ntpq -p on {host}", style=RICH_CYAN)
                 result = subprocess.run(['ntpq', '-p', host], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
                 output = f"Results for {host}:\n{result.stdout}\n\n"
                 print(output)  # Print to the console
