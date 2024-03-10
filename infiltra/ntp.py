@@ -7,6 +7,7 @@ from infiltra.utils import RICH_CYAN, RICH_RED, RICH_GREEN, console, clear_scree
 
 
 def start_metasploit_rpc(password):
+    console.print("[+] Starting Metaploit RPC daemon please wait...\n", style=RICH_GREEN)
     msf_rpcd_command = [
         'msfrpcd',
         '-P', password,  # Set the RPC password
@@ -52,25 +53,29 @@ def run_ntp_fuzzer(hosts, output_dir, password):
     output_file = os.path.join(output_dir, 'ntp_fuzzer.txt')
 
     # Connect to the Metasploit RPC server
-    client = MsfRpcClient(password, port=55553)  # replace 'password' with your msfrpcd password
+    client = MsfRpcClient(password, port=55553)
 
     with open(output_file, 'w') as file:
         for host in hosts:
             try:
-                console = client.console.console()  # Create a new console
-                console.write(f'use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer\n')
-                console.write(f'set RHOSTS {host}\n')
-                console.write(f'set VERBOSE true\n')
-                console.write(f'run\n')
+                # Create a new console
+                console_id = client.consoles.console().cid
+                # Write commands to the console
+                client.consoles.console(console_id).write('use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer\n')
+                client.consoles.console(console_id).write(f'set RHOSTS {host}\n')
+                client.consoles.console(console_id).write('set VERBOSE true\n')
+                client.consoles.console(console_id).write('run\n')
 
+                # Wait for the job to finish, this is just an example, may need to adjust the timing
+                time.sleep(5)  # Give some time for the command to run
                 # Read console output
-                time.sleep(1)  # Give console time to respond
-                result = console.read()
+                result = client.consoles.console(console_id).read()
 
                 file.write(f"Fuzzer results for {host}:\n{result['data']}\n\n")
                 print(f"Fuzzer results for {host}:\n{result['data']}\n")
 
-                console.destroy()  # Clean up the console
+                # Destroy the console when done
+                client.consoles.console(console_id).destroy()
 
             except Exception as e:
                 error_msg = f"Failed to run NTP fuzzer for {host}: {e}\n\n"
