@@ -59,25 +59,30 @@ def run_ntp_fuzzer(hosts, output_dir, password):
     for host in hosts:
         console.print(f"Running Metasploit NTP Fuzzer on {host}\n", style=RICH_GREEN)
 
-        client.consoles.console(console_id).write('use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer\n')
-        client.consoles.console(console_id).write(f'set RHOSTS {host}\n')
-        client.consoles.console(console_id).write('set VERBOSE true\n')
-        client.consoles.console(console_id).write('run\n')
+        fuzzer_setup_commands = [
+            'use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer',
+            f'set RHOSTS {host}',
+            'set VERBOSE true',
+            'run'
+        ]
+        for command in fuzzer_setup_commands:
+            client.consoles.console(console_id).write(command + '\n')
+            time.sleep(1)  # Wait for each command to be processed
 
-        # Save the output to a file
         output_file_path = f"{output_dir}/ntp_fuzzer_{host}.txt"
         with open(output_file_path, 'w') as output_file:
-            # Keep checking for output until the console is finished running the fuzzer
-            while True:
-                read_data = client.consoles.console(console_id).read()
-                if read_data['busy']:  # Check if the console is still busy
-                    time.sleep(1)  # Wait for a second before checking again
-                    continue
+            # Read the initial output
+            read_data = client.consoles.console(console_id).read()
+            print(read_data['data'])
+            output_file.write(read_data['data'])
 
-                # If there's output data, print and write it to the file
-                if read_data['data']:
-                    print(read_data['data'])
-                    output_file.write(read_data['data'])
+            # Keep checking for output until the console is no longer busy
+            while client.consoles.console(console_id).is_busy():
+                time.sleep(1)  # Poll every second for new data
+                new_data = client.consoles.console(console_id).read()
+                if new_data['data']:
+                    print(new_data['data'])
+                    output_file.write(new_data['data'])
 
                 # If the console is no longer busy, we assume the fuzzer is done
                 if not read_data['busy']:
