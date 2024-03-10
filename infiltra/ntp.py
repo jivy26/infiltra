@@ -52,29 +52,35 @@ def run_ntpq(hosts, output_dir):
 
 
 def run_ntp_fuzzer(hosts, output_dir, password):
-    console.print("Starting ntp fuzzer\n", style=RICH_GREEN)
-    client = MsfRpcClient(password, ssl=True)  # Make sure to set ssl=True if msfrpcd is running with SSL
+    client = MsfRpcClient(password, ssl=True)  # Ensure the SSL setting matches your msfrpcd setup
     console_id = client.consoles.console().cid  # Create a new console and get its ID
 
     for host in hosts:
-        console.print(f"Running Metasploit NTP Fuzzer on {host}", style=RICH_GREEN)
+        console.print(f"Running Metasploit NTP Fuzzer on {host}\n", style=RICH_GREEN)
 
-        # Run the fuzzer for each host
         client.consoles.console(console_id).write('use auxiliary/fuzzers/ntp/ntp_protocol_fuzzer\n')
         client.consoles.console(console_id).write(f'set RHOSTS {host}\n')
         client.consoles.console(console_id).write('set VERBOSE true\n')
         client.consoles.console(console_id).write('run\n')
 
-        # Allow some time for the command to execute, may require tuning
-        time.sleep(5)
-
-        # Read the output
-        output = client.consoles.console(console_id).read()['data']
-        print(output)  # Print to the console
-
         # Save the output to a file
-        with open(f"{output_dir}/ntp_fuzzer_{host}.txt", 'w') as file:
-            file.write(output)
+        output_file_path = f"{output_dir}/ntp_fuzzer_{host}.txt"
+        with open(output_file_path, 'w') as output_file:
+            # Keep checking for output until the console is finished running the fuzzer
+            while True:
+                read_data = client.consoles.console(console_id).read()
+                if read_data['busy']:  # Check if the console is still busy
+                    time.sleep(1)  # Wait for a second before checking again
+                    continue
 
-        # Clean up the console, if you are done with it
-        client.consoles.console(console_id).destroy()
+                # If there's output data, print and write it to the file
+                if read_data['data']:
+                    print(read_data['data'])
+                    output_file.write(read_data['data'])
+
+                # If the console is no longer busy, we assume the fuzzer is done
+                if not read_data['busy']:
+                    break
+
+        client.consoles.console(console_id).destroy()  # Clean up the console when done
+        console.print(f"Finished fuzzing {host}, results saved to {output_file_path}\n", style=RICH_GREEN)
