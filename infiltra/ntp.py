@@ -52,6 +52,7 @@ def run_ntpq(hosts, output_dir):
 
 
 def run_ntp_fuzzer(hosts, output_dir, password):
+    console.print("Starting ntp fuzzer\n", style=RICH_GREEN)
     client = MsfRpcClient(password, ssl=True)  # Make sure to set ssl=True if msfrpcd is running with SSL
     console_id = client.consoles.console().cid  # Create a new console and get its ID
 
