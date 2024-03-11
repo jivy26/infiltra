@@ -2,7 +2,8 @@ import os
 import subprocess
 
 from infiltra.utils import (read_file_lines, is_valid_domain, clear_screen, is_valid_ip, is_valid_hostname,
-                            check_run_indicator, BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_CYAN, DEFAULT_COLOR)
+                            check_run_indicator, BOLD_RED, BOLD_GREEN, BOLD_YELLOW, BOLD_CYAN, DEFAULT_COLOR,
+                            RICH_CYAN, console)
 from infiltra.website_enum.feroxbuster import main as run_feroxbuster
 from infiltra.website_enum.wpscan import main as run_wpscan
 
@@ -82,13 +83,13 @@ def website_enumeration_submenu():
         if os.path.exists(filename):
             with open(filename, 'r') as file:
                 domain = file.read().strip()
-            print(f"{idx}. Use domain from {filename}: {domain}")
+            console.print(f"{idx}. Use domain from {filename}: {domain}", style=RICH_CYAN)
             choices.append((str(idx), filename))
             domain_files[filename] = domain
 
     # Determine the new choice index based on existing files
     new_choice_index = str(len(choices) + 1)
-    print(f"{new_choice_index}. Enter a new domain for website enumeration")
+    console.print(f"{new_choice_index}. Enter a new domain for website enumeration", style=RICH_CYAN)
     choices.append((new_choice_index, "new_domain"))
 
     choice = input("\nEnter your choice: ").strip()

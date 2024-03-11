@@ -85,7 +85,7 @@ def read_file_lines(filepath):
         with open(filepath, 'r') as file:
             return file.read().splitlines()
     except FileNotFoundError:
-        console.print(f"File not found: {filepath}", style=RICH_RED)
+        console.print(f"No Domain Set via {filepath}\n", style=RICH_YELLOW)
         return None
 
 
