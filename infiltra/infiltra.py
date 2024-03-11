@@ -122,6 +122,7 @@ def list_available_files():
         print(f"{BOLD_GREEN}sipenum: {DEFAULT_COLOR}Enumerates available VoIP methods.")
         print(f"{BOLD_GREEN}sipexten: {DEFAULT_COLOR}Enumerates available VoIP extensions.")
         print(f"{BOLD_GREEN}sipinvite: {DEFAULT_COLOR}Attempts to send an VoIP Invite to extention 100.\n")
+        print(f"{BOLD_GREEN} More info can be found at: https://github.com/Pepelux/sippts/wiki")
         print(f"{BOLD_CYAN}Available .txt Files:\n")
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
