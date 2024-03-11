@@ -49,8 +49,14 @@ subprocess.run(["sudo", "apt-get", "install", "-y", "libnotify-bin"], check=True
 def check_alive_hosts():
     clear_screen()
 
-    # List .txt files in the current directory
-    txt_files = list_txt_files(os.getcwd())
+    excluded_files = [
+        'whois_',
+        'icmpecho_',
+        'sslscan.txt',
+        'tcp.txt',
+        'udp.txt'
+    ]
+    txt_files = list_txt_files(os.getcwd(), exclude_prefixes=excluded_files)
     if txt_files:
         print(f"{BOLD_GREEN}ICMP Echo and Parser\n")
         print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
@@ -225,8 +231,14 @@ def run_sslscanparse():
     print("\n".join(sys.path))
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
-    # List the available .txt files
-    txt_files = list_txt_files(os.getcwd())
+    excluded_files = [
+        'whois_',
+        'icmpecho_',
+        'sslscan.txt',
+        'tcp.txt',
+        'udp.txt'
+    ]
+    txt_files = list_txt_files(os.getcwd(), exclude_prefixes=excluded_files)
     if txt_files:
         print(f"{BOLD_GREEN}SSLScanner and Parser\n")
         print(f"{BOLD_CYAN}Available .txt Files In This Project's Folder\n")
@@ -286,7 +298,14 @@ def run_whois():
     clear_screen()
     whois_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'whois_script.sh')
 
-    txt_files = list_txt_files(os.getcwd())
+    excluded_files = [
+        'whois_',
+        'icmpecho_',
+        'sslscan.txt',
+        'tcp.txt',
+        'udp.txt'
+    ]
+    txt_files = list_txt_files(os.getcwd(), exclude_prefixes=excluded_files)
     if txt_files:
         print(f"{BOLD_GREEN}WHOIS Scan and Parse\n")
         print(f"\n{BOLD_CYAN}Available .txt Files In This Project's Folder\n")

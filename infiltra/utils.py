@@ -10,7 +10,6 @@ from rich.style import Style
 from rich.text import Text
 from importlib.metadata import version as get_distribution_version
 
-
 # Initialize Colorama
 init(autoreset=True)
 
@@ -24,7 +23,6 @@ BOLD_RED = Fore.RED + Style1.BRIGHT
 BOLD_MAG = Fore.MAGENTA + Style1.BRIGHT
 BOLD_YELLOW = Fore.YELLOW + Style1.BRIGHT
 BOLD_WHITE = Fore.WHITE + Style1.BRIGHT
-
 
 # Create a console object for Rich
 console = Console()
@@ -49,6 +47,7 @@ def clear_screen():
     else:
         os.system('clear')
 
+
 def run_subprocess(command, working_directory=None, shell=False):
     try:
         result = subprocess.run(command, cwd=working_directory, shell=shell,
@@ -59,12 +58,14 @@ def run_subprocess(command, working_directory=None, shell=False):
         console.print(f"Subprocess error: {e.stderr}", RICH_RED)
         return None
 
+
 def check_run_indicator(pattern):
     files = glob.glob(pattern)
     if files:
         return Text("✓", RICH_GREEN)
     else:
         return Text("", DEFAULT_COLOR)
+
 
 def is_valid_ip(ip):
     try:
@@ -73,9 +74,11 @@ def is_valid_ip(ip):
     except ValueError:
         return False
 
+
 def is_valid_domain(domain):
     pattern = r"^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$"
     return re.match(pattern, domain) is not None
+
 
 def read_file_lines(filepath):
     try:
@@ -85,12 +88,15 @@ def read_file_lines(filepath):
         console.print(f"File not found: {filepath}", RICH_RED)
         return None
 
-def list_txt_files(directory):
-    txt_files = [f for f in os.listdir(directory) if f.endswith('.txt')]
-    if not txt_files:
-        print(f"{BOLD_RED}No .txt files found in the current directory.")
-        return None
+
+def list_txt_files(directory, exclude_prefixes=None):
+    if exclude_prefixes is None:
+        exclude_prefixes = []
+    txt_files = [f for f in os.listdir(directory) if
+                 f.endswith('.txt') and
+                 not any(f.startswith(prefix) for prefix in exclude_prefixes)]
     return txt_files
+
 
 def write_to_file(filepath, content, mode='w'):
     try:
@@ -99,11 +105,13 @@ def write_to_file(filepath, content, mode='w'):
     except IOError as e:
         console.print(f"IO error occurred: {e}", RICH_RED)
 
+
 def is_valid_hostname(hostname):
     if not hostname or len(hostname) > 255 or hostname[-1] == ".":
         hostname = hostname[:-1] if hostname[-1] == "." else hostname
     allowed = re.compile(r"(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
     return all(allowed.match(x) for x in hostname.split("."))
+
 
 def get_version():
     try:
@@ -111,3 +119,6 @@ def get_version():
     except Exception as e:
         console.print(f"Could not read version: {e}", RICH_RED)
         return "unknown"
+
+
+
