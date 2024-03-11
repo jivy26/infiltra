@@ -94,8 +94,16 @@ def cancel_scheduled_scan():
 def run_nmap():
     clear_screen()
 
-    # List the available .txt files
-    txt_files = list_txt_files(os.getcwd())
+    excluded_files = [
+        'whois_',
+        'icmpecho_',
+        'sslscan.txt',
+        'tcp.txt',
+        'udp.txt',
+        'aort_dns.txt',
+        'osint_domain.txt'
+    ]
+    txt_files = list_txt_files(os.getcwd(), exclude_prefixes=excluded_files)
     if txt_files:
         console.print("NMAP Scanner\n",  style=RICH_GREEN)
         console.print("Available .txt Files In This Project's Folder\n",  style=RICH_CYAN)
