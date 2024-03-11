@@ -117,6 +117,12 @@ def list_available_files():
 
     if txt_files:
         print(f"{BOLD_GREEN}VoIP Testing Utilizing SIPPTS\n")
+        print(f"{BOLD_GREEN}This module will run the following SIPPTS tools over each IP provided.")
+        print(f"{BOLD_CYAN}You can screenshot then press enter for it to repeat across as many IPs as were provided.\n")
+        print(f"{BOLD_GREEN}sipscan: {DEFAULT_COLOR}Identifies VoIP services.")
+        print(f"{BOLD_GREEN}sipenum: {DEFAULT_COLOR}Enumerates available VoIP methods.")
+        print(f"{BOLD_GREEN}sipexten: {DEFAULT_COLOR}Enumerates available VoIP extensions.")
+        print(f"{BOLD_GREEN}sipinvite: {DEFAULT_COLOR}Attempts to send an VoIP Invite to extention 100.\n")
         print(f"{BOLD_CYAN}Available .txt Files:\n")
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
@@ -125,13 +131,6 @@ def list_available_files():
 
 def run_voip_tests():
     clear_screen()
-
-    print(f"{BOLD_GREEN} This module will run the following SIPPTS tools over each IP provided. You can screenshot "
-          f"then press enter for it to repeat across as many IPs as were provided: {BOLD_CYAN}:")
-    print(f"{BOLD_GREEN}sipscan: {DEFAULT_COLOR}Identifies VoIP services.")
-    print(f"{BOLD_GREEN}sipenum: {DEFAULT_COLOR}Enumerates available VoIP methods.")
-    print(f"{BOLD_GREEN}sipexten: {DEFAULT_COLOR}Enumerates available VoIP extensions.")
-    print(f"{BOLD_GREEN}sipinvite: {DEFAULT_COLOR}Attempts to send an VoIP Invite to extention 100.\n")
     txt_files = list_available_files()
 
     # Check for non-standard ports
