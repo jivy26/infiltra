@@ -14,7 +14,7 @@ from importlib.metadata import version as get_distribution_version
 init(autoreset=True)
 
 # Define colors using Colorama
-DEFAULT_COLOR = Fore.WHITE
+DEFAULT_COLOR = Fore.WHITE + Style1.NORMAL
 IT_MAG = Fore.MAGENTA + Style1.BRIGHT
 BOLD_BLUE = Fore.BLUE + Style1.BRIGHT
 BOLD_CYAN = Fore.CYAN + Style1.BRIGHT
