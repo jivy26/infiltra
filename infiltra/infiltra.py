@@ -117,8 +117,7 @@ def list_available_files():
 
     if txt_files:
         print(f"{BOLD_GREEN}VoIP Testing Utilizing SIPPTS\n")
-        print(f"{BOLD_GREEN}This module will run the following SIPPTS tools over each IP provided.")
-        print(f"{BOLD_CYAN}You can screenshot then press enter for it to repeat across as many IPs as were provided.\n")
+        print(f"{BOLD_BLUE}This module will run the following SIPPTS tools over each IP provided:\n")
         print(f"{BOLD_GREEN}sipscan: {DEFAULT_COLOR}Identifies VoIP services.")
         print(f"{BOLD_GREEN}sipenum: {DEFAULT_COLOR}Enumerates available VoIP methods.")
         print(f"{BOLD_GREEN}sipexten: {DEFAULT_COLOR}Enumerates available VoIP extensions.")
@@ -134,7 +133,7 @@ def run_voip_tests():
     txt_files = list_available_files()
 
     # Check for non-standard ports
-    use_non_standard_port = input(f"{BOLD_GREEN}Are you testing a non-standard port other than 5060? (y/N): {BOLD_WHITE}").strip().lower()
+    use_non_standard_port = input(f"\n{BOLD_GREEN}Are you testing a non-standard port other than 5060? (y/N): {DEFAULT_COLOR}").strip().lower()
     non_standard_ports = use_non_standard_port == 'y'
 
     hosts = []
@@ -157,7 +156,7 @@ def run_voip_tests():
     else:
         if txt_files:
             # If non-standard port is not used, continue to prompt for file selection
-            selection = input(f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path or IP address (with optional port): {BOLD_WHITE}").strip()
+            selection = input(f"{BOLD_GREEN}\nEnter a number to select a file, or input a custom file path or IP address (with optional port): {DEFAULT_COLOR}").strip()
 
             # Check if selection is a digit and within the range of listed files
             if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
