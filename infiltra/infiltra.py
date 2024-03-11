@@ -366,8 +366,8 @@ def display_menu(version, project_path, ascii_art):
         ("5. NMAP", f"{DEFAULT_COLOR}Run scans and parse results  TCP {BOLD_GREEN}{tcpscan_ran} {DEFAULT_COLOR}| UDP {BOLD_GREEN}{udpscan_ran}"),
         ("6. Website Enumeration", f"{DEFAULT_COLOR}Directory brute-forcing, technology identification, and more."),
         ("7. VoIP (SIP) Testing", f"{DEFAULT_COLOR}Run various SIPPTS modules against VoIP devices"),
-        ("8. NTP Testing", f"{BOLD_YELLOW}Not Working{DEFAULT_COLOR}Run NTPQ and Metasploit against NTP servers"),
-        (f"\n{BOLD_BLUE}Parsers", f"{BOLD_YELLOW}NMAP Parser Moved to NMAP Menu"),
+        ("8. NTP Testing", f"{BOLD_YELLOW}Not Working - {DEFAULT_COLOR}Run NTPQ and Metasploit against NTP servers"),
+        (f"\n{BOLD_BLUE}Parsers", f"{BOLD_YELLOW}          NMAP Parser Moved to NMAP Menu"),
         ("9. SSLScan and Parse", f"{DEFAULT_COLOR}Run SSLScan for Single IP or Range and Parse Findings.  {BOLD_GREEN}{sslscan_ran}"),
         ("10. SSH-Audit and Parse", f"{DEFAULT_COLOR}Run SSH-Audit and Parse Findings."),
         (f"\n\n{BOLD_YELLOW}Vulnerability Scanner", f"{BOLD_RED}(Not Functioning)")
