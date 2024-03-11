@@ -55,7 +55,7 @@ def run_subprocess(command, working_directory=None, shell=False):
                                 text=True, check=True)
         return result.stdout
     except subprocess.CalledProcessError as e:
-        console.print(f"Subprocess error: {e.stderr}", RICH_RED)
+        console.print(f"Subprocess error: {e.stderr}", style=RICH_RED)
         return None
 
 
@@ -85,7 +85,7 @@ def read_file_lines(filepath):
         with open(filepath, 'r') as file:
             return file.read().splitlines()
     except FileNotFoundError:
-        console.print(f"File not found: {filepath}", RICH_RED)
+        console.print(f"File not found: {filepath}", style=RICH_RED)
         return None
 
 
@@ -117,7 +117,7 @@ def get_version():
     try:
         return get_distribution_version('infiltra')
     except Exception as e:
-        console.print(f"Could not read version: {e}", RICH_RED)
+        console.print(f"Could not read version: {e}", style=RICH_RED)
         return "unknown"
 
 
