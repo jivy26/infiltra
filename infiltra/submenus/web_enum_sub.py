@@ -91,7 +91,7 @@ def website_enumeration_submenu():
     print(f"{BOLD_GREEN}{new_choice_index}. {DEFAULT_COLOR}Enter a new domain for website enumeration")
     choices.append((new_choice_index, "new_domain"))
 
-    choice = input("\nEnter your choice: ").strip()
+    choice = input(f"\n{BOLD_GREEN}Enter your choice: {DEFAULT_COLOR}").strip()
 
     # Validate choice
     if choice not in [idx for idx, _ in choices]:
