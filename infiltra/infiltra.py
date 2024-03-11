@@ -125,6 +125,12 @@ def list_available_files():
 
 def run_voip_tests():
     clear_screen()
+
+    print(f"{BOLD_GREEN} This module will run the following SIPPTS tools over each IP provided:")
+    print(f"{BOLD_GREEN}sipscan: {DEFAULT_COLOR}Identifies VoIP services.")
+    print(f"{BOLD_GREEN}sipenum: {DEFAULT_COLOR}Enumerates available VoIP methods.")
+    print(f"{BOLD_GREEN}sipexten: {DEFAULT_COLOR}Enumerates available VoIP extensions.")
+    print(f"{BOLD_GREEN}sipinvite: {DEFAULT_COLOR}Attempts to send an VoIP Invite to extention 100.\n")
     txt_files = list_available_files()
 
     # Check for non-standard ports
