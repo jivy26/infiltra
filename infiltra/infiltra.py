@@ -126,7 +126,8 @@ def list_available_files():
 def run_voip_tests():
     clear_screen()
 
-    print(f"{BOLD_GREEN} This module will run the following SIPPTS tools over each IP provided:")
+    print(f"{BOLD_GREEN} This module will run the following SIPPTS tools over each IP provided. You can screenshot "
+          f"then press enter for it to repeat across as many IPs as were provided: {BOLD_CYAN}:")
     print(f"{BOLD_GREEN}sipscan: {DEFAULT_COLOR}Identifies VoIP services.")
     print(f"{BOLD_GREEN}sipenum: {DEFAULT_COLOR}Enumerates available VoIP methods.")
     print(f"{BOLD_GREEN}sipexten: {DEFAULT_COLOR}Enumerates available VoIP extensions.")
