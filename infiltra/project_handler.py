@@ -61,6 +61,7 @@ def create_project_directory(org_name):
 
 
 def save_last_project(project_name):
+    clear_screen()
     with last_project_file_path.open('w') as file:
         file.write(project_name)
 
