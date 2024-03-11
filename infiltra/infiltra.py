@@ -227,9 +227,6 @@ def run_ntp():
 def run_sslscanparse():
     clear_screen()
     sslscan_script_path = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'sslscanparse.py'))
-    print(f"Path to sslscanparse.py: {sslscan_script_path}")
-    print("\n".join(sys.path))
-    input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
     excluded_files = [
         'whois_',
@@ -411,12 +408,14 @@ def main():
         try:
             choice = display_menu(version, project_path, ascii_art)
             if choice == '1':
+                clear_screen()
                 new_project_path = project_submenu()
                 if new_project_path is not None:  # Check if a new project path was returned or if it's a deletion
                     project_path = new_project_path
                     os.chdir(project_path)  # Change the working directory
                     print(f"Changed directory to {project_path}")
                 else:
+                    clear_screen()
                     # If None is returned, reset to the base projects directory (e.g. after deletion)
                     project_path = os.path.expanduser('~/projects')
                     os.chdir(project_path)
