@@ -108,14 +108,13 @@ def list_available_files():
         'udp.txt'
     ]
 
-    # Start by listing .txt files in the current directory
-    txt_files = list_txt_files(os.getcwd())
+    txt_files = list_txt_files(os.getcwd(), exclude_prefixes=excluded_files)
 
     # Check if udp_parsed/ exists and 5060-udp-hosts.txt is inside it
     if os.path.isdir(udp_parsed_dir) and os.path.isfile(udp_hosts_path):
         txt_files.append(udp_hosts_path)  # Add the udp hosts file to the list of available files
 
-    txt_files = list_txt_files(os.getcwd(), exclude_prefixes=excluded_files)
+
     if txt_files:
         print(f"{BOLD_GREEN}VoIP Testing Utilizing SIPPTS\n")
         print(f"{BOLD_CYAN}Available .txt Files:\n")
