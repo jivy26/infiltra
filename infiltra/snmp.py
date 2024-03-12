@@ -1,7 +1,7 @@
 import os
 import subprocess
-from infiltra.utils import (console, RICH_CYAN, RICH_GREEN, RICH_YELLOW, RICH_RED, list_txt_files,
-                            BOLD_GREEN, BOLD_BLUE, BOLD_RED, clear_screen)
+from infiltra.utils import (console, BOLD_CYAN, RICH_GREEN, RICH_YELLOW, RICH_RED, list_txt_files,
+                            BOLD_GREEN, BOLD_BLUE, DEFAULT_COLOR, clear_screen)
 
 
 # Commonly used OIDs
@@ -31,11 +31,11 @@ def run_snmp_operations():
         console.print("No .txt files found for IP lists.", style=RICH_RED)
         return
 
-    console.print(f"{RICH_GREEN}Please select an IP list file to use:", style=RICH_GREEN)
+    console.print(f"Please select an IP list file to use:", style=RICH_GREEN)
     for idx, file in enumerate(txt_files, start=1):
-        console.print(f"{RICH_CYAN}{idx}. {file}", style=RICH_CYAN)
+        print(f"{BOLD_CYAN}{idx}. {DEFAULT_COLOR}{file}")
 
-    selection = input("Enter your choice: ").strip()
+    selection = input(f"\n{BOLD_BLUE}Enter your choice: {DEFAULT_COLOR}").strip()
     if not selection.isdigit() or not 1 <= int(selection) <= len(txt_files):
         console.print("Invalid selection. Exiting SNMP operations.", style=RICH_RED)
         return
@@ -58,7 +58,7 @@ def run_snmp_operations():
     with open(ip_list_file, 'r') as ip_list:
         for ip in ip_list:
             ip = ip.strip()
-            console.print(f"Testing IP: {ip}", style=RICH_GREEN)
+            print(f"{BOLD_GREEN}Testing IP: {DEFAULT_COLOR}{ip}")
             username_count = 0
 
             with open(usernames_file, 'r') as usernames:
