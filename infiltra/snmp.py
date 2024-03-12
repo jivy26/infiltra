@@ -28,7 +28,7 @@ def run_snmp_operations():
         'udp.txt'
     ]
 
-    txt_files = list_txt_files(os.getcwd(), excluded_files)
+    txt_files = list_txt_files(os.getcwd(), exclude_prefixes=excluded_files)
 
     if os.path.isdir(snmp_dir) and os.path.isfile(os.path.join(snmp_dir, 'snmp-hosts.txt')):
         txt_files.append(
