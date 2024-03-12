@@ -2,6 +2,8 @@
   <img src="https://github.com/jivy26/infiltra/blob/master/logo.png" alt="Infiltra">
 </p>
 
+[![Downloads](https://static.pepy.tech/badge/infiltra/month)](https://pepy.tech/project/infiltra) [![Downloads](https://static.pepy.tech/badge/infiltra/week)](https://pepy.tech/project/infiltra)
+
 # Goal
 
 To automate and enhance the processes of external penetration testing by integrating advanced Open Source Intelligence (OSINT) and other security tools, streamlining the discovery and analysis phases of security assessments.
