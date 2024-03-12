@@ -10,9 +10,15 @@ oids = ["1.3.6.1.2.1.1.1.0", "1.3.6.1.2.1.1.3.0", "1.3.6.1.2.1.1.5.0"]  # sysDes
 
 def run_snmp_operations():
     clear_screen()
-    udp_parsed_dir = 'udp_parsed/'
-    udp_hosts_file = 'snmp-hosts.txt'
-    udp_hosts_path = os.path.join(udp_parsed_dir, udp_hosts_file)
+
+    # Get the directory where infiltra.py resides
+    infiltra_dir = os.path.dirname(os.path.abspath(__file__))
+
+    snmp_dir = os.path.join(infiltra_dir, 'udp_parsed')
+    usernames_file = os.path.join(snmp_dir, "users.txt")
+    passwords_file = os.path.join(snmp_dir, "passwords.txt")
+    ip_list_file = os.path.join(infiltra_dir, "ips.txt")  # Assuming ips.txt is in the same directory as infiltra.py
+    attempt_limit = 4
 
     excluded_files = [
         'whois_',
@@ -21,12 +27,13 @@ def run_snmp_operations():
         'tcp.txt',
         'udp.txt'
     ]
+
     txt_files = list_txt_files(os.getcwd(), excluded_files)
 
-    if os.path.isdir(udp_parsed_dir) and os.path.isfile(udp_hosts_path):
-        txt_files.append(udp_hosts_path)  # Add the udp hosts file to the list of available file
+    if os.path.isdir(snmp_dir) and os.path.isfile(os.path.join(snmp_dir, 'snmp-hosts.txt')):
+        txt_files.append(
+            os.path.join(snmp_dir, 'snmp-hosts.txt'))  # Add the snmp hosts file to the list of available files
 
-    # Ask user to select the IP list file from the available txt files
     if not txt_files:
         console.print("No .txt files found for IP lists.", style=RICH_RED)
         return
@@ -39,11 +46,6 @@ def run_snmp_operations():
     if not selection.isdigit() or not 1 <= int(selection) <= len(txt_files):
         console.print("Invalid selection. Exiting SNMP operations.", style=RICH_RED)
         return
-
-    ip_list_file = txt_files[int(selection) - 1]  # Get the selected file
-    usernames_file = "snmp/users.txt"
-    passwords_file = "snmp/passwords.txt"
-    attempt_limit = 4
 
     def snmpwalk(username, password, ip, oid):
         try:
