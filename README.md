@@ -2,46 +2,47 @@
   <img src="https://github.com/jivy26/infiltra/blob/master/logo.png" alt="Infiltra">
 </p>
 
+[![Downloads](https://static.pepy.tech/badge/infiltra/month)](https://pepy.tech/project/infiltra) [![Downloads](https://static.pepy.tech/badge/infiltra/week)](https://pepy.tech/project/infiltra)
+
 # Goal
 
 To automate and enhance the processes of external penetration testing by integrating advanced Open Source Intelligence (OSINT) and other security tools, streamlining the discovery and analysis phases of security assessments.
 
 # Features
 
-- **Project Management**: Create, load, and manage penetration testing projects with a structured approach.
+## Project Management
+- **Create, Load, or Delete Projects**: Manage your penetration testing projects efficiently, from initiation to completion.
 
-- **Tool Status Monitoring**: Visual indicators for tool execution status within the current project's context.
+## Information Gathering
+- **Whois Lookups**: Conduct Whois lookups and parse results for organizational details.
+- **ICMP Echo**: Utilize ICMP echo requests to discover live hosts within a network.
+- **OSINT & Black Box OSINT**: Leverage tools like AORT, DNS Recon, BBOT, and EyeWitness for reconnaissance and analysis.
 
-- **Whois Analysis**: Comprehensive Whois lookups with parsed organization names for IP range targeting.
+## Scanning and Enumeration
+- **NMAP Scanning**: Run comprehensive NMAP scans for both TCP and UDP to map out network structures.
+- **Website Enumeration**: Employ techniques such as directory brute-forcing and technology identification for web analysis.
+- **VoIP (SIP) Testing**: Test VoIP devices using various SIPTPS modules.
 
-- **ICMP Echo Checking**: Identification of live hosts using ICMP echo requests.
+## Parsing and Analysis
+- **SSLScan and Parse**: Execute SSLScans over IP ranges and parse the output for significant findings.
+- **SSH-Audit and Parse**: Conduct SSH-Audit for security checks and parse the results.
 
-- **Open Source Intelligence (OSINT) Gathering**:
-  - **AORT & DNSRecon**: In-depth subdomain discovery and DNS analysis.
-  - **BBOT**: Black-box penetration testing for detailed security analysis. [Learn about BBOT](https://github.com/blacklanternsecurity/bbot).
-  - **Subdomain Enumeration**: Automated enumeration with visual snapshots of live websites.
+## Vulnerability Scanning
+- **NTP Testing (Not Working)**: Intended for running NTPQ and Metasploit against NTP servers.
 
-- **Network Mapping**: Detailed NMAP scans (TCP/UDP) with parsed results to outline network structures.
+## Additional Utilities
+- **NMAP Parser**: Now located in the NMAP Menu for enhanced scanning and result parsing.
+- **Feroxbuster for Directory Brute Forcing**: Discover hidden directories and files within web servers.
+- **Identify Technologies with Wappalyzer (Not Working)**: Detect technologies used by web applications.
+- **Perform OWASP ZAP Scan (Not Working)**: Analyze web applications for vulnerabilities.
+- **Run WPScan for WordPress Sites (Not Working)**: Inspect WordPress sites for security weaknesses.
+- **Nikto Web Scans**: Scan web servers to identify potential security issues.
 
-- **SSL Vulnerability Assessment**: SSLScan execution across IP ranges with parsed output highlighting significant vulnerabilities.
+## VoIP Testing Utilizing SIPPTS
+- **SIPPTS Tools**: Identify VoIP services, enumerate VoIP methods and extensions, and attempt to send VoIP invites using various SIPPTS tools.
 
-- **Web Server Scanning**: Nikto scans on single or multiple IPs to detect potential web server vulnerabilities.
+Note: Some features are currently not working and are in the process of being fixed or improved.
 
-- **Nuclei Vulnerability Scanning**: Integration of Nuclei scans to identify known vulnerabilities in network infrastructures.
-
-- **Website Enumeration**: A suite of tools including Feroxbuster, Wappalyzer, OWASP ZAP, and WPScan to discover, analyze, and report on web application vulnerabilities.
-
-# New in This Release
-
-- **Feroxbuster Integration**: Automated installation and execution of Feroxbuster for directory brute-forcing, with results stored in project-specific directories.
-
-- **DNSRecon Output Filtering**: Enhanced DNSRecon output to highlight misconfigurations and rerun functionality for thorough examination.
-
-- **WPScan Improvements**: Single domain processing for WPScan to avoid errors and better handle multiple domains.
-
-- **App Data Directory**: Introduction of an application data directory for storing user-specific configurations and API keys.
-
-- **Error Handling and Notifications**: Improved error messages and notifications for background processes and completed scans.
 
 # Examples
 
