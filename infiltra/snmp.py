@@ -1,6 +1,7 @@
 import os
 import subprocess
-from infiltra.utils import console, RICH_CYAN, RICH_GREEN, RICH_YELLOW, RICH_RED, list_txt_files
+from infiltra.utils import (console, RICH_CYAN, RICH_GREEN, RICH_YELLOW, RICH_RED, list_txt_files,
+                            BOLD_GREEN, BOLD_BLUE, BOLD_RED, clear_screen)
 
 
 # Commonly used OIDs
@@ -8,9 +9,22 @@ oids = ["1.3.6.1.2.1.1.1.0", "1.3.6.1.2.1.1.3.0", "1.3.6.1.2.1.1.5.0"]  # sysDes
 
 
 def run_snmp_operations():
-    excluded_files = ['whois_', 'icmpecho_', 'sslscan.txt', 'tcp.txt', 'udp.txt']
-    txt_files = list_txt_files(os.getcwd(),
-                               excluded_files)  # Assuming list_txt_files function can exclude files based on prefixes
+    clear_screen()
+    udp_parsed_dir = 'udp_parsed/'
+    udp_hosts_file = 'snmp-hosts.txt'
+    udp_hosts_path = os.path.join(udp_parsed_dir, udp_hosts_file)
+
+    excluded_files = [
+        'whois_',
+        'icmpecho_',
+        'sslscan.txt',
+        'tcp.txt',
+        'udp.txt'
+    ]
+    txt_files = list_txt_files(os.getcwd(), excluded_files)
+
+    if os.path.isdir(udp_parsed_dir) and os.path.isfile(udp_hosts_path):
+        txt_files.append(udp_hosts_path)  # Add the udp hosts file to the list of available file
 
     # Ask user to select the IP list file from the available txt files
     if not txt_files:
@@ -21,7 +35,7 @@ def run_snmp_operations():
     for idx, file in enumerate(txt_files, start=1):
         console.print(f"{RICH_CYAN}{idx}. {file}", style=RICH_CYAN)
 
-    selection = input("Enter the file number: ").strip()
+    selection = input("Enter your choice: ").strip()
     if not selection.isdigit() or not 1 <= int(selection) <= len(txt_files):
         console.print("Invalid selection. Exiting SNMP operations.", style=RICH_RED)
         return
