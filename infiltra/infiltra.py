@@ -338,8 +338,9 @@ def run_whois():
     print(f"\n{BOLD_GREEN}Running WHOIS and Parsing results on {ip_input}\n")
     stdout = run_subprocess(['bash', whois_script_path, ip_input])
     print(stdout)
-    screenshot_path = take_screenshot()
-    take_screenshot()
+
+    module_name = "whois"
+    screenshot_path = take_screenshot(module_name)
     print(f"Screenshot saved at {screenshot_path}")
     input(f"{BOLD_GREEN}Press any key to return to the menu...")
 
