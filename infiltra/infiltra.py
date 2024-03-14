@@ -23,6 +23,8 @@ GitHub: https://github.com/jivy26/infiltra
 import os
 import subprocess
 import sys
+import time
+
 import pyfiglet
 
 from infiltra.install_dependencies import (check_and_install_sippts, check_and_install_eyewitness,
@@ -340,7 +342,7 @@ def run_whois():
     stdout = run_subprocess(['bash', whois_script_path, ip_input])
     print(stdout)
 
-
+    time.sleep(1)
     take_screenshot(module_name)
     input(f"{BOLD_GREEN}Press any key to return to the menu...")
 
