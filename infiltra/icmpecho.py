@@ -1,7 +1,7 @@
 import subprocess
 import re
 from datetime import datetime
-from screenshot import take_screenshot
+from infiltra.screenshot import take_screenshot
 
 def run_fping(hosts_input):
     # Get the current date to include in the filename
