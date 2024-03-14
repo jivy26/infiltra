@@ -92,10 +92,6 @@ def check_alive_hosts():
     for host in alive_hosts:
         print(f"{BOLD_YELLOW}{host}")
 
-    screenshot_path = take_screenshot()
-    take_screenshot()
-    print(f"Screenshot saved at {screenshot_path}")
-
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
 
@@ -342,6 +338,9 @@ def run_whois():
     print(f"\n{BOLD_GREEN}Running WHOIS and Parsing results on {ip_input}\n")
     stdout = run_subprocess(['bash', whois_script_path, ip_input])
     print(stdout)
+    screenshot_path = take_screenshot()
+    take_screenshot()
+    print(f"Screenshot saved at {screenshot_path}")
     input(f"{BOLD_GREEN}Press any key to return to the menu...")
 
 
