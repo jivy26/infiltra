@@ -9,6 +9,8 @@ import re
 import datetime
 import sys
 
+from screenshot import take_screenshot
+
 
 # Default path to the file containing IP addresses if no command-line argument is provided
 default_ip_file_path = 'tcp_parsed/https-hosts.txt'  # Define this before using it in the conditional statement below
@@ -265,4 +267,6 @@ with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
                 output_file.write(f"\nNo findings for {ip}, automatically loading a window to run scans for a screenshot.\n")
                 print(f"\n{YELLOW}No findings for {ip}, automatically loading a window to run scans for a screenshot.{END}", flush=True)
                 open_new_terminal_and_run_sslscan(ip)
+            module_name = f"sslscan_{ip.replace('.', '_')}"  # Replace dots with underscores for filename
+            take_screenshot(module_name)
                 # Pause the script to allow the user to take a screenshot

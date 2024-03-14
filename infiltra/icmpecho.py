@@ -1,7 +1,7 @@
 import subprocess
 import re
 from datetime import datetime
-
+from screenshot import take_screenshot
 
 def run_fping(hosts_input):
     # Get the current date to include in the filename
@@ -32,5 +32,6 @@ def run_fping(hosts_input):
                     alive_ip = match.group(1)
                     alive_ips.append(alive_ip)
                     alive_file.write(alive_ip + '\n')
-
+    module_name = "icmpechho"
+    take_screenshot(module_name)
     return alive_hosts
