@@ -342,7 +342,7 @@ def run_whois():
     stdout = run_subprocess(['bash', whois_script_path, ip_input])
     print(stdout)
 
-    time.sleep(1)
+
     take_screenshot(module_name)
     input(f"{BOLD_GREEN}Press any key to return to the menu...")
 

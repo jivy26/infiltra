@@ -1,5 +1,6 @@
 # screenshot.py
-
+import datetime
+import time
 import os
 
 from PIL import ImageGrab
@@ -10,9 +11,11 @@ def take_screenshot(module_name, save_path="screenshots"):
     # Ensure the directory exists
     os.makedirs(save_path, exist_ok=True)
 
-    filename = f"{module_name}.png"
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename = f"{module_name}_{timestamp}.png"
     file_path = os.path.join(save_path, filename)
 
+    time.sleep(1)
     screenshot = pyautogui.screenshot()
 
     screenshot.save(file_path)
