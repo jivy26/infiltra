@@ -309,6 +309,7 @@ def run_sslscanparse():
 # Function to run whois script
 def run_whois():
     clear_screen()
+    module_name = "whois"
     whois_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'whois_script.sh')
 
     excluded_files = [
@@ -339,9 +340,8 @@ def run_whois():
     stdout = run_subprocess(['bash', whois_script_path, ip_input])
     print(stdout)
 
-    module_name = "whois"
-    screenshot_path = take_screenshot(module_name)
-    print(f"Screenshot saved at {screenshot_path}")
+
+    take_screenshot(module_name)
     input(f"{BOLD_GREEN}Press any key to return to the menu...")
 
 
