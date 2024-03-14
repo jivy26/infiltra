@@ -93,13 +93,13 @@ def check_alive_hosts():
         print(f"{BOLD_YELLOW}{host}")
 
     screenshot_path = take_screenshot()
+    take_screenshot()
     print(f"Screenshot saved at {screenshot_path}")
 
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
+
 # Sippts
-
-
 def list_available_files():
     udp_parsed_dir = 'udp_parsed/'
     udp_hosts_file = '5060-udp-hosts.txt'
