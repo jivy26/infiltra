@@ -27,6 +27,7 @@ import pyfiglet
 
 from infiltra.install_dependencies import (check_and_install_sippts, check_and_install_eyewitness,
                                   check_and_install_gnome_terminal)
+from infiltra.screenshot import take_screenshot
 from infiltra.icmpecho import run_fping
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
@@ -90,6 +91,9 @@ def check_alive_hosts():
     print(f"\n{BOLD_GREEN}Alive Hosts:")
     for host in alive_hosts:
         print(f"{BOLD_YELLOW}{host}")
+
+    screenshot_path = take_screenshot()
+    print(f"Screenshot saved at {screenshot_path}")
 
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 

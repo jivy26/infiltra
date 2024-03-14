@@ -41,7 +41,7 @@ def check_and_install_eyewitness():
 def check_and_install_sippts():
     try:
         # Check if 'sipscan' command is available in the system path
-        subprocess.run(["which", "sipscan"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run(["which", "sipscan"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         print(f"{BOLD_GREEN}sippts is installed.")
     except subprocess.CalledProcessError:
         print(f"{BOLD_YELLOW}sippts is not installed. Installing now...")
