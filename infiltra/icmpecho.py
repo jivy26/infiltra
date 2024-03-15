@@ -34,4 +34,9 @@ def run_fping(hosts_input):
                     alive_file.write(alive_ip + '\n')
     module_name = "icmpechho"
     take_screenshot(module_name)
+
+    if not alive_hosts:
+        print("No hosts responded to ICMP Echo requests.")
+        return []
+
     return alive_hosts
