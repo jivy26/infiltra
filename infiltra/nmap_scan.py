@@ -40,11 +40,12 @@ def run_nmap_scan(ip_list, scan_type, project_path, schedule=False):
         # For immediate execution, use gnome-terminal
         if scan_type == "tcp" or scan_type == "both":
             tcp_command = ['gnome-terminal', '--', 'bash', '-c',
-                           f"{tcp_scan_command}; echo 'Press enter to exit'; read"]
+                           f"{tcp_scan_command} || echo 'An error occurred with the TCP scan.'; echo 'Press enter to exit'; read"]
             subprocess.Popen(tcp_command)
 
         if scan_type == "udp" or scan_type == "both":
-            udp_command = ['gnome-terminal', '--', 'bash', '-c', f"{udp_scan_command}; echo 'Press enter to exit'; read"]
+            udp_command = ['gnome-terminal', '--', 'bash', '-c',
+                           f"{udp_scan_command} || echo 'An error occurred with the UDP scan.'; echo 'Press enter to exit'; read"]
             subprocess.Popen(udp_command)
     else:
         # Create a marker file to indicate the scan has started
