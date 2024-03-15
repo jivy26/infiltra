@@ -78,7 +78,7 @@ def run_dnsrecon(domain):
     except Exception as e:
         print(f"{BOLD_RED}An error occurred while running DNSRecon: {e}")
 
-    module_name = f"aort_{domain}"
+    module_name = f"dnsrecon_{domain}"
     take_screenshot(module_name)
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
