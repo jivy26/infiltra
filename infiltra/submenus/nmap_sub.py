@@ -3,6 +3,7 @@ import subprocess
 import sys
 import pkg_resources
 
+from infiltra.screenshot import take_screenshot
 from infiltra.utils import (
     is_valid_ip, list_txt_files, is_valid_domain, clear_screen,
     console,
@@ -41,6 +42,9 @@ def run_ngrep(scan_type):
 
     console.print(f"Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans", style=RICH_GREEN)
     subprocess.run(['bash', ngrep_script_path, output_file, scan_type.upper()])
+
+    module_name = f"{scan_type}nmap"
+    take_screenshot(module_name)
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
 
