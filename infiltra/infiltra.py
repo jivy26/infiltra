@@ -28,7 +28,7 @@ import time
 import pyfiglet
 
 from infiltra.install_dependencies import (check_and_install_sippts, check_and_install_eyewitness,
-                                  check_and_install_gnome_terminal)
+                                  check_and_install_gnome_terminal, check_and_install_gnome_screenshot)
 from infiltra.screenshot import take_screenshot
 from infiltra.icmpecho import run_fping
 from infiltra.project_handler import project_submenu, last_project_file_path
@@ -405,6 +405,7 @@ def main():
     check_and_install_gnome_terminal()
     check_and_install_eyewitness()
     check_and_install_sippts()
+    check_and_install_gnome_screenshot()
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()
