@@ -124,6 +124,7 @@ def cancel_scheduled_scan():
 
 
 # Function to run nmap scan
+# Function to run nmap scan
 def run_nmap():
     clear_screen()
 
@@ -137,7 +138,7 @@ def run_nmap():
 
     # Prompt for input: either a file number, a single IP, or 'x' to cancel
     selection = input(
-        f"{BOLD_GREEN}\nEnter a number to select a file or input a single IP address: {BOLD_WHITE}").strip()
+        f"{BOLD_GREEN}\nEnter a number to select a file, input a single IP address: {BOLD_WHITE}").strip()
 
     # Check if the input is a digit and within the range of listed files
     if selection.isdigit() and 1 <= int(selection) <= len(txt_files):
@@ -151,7 +152,7 @@ def run_nmap():
     # Ask for the type of scan
     clear_screen()
     print(f"{BOLD_GREEN}NMAP Scanner\n")
-    print(f"{BOLD_GREEN}NMAP Scans will launch in a separate terminal")
+    print(f"{BOLD_MAG}NMAP Scans will launch in a separate terminal")
     print(f"{BOLD_CYAN}TCP: {BOLD_WHITE}nmap -sSV --top-ports 4000 -Pn ")
     print(f"{BOLD_CYAN}UDP: {BOLD_WHITE}nmap -sU --top-ports 400 -Pn ")
     scan_type = input(f"\n{BOLD_GREEN}Enter scan type (tcp/udp/both): ").lower()
@@ -164,12 +165,10 @@ def run_nmap():
     # Run the nmap scan using the selected file or entered IP/domain
     nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
     if scan_type in ['tcp', 'both']:
-        tcp_command_string = f"echo -ne \"\\033]0;NMAP TCP\\007\"; exec sudo python3 {nmap_script_path} {ip_input} tcp"
-        tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
+        tcp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} tcp']
         subprocess.Popen(tcp_command)
     if scan_type in ['udp', 'both']:
-        udp_command_string = f"echo -ne \"\\033]0;NMAP UDP\\007\"; exec sudo python3 {nmap_script_path} {ip_input} udp"
-        udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
+        udp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} udp']
         subprocess.Popen(udp_command)
 
     print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched.")
