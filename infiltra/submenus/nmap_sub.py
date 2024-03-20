@@ -137,8 +137,8 @@ def run_nmap():
     ]
     txt_files = list_txt_files(os.getcwd(), exclude_prefixes=excluded_files)
     if txt_files:
-        console.print("NMAP Scanner\n",  style=RICH_GREEN)
-        console.print("Available .txt Files In This Project's Folder\n",  style=RICH_CYAN)
+        console.print("NMAP Scanner\n", style=RICH_GREEN)
+        console.print("Available .txt Files In This Project's Folder\n", style=RICH_CYAN)
         for idx, file in enumerate(txt_files, start=1):
             print(f"{BOLD_GREEN}{idx}. {BOLD_WHITE}{file}")
 
@@ -157,48 +157,35 @@ def run_nmap():
         print(f"{BOLD_RED}Invalid scan type: {scan_type}. Please enter 'tcp', 'udp', or 'both'.")
         return
 
-    # Decide whether to run now or schedule
     action = input(f"\n{BOLD_GREEN}Do you want to run the scan now or schedule it for later? (now/later): ").lower()
     if action not in ['now', 'later']:
         print(f"{BOLD_RED}Invalid option: {action}. Please enter 'now' or 'later'.")
         return
 
     nmap_script_path = pkg_resources.resource_filename('infiltra', 'nmap_scan.py')
-    command_string = f"sudo python3 {nmap_script_path} {ip_input} {scan_type}"
 
     if action == 'now':
-        if scan_type in ['tcp', 'both']:
-            tcp_command_string = f"echo -ne \"\\033]0;NMAP TCP\\007\"; exec {command_string} tcp"
-            tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
-            subprocess.Popen(tcp_command)
-        if scan_type in ['udp', 'both']:
-            udp_command_string = f"echo -ne \"\\033]0;NMAP UDP\\007\"; exec {command_string} udp"
-            udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
-            subprocess.Popen(udp_command)
-
+        # Execute the nmap command directly without using gnome-terminal
+        command_string = f"sudo python3 {nmap_script_path} {ip_input} {scan_type}"
+        subprocess.Popen(command_string, shell=True)
         print(f"\n{BOLD_GREEN}Nmap {scan_type} scan launched.")
     elif action == 'later':
+        # Scheduling part remains unchanged
         date_input = input(f"{BOLD_GREEN}Enter date for the scan (mm/dd/yyyy): {BOLD_WHITE}").strip()
         time_input = input(f"{BOLD_GREEN}Enter time in military time (HHMM, e.g., 1600 for 4pm): {BOLD_WHITE}").strip()
-
-        # Ensure time is properly formatted for the `at` command
-        if len(time_input) == 3:  # If only 3 digits, add a '0' in the front
+        if len(time_input) == 3:
             time_input = '0' + time_input
         if ':' in time_input:
-            time_input = time_input.replace(':', '')  # Remove colon
-
-        # Combine date and time for the `at` command
+            time_input = time_input.replace(':', '')
         schedule_datetime = f"{time_input} {date_input}"
         at_command = f'echo "sudo python3 {nmap_script_path} {ip_input} {scan_type} True" | at {schedule_datetime}'
         try:
-            at_command = f'echo "sudo python3 {nmap_script_path} {ip_input} {scan_type} True" | at {schedule_datetime}'
             subprocess.run(at_command, shell=True, check=True)
             print(f"{BOLD_GREEN}Scan scheduled for {schedule_datetime}.")
         except subprocess.CalledProcessError as e:
             print(f"{BOLD_RED}An error occurred while scheduling the scan: {e}")
 
     input(f"{BOLD_GREEN}Press Enter to return to the menu...")
-
 
 
 def nmap_submenu(project_path):
