@@ -169,11 +169,11 @@ def run_nmap():
 
     if action == 'now':
         if scan_type in ['tcp', 'both']:
-            tcp_command_string = f"echo -ne \"\\033]0;NMAP TCP\\007\"; exec {command_string} tcp"
+            tcp_command_string = f"sudo python3 {nmap_script_path} {ip_input} tcp; read -p 'Press enter to close'"
             tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
             subprocess.Popen(tcp_command)
         if scan_type in ['udp', 'both']:
-            udp_command_string = f"echo -ne \"\\033]0;NMAP UDP\\007\"; exec {command_string} udp"
+            udp_command_string = f"sudo python3 {nmap_script_path} {ip_input} udp; read -p 'Press enter to close'"
             udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
             subprocess.Popen(udp_command)
 

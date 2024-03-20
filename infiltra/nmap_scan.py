@@ -37,14 +37,14 @@ def run_nmap_scan(ip_list, scan_type, project_path, schedule=False):
     udp_scan_command = f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}"
 
     if not schedule:
-        # For immediate execution, use gnome-terminal
+        # Use gnome-terminal to keep the window open after executing the command
         if scan_type == "tcp" or scan_type == "both":
-            tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_scan_command]
-            subprocess.Popen(tcp_command)
+            tcp_command = f"sudo nmap -sSV --top-ports 4000 -Pn -oG tcp.txt {' '.join(ip_list)}; read -p 'Press enter to close'"
+            subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', tcp_command])
 
         if scan_type == "udp" or scan_type == "both":
-            udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_scan_command]
-            subprocess.Popen(udp_command)
+            udp_command = f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}; read -p 'Press enter to close'"
+            subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', udp_command])
     else:
         # Create a marker file to indicate the scan has started
         with open(marker_file, "w") as f:
