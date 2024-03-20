@@ -27,21 +27,53 @@ def check_and_install_at():
 
 def run_ngrep(scan_type):
     clear_screen()
+    # Define the path to the nmap-grep.sh script
     ngrep_script_path = pkg_resources.resource_filename('infiltra', 'nmap-grep.sh')
-    output_file = f"{scan_type.lower()}.txt"
+    # Define the output directory based on the scan type
     output_path = f"{scan_type.lower()}_parsed/"
 
+    # Check if the output directory exists and handle accordingly
     if os.path.isdir(output_path):
-        overwrite = console.input(f"The directory [bold cyan]{output_path}[/bold cyan] already exists. Overwrite it? (y/n): ").strip().lower()
-        if overwrite == 'y':
-            subprocess.run(['rm', '-rf', output_path])
-        else:
+        overwrite = console.input(
+            f"The directory [bold cyan]{output_path}[/bold cyan] already exists. Overwrite it? (y/n): ").strip().lower()
+        if overwrite != 'y':
             console.print(f"Not overwriting the existing directory {output_path}.", style=RICH_COLOR)
             return
 
-    console.print(f"Running nmap-grep.sh on {output_file} for {scan_type.upper()} scans", style=RICH_GREEN)
-    subprocess.run(['bash', ngrep_script_path, output_file, scan_type.upper()])
-    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
+    # List available .txt files in the project directory, excluding specific files
+    excluded_files = [
+        'whois_',
+        'icmpecho_',
+        'sslscan.txt',
+        'aort_dns.txt',
+        'osint_domain.txt'
+    ]
+    txt_files = list_txt_files(os.getcwd(), exclude_prefixes=excluded_files)
+
+    if txt_files:
+        console.print(f"Available .txt Files for {scan_type.upper()} Parsing\n", style=RICH_CYAN)
+        for idx, file in enumerate(txt_files, start=1):
+            console.print(f"{idx}. {file}", style=RICH_GREEN)
+
+        # Prompt the user to select a file
+        selection = console.input(
+            f"\n{BOLD_GREEN}Enter the number of the file you wish to parse or 'x' to cancel: {BOLD_WHITE}").strip()
+        if selection.lower() == 'x':
+            return
+        elif selection.isdigit() and 1 <= int(selection) <= len(txt_files):
+            file_selected = txt_files[int(selection) - 1]
+        else:
+            console.print("Invalid selection. Please enter a valid number from the list.", style=RICH_RED)
+            return
+
+        # Continue with ngrep script execution for the selected file
+        console.print(f"Running nmap-grep.sh on {file_selected} for {scan_type.upper()} parsing", style=RICH_GREEN)
+        subprocess.run(
+            ['bash', ngrep_script_path, os.path.join(os.getcwd(), file_selected), scan_type.upper(), output_path])
+
+        console.input(f"{BOLD_GREEN}Press Enter to return to the menu...")
+    else:
+        console.print("No suitable .txt files found for parsing.", style=RICH_RED)
 
 
 def get_scheduled_scans_status(project_path):
