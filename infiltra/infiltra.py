@@ -23,10 +23,13 @@ GitHub: https://github.com/jivy26/infiltra
 import os
 import subprocess
 import sys
+import time
+
 import pyfiglet
 
 from infiltra.install_dependencies import (check_and_install_sippts, check_and_install_eyewitness,
-                                  check_and_install_gnome_terminal)
+                                  check_and_install_gnome_terminal, check_and_install_gnome_screenshot)
+from infiltra.screenshot import take_screenshot
 from infiltra.icmpecho import run_fping
 from infiltra.project_handler import project_submenu, last_project_file_path
 from infiltra.updater import check_and_update
@@ -93,9 +96,8 @@ def check_alive_hosts():
 
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
+
 # Sippts
-
-
 def list_available_files():
     udp_parsed_dir = 'udp_parsed/'
     udp_hosts_file = '5060-udp-hosts.txt'
@@ -309,6 +311,7 @@ def run_sslscanparse():
 # Function to run whois script
 def run_whois():
     clear_screen()
+    module_name = "whois"
     whois_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'whois_script.sh')
 
     excluded_files = [
@@ -338,6 +341,9 @@ def run_whois():
     print(f"\n{BOLD_GREEN}Running WHOIS and Parsing results on {ip_input}\n")
     stdout = run_subprocess(['bash', whois_script_path, ip_input])
     print(stdout)
+
+
+    take_screenshot(module_name)
     input(f"{BOLD_GREEN}Press any key to return to the menu...")
 
 
@@ -399,6 +405,7 @@ def main():
     check_and_install_gnome_terminal()
     check_and_install_eyewitness()
     check_and_install_sippts()
+    check_and_install_gnome_screenshot()
     projects_base_path = os.path.expanduser('~/projects')  # Define the base projects directory path
     project_path = projects_base_path  # Initialize project_path
     version = get_version()

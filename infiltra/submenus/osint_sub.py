@@ -6,6 +6,7 @@ from infiltra.utils import read_file_lines, is_valid_domain, clear_screen, write
 from infiltra.bbot.bbot_parse import bbot_main
 from infiltra.bbot.check_bbot import is_bbot_installed, install_bbot
 from infiltra.eyewitness import main as run_eyewitness
+from infiltra.screenshot import take_screenshot
 
 # Initialize Colorama
 init(autoreset=True)
@@ -40,7 +41,8 @@ def run_aort(domain):
         os.system(aort_command)
     except Exception as e:
         print(f"{BOLD_RED}An error occurred while running AORT: {e}")
-
+    module_name = f"aort_{domain}"
+    take_screenshot(module_name)
     input(f"\n{BOLD_GREEN}Press Enter to return to proceed with DNSRecon...")
 
 
@@ -76,6 +78,8 @@ def run_dnsrecon(domain):
     except Exception as e:
         print(f"{BOLD_RED}An error occurred while running DNSRecon: {e}")
 
+    module_name = f"dnsrecon_{domain}"
+    take_screenshot(module_name)
     input(f"\n{BOLD_GREEN}Press Enter to return to the menu...")
 
 
