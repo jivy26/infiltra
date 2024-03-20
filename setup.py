@@ -11,7 +11,8 @@ setup(
         'ascii_magic',
         'pyfiglet',
         'pipx',
-        'pymetasploit3'
+        'pymetasploit3',
+        'pyautogui'
     ],
     entry_points={
         'console_scripts': [
