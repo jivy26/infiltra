@@ -165,9 +165,10 @@ def run_nmap():
     nmap_script_path = pkg_resources.resource_filename('infiltra', 'nmap_scan.py')
 
     if action == 'now':
-        # Execute the nmap command directly without using gnome-terminal
+        # Ensure ip_input is a string representing the file path or IP address
         command_string = f"sudo python3 {nmap_script_path} {ip_input} {scan_type}"
-        subprocess.Popen(command_string, shell=True)
+        # Make sure to pass the command as a list if shell=False or a single string if shell=True
+        subprocess.Popen(command_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         print(f"\n{BOLD_GREEN}Nmap {scan_type} scan launched.")
     elif action == 'later':
         # Scheduling part remains unchanged
