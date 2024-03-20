@@ -165,10 +165,19 @@ def run_nmap():
     nmap_script_path = pkg_resources.resource_filename('infiltra', 'nmap_scan.py')
 
     if action == 'now':
-        # Ensure ip_input is a string representing the file path or IP address
-        command_string = f"sudo python3 {nmap_script_path} {ip_input} {scan_type}"
-        # Make sure to pass the command as a list if shell=False or a single string if shell=True
-        subprocess.Popen(command_string, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Define the command string as a list
+        command = ["sudo", "python3", nmap_script_path, ip_input, scan_type]
+
+        if scan_type in ['tcp', 'both']:
+            # Open a new xterm window to run the TCP scan command
+            tcp_command = ["xterm", "-e"] + command + ["tcp"]
+            subprocess.Popen(tcp_command)
+
+        if scan_type in ['udp', 'both']:
+            # Open a new xterm window to run the UDP scan command
+            udp_command = ["xterm", "-e"] + command + ["udp"]
+            subprocess.Popen(udp_command)
+
         print(f"\n{BOLD_GREEN}Nmap {scan_type} scan launched.")
     elif action == 'later':
         # Scheduling part remains unchanged
