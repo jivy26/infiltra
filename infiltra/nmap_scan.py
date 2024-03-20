@@ -16,13 +16,10 @@ def nmap_is_installed():
     return subprocess.run(['which', 'nmap'], stdout=subprocess.PIPE, stderr=subprocess.PIPE).returncode == 0
 
 
-def run_nmap_scan(ip_list, scan_type, project_path, schedule=False):
+def run_nmap_scan(ip_list, scan_type, project_path):
     # Create the 'tmp' directory within the project path if it doesn't exist
     tmp_dir = os.path.join(project_path, 'tmp')
     os.makedirs(tmp_dir, exist_ok=True)
-
-    # Define the path to the marker file inside the 'tmp' direc
-    marker_file = os.path.join(tmp_dir, "nmap_scan_ongoing.marker")
 
     if scan_type not in ["tcp", "udp", "both"]:
         print("Invalid scan type: Choose 'tcp', 'udp', or 'both'.")
@@ -36,34 +33,17 @@ def run_nmap_scan(ip_list, scan_type, project_path, schedule=False):
     tcp_scan_command = f"sudo nmap -sSV --top-ports 4000 -Pn -oG tcp.txt {' '.join(ip_list)}"
     udp_scan_command = f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}"
 
-    if not schedule:
-        terminal_command_prefix = "gnome-terminal -- bash -c '"
-        terminal_command_suffix = "; read -p \"Press enter to close\"'"
+    # Prepare terminal commands to open new windows
+    terminal_command_prefix = "gnome-terminal -- bash -c '"
+    terminal_command_suffix = "; read -p \"Press enter to close\"'"
 
-        if scan_type == "tcp" or scan_type == "both":
-            tcp_command = f"sudo nmap -sSV --top-ports 4000 -Pn -oG tcp.txt {' '.join(ip_list)}"
-            full_tcp_command = terminal_command_prefix + tcp_command + terminal_command_suffix
-            subprocess.Popen(full_tcp_command, shell=True)
+    if scan_type == "tcp" or scan_type == "both":
+        tcp_command = terminal_command_prefix + tcp_scan_command + terminal_command_suffix
+        subprocess.Popen(tcp_command, shell=True)
 
-        if scan_type == "udp" or scan_type == "both":
-            udp_command = f"sudo nmap -sU --top-ports 400 -Pn -oG udp.txt {' '.join(ip_list)}"
-            full_udp_command = terminal_command_prefix + udp_command + terminal_command_suffix
-            subprocess.Popen(full_udp_command, shell=True)
-    else:
-        # Create a marker file to indicate the scan has started
-        with open(marker_file, "w") as f:
-            f.write("Scan started")
-
-        # For scheduled execution, run the command directly
-        if scan_type == "tcp" or scan_type == "both":
-            subprocess.run(tcp_scan_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-        if scan_type == "udp" or scan_type == "both":
-            subprocess.run(udp_scan_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-       # Delete the marker file
-        if os.path.exists(marker_file):
-            os.remove(marker_file)
+    if scan_type == "udp" or scan_type == "both":
+        udp_command = terminal_command_prefix + udp_scan_command + terminal_command_suffix
+        subprocess.Popen(udp_command, shell=True)
 
 
 def main():
