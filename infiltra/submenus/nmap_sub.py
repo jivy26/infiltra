@@ -168,12 +168,24 @@ def run_nmap():
     command_string = f"sudo python3 {nmap_script_path} {ip_input} {scan_type}"
 
     if action == 'now':
+        # Get the correct path to the nmap_scan.py script
+        nmap_script_path = pkg_resources.resource_filename('infiltra', 'nmap_scan.py')
+
+        # Check if the file actually exists at the path
+        if not os.path.exists(nmap_script_path):
+            print(f"{BOLD_RED}Error: nmap_scan.py not found at {nmap_script_path}.")
+            return
+
+        # Correctly construct the command string
+        command_string = f"sudo python3 '{nmap_script_path}' '{ip_input}' {scan_type}"
+
+        # Open gnome-terminal and handle errors
         if scan_type in ['tcp', 'both']:
-            tcp_command_string = f"sudo python3 {nmap_script_path} {ip_input} tcp; read -p 'Press enter to close'"
+            tcp_command_string = f"{command_string} tcp || read -p 'Press enter to close'"
             tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
             subprocess.Popen(tcp_command)
         if scan_type in ['udp', 'both']:
-            udp_command_string = f"sudo python3 {nmap_script_path} {ip_input} udp; read -p 'Press enter to close'"
+            udp_command_string = f"{command_string} udp || read -p 'Press enter to close'"
             udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
             subprocess.Popen(udp_command)
 
