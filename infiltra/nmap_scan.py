@@ -65,7 +65,7 @@ def main():
                         print(f"Invalid IP found in file: {ip}")
                         sys.exit(1)
             # Run scan with file input
-            run_nmap_scan(["-iL", input_arg], scan_type, scheduled)
+            run_nmap_scan(["-iL", input_arg], scan_type, os.getcwd())
         elif is_valid_ip(input_arg):
             # Run scan with single IP
             run_nmap_scan([input_arg], scan_type, scheduled)
