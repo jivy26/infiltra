@@ -177,19 +177,18 @@ def run_nmap():
             return
 
         # Correctly construct the command string
-        command_string = f"sudo python3 '{nmap_script_path}' '{ip_input}' {scan_type}"
-
-        # Open gnome-terminal and handle errors
         if scan_type in ['tcp', 'both']:
-            tcp_command_string = f"{command_string} tcp || read -p 'Press enter to close'"
+            tcp_command_string = f"sudo python3 '{nmap_script_path}' '{ip_input}' tcp || echo 'An error occurred.'; read -p 'Press enter to close'"
             tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
             subprocess.Popen(tcp_command)
+
         if scan_type in ['udp', 'both']:
-            udp_command_string = f"{command_string} udp || read -p 'Press enter to close'"
+            udp_command_string = f"sudo python3 '{nmap_script_path}' '{ip_input}' udp || echo 'An error occurred.'; read -p 'Press enter to close'"
             udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
             subprocess.Popen(udp_command)
 
         print(f"\n{BOLD_GREEN}Nmap {scan_type} scan launched.")
+
     elif action == 'later':
         date_input = input(f"{BOLD_GREEN}Enter date for the scan (mm/dd/yyyy): {BOLD_WHITE}").strip()
         time_input = input(f"{BOLD_GREEN}Enter time in military time (HHMM, e.g., 1600 for 4pm): {BOLD_WHITE}").strip()
