@@ -124,7 +124,6 @@ def cancel_scheduled_scan():
 
 
 # Function to run nmap scan
-# Function to run nmap scan
 def run_nmap():
     clear_screen()
 
@@ -162,13 +161,15 @@ def run_nmap():
         print(f"{BOLD_RED}Invalid scan type: {scan_type}. Please enter 'tcp', 'udp', or 'both'.")
         return
 
-    # Run the nmap scan using the selected file or entered IP/domain
+    # Construct the path to the nmap_script
     nmap_script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'nmap_scan.py')
+
+    # Commands to run the nmap scan using qterminal
     if scan_type in ['tcp', 'both']:
-        tcp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} tcp']
+        tcp_command = ['qterminal', '-e', f"bash -c 'sudo python3 {nmap_script_path} {ip_input} tcp; bash'"]
         subprocess.Popen(tcp_command)
     if scan_type in ['udp', 'both']:
-        udp_command = ['qterminal', '-e', f'sudo python3 {nmap_script_path} {ip_input} udp']
+        udp_command = ['qterminal', '-e', f"bash -c 'sudo python3 {nmap_script_path} {ip_input} udp; bash'"]
         subprocess.Popen(udp_command)
 
     print(f"\n{BOLD_GREEN}Nmap {scan_type} scans launched.")
