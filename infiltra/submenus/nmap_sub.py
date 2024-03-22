@@ -186,12 +186,12 @@ def run_nmap():
 
         # Correctly construct the command string
         if scan_type in ['tcp', 'both']:
-            tcp_command_string = f"sudo python3 '{nmap_script_path}' {' '.join(ip_list)} tcp '{project_path}' || echo 'An error occurred.'; read -p 'Press enter to close'"
+            tcp_command_string = f"sudo python3 '{nmap_script_path}' {' '.join(ip_list)} tcp {project_path} || echo 'An error occurred.'; read -p 'Press enter to close'"
             tcp_command = ['gnome-terminal', '--', 'bash', '-c', tcp_command_string]
             subprocess.Popen(tcp_command)
 
         if scan_type in ['udp', 'both']:
-            udp_command_string = f"sudo python3 '{nmap_script_path}' {' '.join(ip_list)} udp '{project_path}' || echo 'An error occurred.'; read -p 'Press enter to close'"
+            udp_command_string = f"sudo python3 '{nmap_script_path}' {' '.join(ip_list)} udp {project_path} || echo 'An error occurred.'; read -p 'Press enter to close'"
             udp_command = ['gnome-terminal', '--', 'bash', '-c', udp_command_string]
             subprocess.Popen(udp_command)
 
