@@ -179,7 +179,7 @@ def run_nmap():
             return
 
         # Convert ip_input to a list if it's a single IP address
-        ip_list = [ip_input] if is_valid_ip(ip_input) else ["-iL", ip_input]
+        ip_list = [ip_input] if is_valid_ip(ip_input) else [ip_input]
 
         # Pass the project path as an argument
         project_path = os.getcwd()

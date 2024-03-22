@@ -50,13 +50,12 @@ def run_nmap_scan(ip_list, scan_type, project_path):
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: nmap_scan.py [single_ip/ip_file_path] [tcp/udp/both] [True/False for scheduled]")
+        print("Usage: nmap_scan.py [single_ip/ip_file_path] [tcp/udp/both] [project_path]")
         sys.exit(1)
 
-    scheduled = len(sys.argv) == 4 and sys.argv[3] == 'True'
     input_arg = sys.argv[1]
     scan_type = sys.argv[2].lower()
-    project_path = os.getcwd()  # Get the current working directory as the project path
+    project_path = sys.argv[3]
 
     try:
         if os.path.isfile(input_arg):
@@ -68,7 +67,7 @@ def main():
                         print(f"Invalid IP found in file: {ip}")
                         sys.exit(1)
             # Run scan with file input
-            run_nmap_scan(["-iL", input_arg], scan_type, project_path)
+            run_nmap_scan(ip_list, scan_type, project_path)
         elif is_valid_ip(input_arg):
             # Run scan with single IP
             run_nmap_scan([input_arg], scan_type, project_path)
