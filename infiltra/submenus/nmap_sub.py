@@ -1,6 +1,7 @@
 # nmap_sub.py
 
 import os
+import shutil
 import subprocess
 import sys
 import pkg_resources
@@ -25,6 +26,21 @@ def check_and_install_at():
         except subprocess.CalledProcessError as e:
             console.print(f"Failed to install at: {e}",  style=RICH_RED)
             sys.exit(1)
+
+
+def remove_directory_if_confirmed(output_path):
+    confirm = input(f"The directory {BOLD_CYAN}{output_path} already exists. Overwrite it? (y/n): {DEFAULT_COLOR} ").strip().lower()
+    if confirm in ['y', 'yes']:
+        try:
+            shutil.rmtree(output_path)  # Removes the directory and all its contents
+            console.print(f"Removed existing directory {output_path}.", style=RICH_GREEN)
+            return True
+        except Exception as e:
+            console.print(f"Failed to remove existing directory {output_path}: {e}", style=RICH_RED)
+            return False
+    else:
+        console.print(f"Not overwriting the existing directory {output_path}.", style=RICH_COLOR)
+        return False
 
 
 def run_ngrep():
@@ -74,11 +90,8 @@ def run_ngrep():
     for file_selected, scan_type in selected_files.items():
         output_path = f"{scan_type.lower()}_parsed/"
 
-        if os.path.isdir(output_path) and input(
-                f"The directory {BOLD_CYAN}{output_path} already exists. Overwrite it? (y/n): {DEFAULT_COLOR} "
-        ).strip().lower() != 'y':
-            console.print(f"Not overwriting the existing directory {output_path}.", style=RICH_COLOR)
-            continue
+        if os.path.isdir(output_path) and not remove_directory_if_confirmed(output_path):
+            continue  # Skip to the next file if the user doesn't confirm removal
 
         console.print(f"Running nmap-grep.sh on {file_selected} for {scan_type} parsing", style=RICH_GREEN)
         subprocess.run(['bash', ngrep_script_path, os.path.join(os.getcwd(), file_selected), scan_type, output_path])
