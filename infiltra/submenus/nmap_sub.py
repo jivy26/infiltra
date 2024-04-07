@@ -261,8 +261,7 @@ def nmap_submenu(project_path):
         elif choice == '3':
             clear_screen()
             print(f"{BOLD_CYAN}NMAP Results Parser\n")
-            scan_type = input(f"{BOLD_GREEN}Enter the scan type that you want to parse (TCP/UDP): ").upper()
-            run_ngrep(scan_type)
+            run_ngrep()
         elif choice == 'x':
             return
         else:
