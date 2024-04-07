@@ -191,20 +191,24 @@ fi
 varLine=""
 while read varLine; do
   varCheckForOpen=""
+  varCheckForTcpWrapped=""
   varCheckForOpen=$(echo $varLine | grep '/open/')
-  if [ "$varCheckForOpen" != "" ]; then
+  varCheckForTcpWrapped=$(echo $varLine | grep 'tcpwrapped')
+  if [ "$varCheckForOpen" != "" ] && [ "$varCheckForTcpWrapped" = "" ]; then
     varLineHost=$(echo $varLine | awk '{print $2}')
     varLinePorts=$(echo $varLine | awk '{$1=$2=$3=$4=""; print $0}')
-# Create temporary file to write each port result for this host
-      varTempRandom2=$(( ( RANDOM % 9999 ) + 1 ))
-      varTempFile2="temp-nmp2-$varTempRandom2.txt"
-      if [ -f "$varTempFile2" ]; then rm $varTempFile2; fi
-      echo "$varLinePorts" | tr "," "\n" | sed 's/^ *//g' >> $varOutPath$varTempFile2
-# Read the per-host temp file to write each open port as a line to the CSV temp file
+    # Create temporary file to write each port result for this host
+    varTempRandom2=$(( ( RANDOM % 9999 ) + 1 ))
+    varTempFile2="temp-nmp2-$varTempRandom2.txt"
+    if [ -f "$varTempFile2" ]; then rm $varTempFile2; fi
+    echo "$varLinePorts" | tr "," "\n" | sed 's/^ *//g' >> $varOutPath$varTempFile2
+    # Read the per-host temp file to write each open port as a line to the CSV temp file
     while read varTempLine; do
       varCheckForOpen=""
+      varCheckForTcpWrapped=""
       varCheckForOpen=$(echo $varTempLine | grep "/open/")
-      if [ "$varCheckForOpen" != "" ]; then
+      varCheckForTcpWrapped=$(echo $varTempLine | grep 'tcpwrapped')
+      if [ "$varCheckForOpen" != "" ] && [ "$varCheckForTcpWrapped" = "" ]; then
         varLinePort=$(echo $varTempLine | awk -F '/' '{print $1}')
         varLineTCPUDP=$(echo $varTempLine | awk -F '/' '{print $3}')
         varLineProto=$(echo $varTempLine | awk -F '/' '{print $5}')
