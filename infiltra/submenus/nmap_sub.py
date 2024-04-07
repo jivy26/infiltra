@@ -50,7 +50,7 @@ def run_ngrep():
 
     selected_files = {}
     while True:
-        selection = console.input(
+        selection = input(
             f"\n{BOLD_GREEN}Enter the number of the file you wish to parse, 'd' when done, or 'x' to cancel: {BOLD_WHITE}"
         ).strip().lower()
 
@@ -60,7 +60,7 @@ def run_ngrep():
             return
         elif selection.isdigit() and 1 <= int(selection) <= len(txt_files):
             file_selected = txt_files[int(selection) - 1]
-            scan_type = console.input(
+            scan_type = input(
                 f"{BOLD_GREEN}Enter the scan type for {file_selected} (TCP/UDP): {BOLD_WHITE}"
             ).strip().upper()
             if scan_type in ['TCP', 'UDP']:
@@ -74,8 +74,8 @@ def run_ngrep():
     for file_selected, scan_type in selected_files.items():
         output_path = f"{scan_type.lower()}_parsed/"
 
-        if os.path.isdir(output_path) and console.input(
-                f"The directory [bold cyan]{output_path}[/bold cyan] already exists. Overwrite it? (y/n): "
+        if os.path.isdir(output_path) and input(
+                f"The directory {BOLD_CYAN}{output_path} already exists. Overwrite it? (y/n): {DEFAULT_COLOR} "
         ).strip().lower() != 'y':
             console.print(f"Not overwriting the existing directory {output_path}.", style=RICH_COLOR)
             continue
