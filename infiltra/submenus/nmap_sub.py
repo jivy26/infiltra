@@ -73,32 +73,6 @@ def run_ngrep(scan_type):
         subprocess.run(
             ['bash', ngrep_script_path, os.path.join(os.getcwd(), file_selected), scan_type.upper(), output_path])
 
-        # Generate a checklist from the summary files
-        checklist_filename = os.path.join(output_path, 'checklist.txt')
-        try:
-            with open(checklist_filename, 'w') as checklist_file:
-                # Handle TCP summary
-                tcp_summary_filename = os.path.join(output_path, 'tcp-summary.txt')
-                if os.path.exists(tcp_summary_filename):
-                    with open(tcp_summary_filename, 'r') as tcp_summary_file:
-                        for line in tcp_summary_file:
-                            # Extract the port information from each line and write to the checklist
-                            port = line.split()[1]  # Modify this according to the actual format of your summary
-                            checklist_file.write(f'[ ] TCP Port {port}\n')
-
-                # Handle UDP summary
-                udp_summary_filename = os.path.join(output_path, 'udp-summary.txt')
-                if os.path.exists(udp_summary_filename):
-                    with open(udp_summary_filename, 'r') as udp_summary_file:
-                        for line in udp_summary_file:
-                            # Extract the port information from each line and write to the checklist
-                            port = line.split()[1]  # Modify this according to the actual format of your summary
-                            checklist_file.write(f'[ ] UDP Port {port}\n')
-
-                console.print(f"Checklist generated: {checklist_filename}", style=RICH_GREEN)
-        except IOError as e:
-            console.print(f"Failed to create checklist: {e}", style=RICH_RED)
-
         console.input(f"{BOLD_GREEN}Press Enter to return to the menu...")
     else:
         console.print("No suitable .txt files found for parsing.", style=RICH_RED)
