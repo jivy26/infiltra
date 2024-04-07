@@ -27,22 +27,10 @@ def check_and_install_at():
             sys.exit(1)
 
 
-def run_ngrep(scan_type):
+def run_ngrep():
     clear_screen()
-    # Define the path to the nmap-grep.sh script
     ngrep_script_path = pkg_resources.resource_filename('infiltra', 'nmap-grep.sh')
-    # Define the output directory based on the scan type
-    output_path = f"{scan_type.lower()}_parsed/"
 
-    # Check if the output directory exists and handle accordingly
-    if os.path.isdir(output_path):
-        overwrite = console.input(
-            f"The directory [bold cyan]{output_path}[/bold cyan] already exists. Overwrite it? (y/n): ").strip().lower()
-        if overwrite != 'y':
-            console.print(f"Not overwriting the existing directory {output_path}.", style=RICH_COLOR)
-            return
-
-    # List available .txt files in the project directory, excluding specific files
     excluded_files = [
         'whois_',
         'icmpecho_',
@@ -52,30 +40,50 @@ def run_ngrep(scan_type):
     ]
     txt_files = list_txt_files(os.getcwd(), exclude_prefixes=excluded_files)
 
-    if txt_files:
-        console.print(f"Available .txt Files for {scan_type.upper()} Parsing\n", style=RICH_CYAN)
-        for idx, file in enumerate(txt_files, start=1):
-            console.print(f"{idx}. {file}", style=RICH_GREEN)
+    if not txt_files:
+        console.print("No suitable .txt files found for parsing.", style=RICH_RED)
+        return
 
-        # Prompt the user to select a file
+    console.print("Available .txt Files for Parsing\n", style=RICH_CYAN)
+    for idx, file in enumerate(txt_files, start=1):
+        console.print(f"{idx}. {file}", style=RICH_GREEN)
+
+    selected_files = {}
+    while True:
         selection = console.input(
-            f"\n{BOLD_GREEN}Enter the number of the file you wish to parse or 'x' to cancel: {BOLD_WHITE}").strip()
-        if selection.lower() == 'x':
+            f"\n{BOLD_GREEN}Enter the number of the file you wish to parse, 'd' when done, or 'x' to cancel: {BOLD_WHITE}"
+        ).strip().lower()
+
+        if selection == 'd':
+            break
+        elif selection == 'x':
             return
         elif selection.isdigit() and 1 <= int(selection) <= len(txt_files):
             file_selected = txt_files[int(selection) - 1]
+            scan_type = console.input(
+                f"{BOLD_GREEN}Enter the scan type for {file_selected} (TCP/UDP): {BOLD_WHITE}"
+            ).strip().upper()
+            if scan_type in ['TCP', 'UDP']:
+                selected_files[file_selected] = scan_type
+                console.print(f"File {file_selected} set for {scan_type} parsing", style=RICH_GREEN)
+            else:
+                console.print("Invalid scan type. Please enter 'TCP' or 'UDP'.", style=RICH_RED)
         else:
             console.print("Invalid selection. Please enter a valid number from the list.", style=RICH_RED)
-            return
 
-        # Continue with ngrep script execution for the selected file
-        console.print(f"Running nmap-grep.sh on {file_selected} for {scan_type.upper()} parsing", style=RICH_GREEN)
-        subprocess.run(
-            ['bash', ngrep_script_path, os.path.join(os.getcwd(), file_selected), scan_type.upper(), output_path])
+    for file_selected, scan_type in selected_files.items():
+        output_path = f"{scan_type.lower()}_parsed/"
 
-        console.input(f"{BOLD_GREEN}Press Enter to return to the menu...")
-    else:
-        console.print("No suitable .txt files found for parsing.", style=RICH_RED)
+        if os.path.isdir(output_path) and console.input(
+                f"The directory [bold cyan]{output_path}[/bold cyan] already exists. Overwrite it? (y/n): "
+        ).strip().lower() != 'y':
+            console.print(f"Not overwriting the existing directory {output_path}.", style=RICH_COLOR)
+            continue
+
+        console.print(f"Running nmap-grep.sh on {file_selected} for {scan_type} parsing", style=RICH_GREEN)
+        subprocess.run(['bash', ngrep_script_path, os.path.join(os.getcwd(), file_selected), scan_type, output_path])
+
+    console.input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
 
 def get_scheduled_scans_status(project_path):
