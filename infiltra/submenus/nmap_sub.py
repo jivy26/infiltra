@@ -96,7 +96,7 @@ def run_ngrep():
         console.print(f"Running nmap-grep.sh on {file_selected} for {scan_type} parsing", style=RICH_GREEN)
         subprocess.run(['bash', ngrep_script_path, os.path.join(os.getcwd(), file_selected), scan_type, output_path])
 
-    console.input(f"{BOLD_GREEN}Press Enter to return to the menu...")
+    input(f"{BOLD_GREEN}Press Enter to return to the menu...")
 
 
 def get_scheduled_scans_status(project_path):

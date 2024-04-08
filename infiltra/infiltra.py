@@ -27,6 +27,9 @@ import time
 
 import pyfiglet
 
+from rich.prompt import Prompt
+from rich.text import Text
+from rich.console import Console
 from infiltra.install_dependencies import (check_and_install_sippts, check_and_install_eyewitness,
                                   check_and_install_gnome_terminal, check_and_install_gnome_screenshot)
 from infiltra.screenshot import take_screenshot
@@ -399,6 +402,10 @@ def display_menu(version, project_path, ascii_art):
     return choice
 
 
+def load_last_project_prompt(last_project):
+    question_text = Text(f"Do you want to load the last project used '{last_project}'? (Y/n): ", style="bold green")
+    return Prompt.ask(question_text, default="Y", show_choices=False)
+
 # Main function
 def main():
     clear_screen()
@@ -419,13 +426,11 @@ def main():
         with last_project_file_path.open() as file:
             last_project = file.read().strip()
         if last_project:
-            print()
-            use_last_project = input(
-                f"\n\n\n{BOLD_GREEN}Do you want to load the last project used '{last_project}'? (Y/n): ").strip().lower()
-            if use_last_project in ['', 'y']:
+            use_last_project = load_last_project_prompt(last_project)
+            if use_last_project.lower() in ['', 'y', 'yes']:
                 project_path = os.path.join(projects_base_path, last_project)
                 os.chdir(project_path)
-                print(f"{BOLD_GREEN}Loaded the recent project: {last_project}")
+                console.print(f"Loaded the recent project: {last_project}", style="bold green")
 
     while True:
         try:
