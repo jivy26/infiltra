@@ -228,3 +228,4 @@ with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
                 output_file.write(f"\nNo findings for {ip}:{port}, automatically loading a window to run scans for a screenshot.\n")
                 print(f"\n{YELLOW}No findings for {ip}:{port}, automatically loading a window to run scans for a screenshot.{END}", flush=True)
                 open_new_terminal_and_run_sslscan(ip, port)
+#1
