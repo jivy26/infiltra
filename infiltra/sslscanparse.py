@@ -148,7 +148,7 @@ def ssl_scan(ip, port):
             dhe_match = re.search(r'DHE.*?(\d+) bits', cleaned_line)
             if dhe_match:
                 dhe_bits = int(dhe_match.group(1))
-                if dhe_bits <= 2048:
+                if dhe bits <= 2048:
                     dheater_findings.append(line)
 
             rsa_match = re.search(r'RSA Key Strength:\s+(\d+)', cleaned_line)
