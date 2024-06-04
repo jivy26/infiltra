@@ -38,18 +38,6 @@ BOLD = '\033[1m'
 END = '\033[0m'
 
 
-# Function to open a new terminal window and run sslscan
-def open_new_terminal_and_run_sslscan(ip, port):
-    if port == '443':
-        command = f"sslscan {ip}"
-    else:
-        command = f"sslscan https://{ip}:{port}"
-
-    logging.info(f"Launching sslscan for {ip}:{port} in a new window...")
-    subprocess.Popen(['x-terminal-emulator', '-e', f"bash -c '{command}; echo Press enter to close...; read'"])
-    logging.info(f"Scan launched for {ip}:{port}. Check the new window for results.")
-
-
 # Function to remove ANSI escape codes
 def remove_ansi_escape_sequences(text):
     ansi_escape_pattern = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
@@ -226,11 +214,9 @@ with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
             if scan_results:
                 for vuln, lines in scan_results.items():
                     output_file.write(f"\n- {vuln} Found on {ip}:{port}\n\n")
-                    output_file.writelines('\n'.join(lines) + '\n')
-                    print(f"\n{GREEN}{BOLD}- {vuln} Found on {ip}:{port}{END}\n", flush=True)
                     for line in lines:
-                        print(line)
+                        output_file.write(line + '\n')
+                        print(f"\n{GREEN}{BOLD}- {line}{END}\n", flush=True)
             else:
-                output_file.write(f"\nNo findings for {ip}:{port}, automatically loading a window to run scans for a screenshot.\n")
-                print(f"\n{YELLOW}No findings for {ip}:{port}, automatically loading a window to run scans for a screenshot.{END}", flush=True)
-                open_new_terminal_and_run_sslscan(ip, port)
+                output_file.write(f"\nNo findings for {ip}:{port}\n")
+                print(f"\n{YELLOW}No findings for {ip}:{port}{END}", flush=True)
