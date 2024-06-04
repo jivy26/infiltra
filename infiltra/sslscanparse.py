@@ -42,7 +42,11 @@ END = '\033[0m'
 
 # Function to open a new terminal window and run sslscan
 def open_new_terminal_and_run_sslscan(ip, port):
-    command = f"sslscan --port={port} {ip}"
+    if port == '443':
+        command = f"sslscan {ip}"
+    else:
+        command = f"sslscan https://{ip}:{port}"
+
     logging.info(f"Launching sslscan for {ip}:{port} in a new window...")
     subprocess.Popen(['x-terminal-emulator', '-e', f"bash -c '{command}; echo Press enter to close...; read'"])
     logging.info(f"Scan launched for {ip}:{port}. Check the new window for results.")
@@ -74,7 +78,11 @@ def ssl_scan(ip, port):
     tls_fallback_scsv_found = False
 
     try:
-        result = subprocess.run(['sslscan', '--port', port, ip], capture_output=True, text=True, timeout=60)
+        if port == '443':
+            result = subprocess.run(['sslscan', ip], capture_output=True, text=True, timeout=60)
+        else:
+            result = subprocess.run(['sslscan', f'https://{ip}:{port}'], capture_output=True, text=True, timeout=60)
+
         output_lines = result.stdout.split('\n')
 
         subject = ""
@@ -228,4 +236,3 @@ with open(ip_file_path, 'r') as file, open('sslscan.txt', 'w') as output_file:
                 output_file.write(f"\nNo findings for {ip}:{port}, automatically loading a window to run scans for a screenshot.\n")
                 print(f"\n{YELLOW}No findings for {ip}:{port}, automatically loading a window to run scans for a screenshot.{END}", flush=True)
                 open_new_terminal_and_run_sslscan(ip, port)
-#1
