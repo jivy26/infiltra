@@ -26,13 +26,16 @@ def parse_bbot_output(file_path):
 
     with open(file_path, 'r') as file:
         for line in file:
-            line = re.sub(r"\s*\([^)]*\)", "", line)  # Remove anything in parentheses
-            parts = line.split()
-            if not parts:
+            line = re.sub(r"\s*\([^)]*\)", "", line).strip()  # Remove anything in parentheses and strip whitespace
+            if not line:
                 continue  # Skip empty lines
 
-            tag = parts[0].strip('[]')
-            content = ' '.join(parts[1:]).strip()
+            parts = line.split(maxsplit=1)
+            if len(parts) != 2:
+                continue  # Skip lines that don't have a tag and content
+
+            tag, content = parts
+            tag = tag.strip('[]')
 
             if tag == 'FINDING':
                 sections['FINDINGS'].append(content)
@@ -51,9 +54,16 @@ def parse_bbot_output(file_path):
 
     return sections
 
+def display_section(title, items):
+    if items:
+        print(f"\n{BOLD_GREEN}{title} Section:")
+        for item in items:
+            print(f"- {item}")
+        print(COLOR_RESET)
+
 def bbot_main():
     clear_screen()  # This will clear the screen
-    use_default = input(f"{BOLD_CYAN}Use default bbot/output.txt? (Y/n): ").strip().lower()
+    use_default = input(f"{BOLD_CYAN}Use default bbot/output.txt? (Y/n): {COLOR_RESET}").strip().lower()
 
     if use_default == '' or use_default.startswith('y'):
         file_name = os.path.join(os.getcwd(), "bbot", "output.txt")
@@ -63,16 +73,13 @@ def bbot_main():
     try:
         parsed_results = parse_bbot_output(file_name)
         for section, items in parsed_results.items():
-            print(f"\n{BOLD_GREEN}{section} Section:")
-            for item in items:
-                print(f"- {item}")
-            print()
-        input(f"\n{BOLD_CYAN}Press any key to return to the menu...")
+            display_section(section, items)
+        input(f"\n{BOLD_CYAN}Press any key to return to the menu...{COLOR_RESET}")
         clear_screen()  # This will clear the screen
     except FileNotFoundError:
-        print("File does not exist. Please check the file name and path.")
+        print(f"{BOLD_RED}File does not exist. Please check the file name and path.{COLOR_RESET}")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"{BOLD_RED}An error occurred: {e}{COLOR_RESET}")
 
 if __name__ == "__main__":
-    main()
+    bbot_main()
